@@ -150,7 +150,7 @@ occurrence `devil-key' is inserted into the buffer."
   "Wake up Devil to read and translate Devil key sequences."
   (interactive)
   (devil--log "Devil waking up")
-  (devil--read-key (vconcat (kbd devil-key))))
+  (devil--read-key (this-command-keys)))
 
 (defun devil--read-key (key)
   "Read Devil key sequences.
