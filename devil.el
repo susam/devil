@@ -3,7 +3,7 @@
 ;; Copyright (c) 2022-2023 Susam Pal
 
 ;; Author: Susam Pal
-;; Version: 0.1.0pre1
+;; Version: 0.1.0
 ;; Package-Requires: ((emacs "24.4"))
 ;; Keywords: convenience
 ;; URL: https://github.com/susam/devil
