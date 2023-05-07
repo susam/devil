@@ -6,7 +6,7 @@ editing experience! Yes, the comma key! The key you would normally
 wield for punctuation in nearly every corner of text. Yes, this is
 twisted! It would not be called the Devil otherwise, would it? If it
 were any more rational, we might call it something divine, like, uh,
-the God mode? But alas, there's nothing divine to be found here.
+the God mode? But alas, there is nothing divine to be found here.
 Welcome, instead, to the realm of the Devil! You will be granted the
 occassional use of the comma key for punctuation, but only if you can
 charm the Devil! But beware, for in this sinister domain, you must
@@ -57,9 +57,9 @@ A skeptical reader may rightfully ask: If `,` is translated to `C-`,
 how on earth are we going to insert a literal `,` into the text when
 we need to? The section [Typing Commas](#typing-commas) answers this.
 But before we get there, we have some fundamentals to cover. Take the
-plunge and see what unfolds! Maybe you'll like this! Maybe you won't!
-If you don't like this, you can always retreat to God mode, Evil mode,
-the vanilla key bindings, or whatever piques your fancy!
+plunge and see what unfolds! Maybe you will like this! Maybe you
+will not! If you do not like this, you can always retreat to God mode,
+Evil mode, the vanilla key bindings, or whatever piques your fancy!
 
 
 Notation
@@ -173,7 +173,7 @@ key. As illustrated in the previous section, typing `, x , f` produces
 the same effect as typing `C-x C-f`. One might naturally wonder how
 then are we supposed to type literal commas.
 
-Most often when we edit text, we don't really type a comma in
+Most often when we edit text, we do not really type a comma in
 isolation. Often we immediately follow the comma with a space or a
 newline. This assumption usually holds good while editing regular
 text. However, this assumption may not hold in some situations, like
@@ -409,7 +409,7 @@ that still suffers from the problem that key combinations like `C-x`,
 `C-a` require pressing both the modifier key and the modified key with
 the left hand fingers. I know many people remap both their <kbd>caps
 lock</kbd> and <kbd>enter</kbd> to behave like <kbd>ctrl</kbd>
-modifier key. While I think that's a fine solution, I was not willing
+modifier key. While I think that is a fine solution, I was not willing
 to put up with the work required to make that work seamlessly across
 all the various operating systems I work on.
 
