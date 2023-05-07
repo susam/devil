@@ -1,0 +1,6 @@
+(add-to-list 'load-path "~/git/devil/")
+(setq devil-logging t)
+(setq devil-key "<left>")
+(require 'devil)
+(global-devil-mode)
+(global-set-key (kbd "C-<left>") 'global-devil-mode)
