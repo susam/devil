@@ -29,6 +29,7 @@ Contents
 * [Local Mode](#local-mode)
 * [Custom Appearance](#custom-appearance)
 * [Custom Devil Key](#custom-devil-key)
+* [Multiple Devil Keys](#multiple-devil-keys)
 * [Why?](#why)
 * [Support](#support)
 * [Channels](#channels)
@@ -383,6 +384,38 @@ can use `<left> x <left> f` and have Devil translate it to `C-x C-f`.
 To customise the special keys, translation rules, and repeatable keys,
 see the variables `devil-special-keys`, `devil-translations`, and
 `devil-repeatable-keys`, respectively.
+
+
+Multiple Devil Keys
+-------------------
+
+While this package provides the comma as the default and the only
+Devil key, nothing stops you from extending the mode map to support
+multiple Devil keys. Say, you decide that in addition to activating
+Devil with `,` which also plays the role of `C-`, you also want to
+activate Devil with `.` which must now play the role of `M-`. To
+achieve such a result, you could tuse this initialization code as a
+starting point and then customise it further based on your
+requirements:
+
+```elisp
+(defvar devil-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd ",") #'devil)
+    (define-key map (kbd ".") #'devil)
+    map))
+(require 'devil)
+(global-devil-mode)
+(setq devil-special-keys '((", ," . (lambda () (insert ",")))
+                           (". ." . (lambda () (insert ".")))))
+(setq devil-translations '(("," . "C-")
+                           ("." . "M-")))
+```
+
+With this configuration, we can type `, x , f` for `C-x C-f` like
+before. But now we can also type `. x` for `M-x`. Similarly, we can
+type `, . s` for `C-M-s` and so on. Further, `, ,` inserts a literal
+comma and `. .` inserts a literal dot.
 
 
 Why?
