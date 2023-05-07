@@ -74,7 +74,7 @@ Devil mode for it to take effect.")
   (list (cons "%k %k" (lambda () (interactive) (devil-run-key "%k")))
         (cons "%k SPC" (lambda () (interactive) (devil-run-key "%k SPC")))
         (cons "%k RET" (lambda () (interactive) (devil-run-key "%k RET"))))
-  "Special Devil keys that are triggered as soon as they are typed.
+  "Special Devil keys that are executed as soon as they are typed.
 
 The value of this variable is an alist where each key represents
 a Devil key sequence. If a Devil key sequence matches any key in

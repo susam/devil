@@ -168,10 +168,10 @@ Devil may be used:
 Typing Commas
 -------------
 
-Devil makes the questionable choice of using the comma as its trigger
-key. As illustrated in the previous section, typing `, x , f` produces
-the same effect as typing `C-x C-f`. One might naturally wonder how
-then we are supposed to type literal commas.
+Devil makes the questionable choice of using the comma as its
+activation key. As illustrated in the previous section, typing `, x ,
+f` produces the same effect as typing `C-x C-f`. One might naturally
+wonder how then we are supposed to type literal commas.
 
 Most often when we edit text, we do not really type a comma in
 isolation. Often we immediately follow the comma with a space or a
@@ -440,8 +440,6 @@ The author of this project hangs out at the following places online:
   - Mastodon: [@susam@mastodon.social](https://mastodon.social/@susam)
   - Twitter: [@susam](https://twitter.com/susam)
   - GitHub: [@susam](https://github.com/susam)
-  - Matrix: [#susam:matrix.org](https://app.element.io/#/room/#susam:matrix.org)
-  - IRC: [#susam:libera.chat](https://web.libera.chat/#susam)
 
 You are welcome to subscribe to, follow, or join one or more of the
 above channels to receive updates from the author or ask questions
