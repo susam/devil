@@ -19,10 +19,8 @@ Perform the following tasks for every release:
   - Commit changes:
 
     ```sh
-    git status
     git add -p
-    git commit
-    git push
+    git status
     ```
 
   - Tag the release:

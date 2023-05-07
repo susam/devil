@@ -3,7 +3,7 @@
 ;; Copyright (c) 2022-2023 Susam Pal
 
 ;; Author: Susam Pal
-;; Version: 0.1.0
+;; Version: 0.2.0pre1
 ;; Package-Requires: ((emacs "24.4"))
 ;; Keywords: convenience
 ;; URL: https://github.com/susam/devil
@@ -69,8 +69,6 @@ Devil mode for it to take effect.")
 
 (defvar devil-logging nil
   "Non-nil if and only if Devil should print log messages.")
-
-(message "Devil loading ...")
 
 (defvar devil-special-keys
   (list (cons "%k %k" (lambda () (interactive) (devil-run-key "%k")))
