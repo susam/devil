@@ -8,10 +8,10 @@ twisted! It would not be called the Devil otherwise, would it? If it
 were any more rational, we might call it something divine, like, uh,
 the God mode? But alas, there is nothing divine to be found here.
 Welcome, instead, to the realm of the Devil! You will be granted the
-occassional use of the comma key for punctuation, but only if you can
+occasional use of the comma key for punctuation, but only if you can
 charm the Devil! But beware, for in this sinister domain, you must
 relinquish your comma key and embrace an editing experience that
-whisphers wicked secrets into your fingertips!
+whispers wicked secrets into your fingertips!
 
 
 Contents
@@ -53,13 +53,13 @@ configured to use another key instead of `,` to mean the `C-`
 modifier. See the section [Custom Devil Key](#custom-devil-key) for an
 example.
 
-A skeptical reader may rightfully ask: If `,` is translated to `C-`,
+A sceptical reader may rightfully ask: If `,` is translated to `C-`,
 how on earth are we going to insert a literal `,` into the text when
 we need to? The section [Typing Commas](#typing-commas) answers this.
 But before we get there, we have some fundamentals to cover. Take the
-plunge and see what unfolds! Maybe you will like this! Maybe you
-will not! If you do not like this, you can always retreat to God mode,
-Evil mode, the vanilla key bindings, or whatever piques your fancy!
+plunge and see what unfolds! Maybe you will like this! Maybe you will
+not! If you do not like this, you can always retreat to God mode, Evil
+mode, the vanilla key bindings, or whatever piques your fancy!
 
 
 Notation
@@ -116,7 +116,7 @@ Use Devil
 ---------
 
 Assuming vanilla Emacs key bindings have not been changed and Devil
-has not been customized, here are some examples that demonstrate how
+has not been customised, here are some examples that demonstrate how
 Devil may be used:
 
  1. Type `, x , f` and watch Devil translate it to `C-x C-f` and
@@ -124,10 +124,10 @@ Devil may be used:
 
  2. Type `, p` to move up one line.
 
- 3. To move up multiple lines type `, p p p` and so on. Some Devil key
-    sequences are repeatable keys. The repeatable Devil key sequences
-    can be repeated by typing the last key of the Devil key sequence
-    over and over again.
+ 3. To move up multiple lines, type `, p p p` and so on. Some Devil
+    key sequences are repeatable keys. The repeatable Devil key
+    sequences can be repeated by typing the last key of the Devil key
+    sequence over and over again.
 
  4. Another example of a repeatable Devil key sequence is `, f f f`
     which moves the cursor word by multiple characters.
@@ -151,8 +151,8 @@ Devil may be used:
     cursor forward by 16 characters.
 
 10. Type `, SPC` to type a comma followed by space. This is a special
-    key sequence to make it convenient to type comma in the text. Note
-    that this sacrifices the use of `, SPC` to mean `C-SPC` which
+    key sequence to make it convenient to type a comma in the text.
+    Note that this sacrifices the use of `, SPC` to mean `C-SPC` which
     could have been a convenient way to set a mark.
 
 11. Type `, z SPC` and watch Devil translate it to `C-SPC` and set a
@@ -171,7 +171,7 @@ Typing Commas
 Devil makes the questionable choice of using the comma as its trigger
 key. As illustrated in the previous section, typing `, x , f` produces
 the same effect as typing `C-x C-f`. One might naturally wonder how
-then are we supposed to type literal commas.
+then we are supposed to type literal commas.
 
 Most often when we edit text, we do not really type a comma in
 isolation. Often we immediately follow the comma with a space or a
@@ -187,10 +187,10 @@ and a newline.
 In scenarios, when we do need to type a single comma, type `, ,` instead.
 
 Also, it is worth mentioning here that if all this fiddling with the
-comma key feels clumsy, we could always customize the Devil key to
+comma key feels clumsy, we could always customise the Devil key to
 something else that feels better. We could also disable Devil mode
-temporarily and renable it later with `C-,` as explained in section
-[Get Started](#get-started).
+temporarily and enable it again later with `C-,` as explained in
+section [Get Started](#get-started).
 
 
 Devil Reader
@@ -259,7 +259,7 @@ user to an Emacs key sequence:
     replacements. If any part of the string matches a key in
     `devil-translations`, then it is replaced with the corresponding
     value. For example, `, x , f` is translated to `C- x C- f`. Then
-    Devil normalizes the result to `C-x C-f` by removing superfluous
+    Devil normalises the result to `C-x C-f` by removing superfluous
     spaces after the modifier keys.
 
  3. However, if the simple string based replacement leads to an
@@ -314,7 +314,7 @@ enabled globally with `global-devil-mode`:
 
 As mentioned before these features are available only when Devil is
 enabled globally with `global-devil-mode`. If Devil is enabled locally
-with `devil-mode`, then these features not available.
+with `devil-mode`, then these features are not available.
 
 
 Local Mode
@@ -343,7 +343,7 @@ section work only when Devil is enabled globally.
 Custom Appearance
 -----------------
 
-The following initialization code shows how we can customize Devil to
+The following initialization code shows how we can customise Devil to
 show a Devil face in the modeline and the echo area.
 
 ```elisp
@@ -365,7 +365,7 @@ This is how Emacs may look if emojis are rendered correctly:
 Custom Devil Key
 ----------------
 
-The following initialization code shows how we can customize Devil to
+The following initialization code shows how we can customise Devil to
 use a different Devil key.
 
 ```elisp
@@ -380,7 +380,7 @@ The above example sets the Devil key to the left arrow key, perhaps
 another dubious choice for the Devil key. With this configuration, we
 can use `<left> x <left> f` and have Devil translate it to `C-x C-f`.
 
-To customize the special keys, translation rules, and repeatable keys,
+To customise the special keys, translation rules, and repeatable keys,
 see the variables `devil-special-keys`, `devil-translations`, and
 `devil-repeatable-keys`, respectively.
 
@@ -395,9 +395,10 @@ keys, why not use something like God mode?
 
 Well, this minor mode began as a tiny little experiment just for fun.
 From the outset, it was clear that using something as crucial as the
-comma for specifying modifier key is asking for trouble. However, I
-still wanted to see how far we can go with it. It turned out that in a
-matter of days, I was using it full-time for all of my Emacs usage.
+comma for specifying the modifier key is asking for trouble. However,
+I still wanted to see how far I could go with it. It turned out that
+in a matter of days, I was using it full-time for all of my Emacs
+usage.
 
 This experiment was partly motivated by Macbook keyboards which do not
 have a right <kbd>ctrl</kbd> key. Being a touch-typist myself, I found
@@ -408,10 +409,10 @@ remapping <kbd>caps lock</kbd> to behave like <kbd>ctrl</kbd> because
 that still suffers from the problem that key combinations like `C-x`,
 `C-a` require pressing both the modifier key and the modified key with
 the left hand fingers. I know many people remap both their <kbd>caps
-lock</kbd> and <kbd>enter</kbd> to behave like <kbd>ctrl</kbd>
-modifier key. While I think that is a fine solution, I was not willing
-to put up with the work required to make that work seamlessly across
-all the various operating systems I work on.
+lock</kbd> and <kbd>enter</kbd> to behave like <kbd>ctrl</kbd>. While
+I think that is a fine solution, I was not willing to put up with the
+work required to make that work seamlessly across all the various
+operating systems I work on.
 
 What began as a tiny whimsical experiment a few years ago turned out
 to be quite effective, at least to me. I like that this solution is
