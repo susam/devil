@@ -6,4 +6,4 @@ checks:
 	cd ~/git/melpa/ && ls -l packages/ packages-stable/ sandbox/elpa/
 
 smiley:
-	emacs -q -l smiley.el example.el example.md
+	emacs -q -l smiley.el example.md

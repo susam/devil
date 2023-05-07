@@ -344,7 +344,7 @@ Custom Appearance
 -----------------
 
 The following initialization code shows how we can customise Devil to
-show a Devil face in the modeline and the echo area.
+show a Devil smiley (😈) in the modeline and the echo area.
 
 ```elisp
 (add-to-list 'load-path "/path/to/devil/")
@@ -357,9 +357,9 @@ show a Devil face in the modeline and the echo area.
 
 This is how Emacs may look if emojis are rendered correctly:
 
-[![Screenshot of Emacs with Devil face][horns-screenshot]][horns-screenshot]
+[![Screenshot of Emacs with Devil smiley][smiley-screenshot]][smiley-screenshot]
 
-[horns-screenshot]: https://i.imgur.com/6Ly7IOs.png
+[smiley-screenshot]: https://i.imgur.com/oYtwnGi.png
 
 
 Custom Devil Key
