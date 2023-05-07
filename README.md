@@ -389,7 +389,7 @@ Why?
 ----
 
 Why go to the trouble of creating and using something like this? Why
-not just remap <kbd>caps lock</kbd> to <code>ctrl</code> like every
+not just remap <kbd>caps lock</kbd> to <kbd>ctrl</kbd> like every
 other sane person does? Or if it is so important to avoid modifier
 keys, why not use something like God mode?
 
