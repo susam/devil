@@ -19,7 +19,10 @@ Contents
 
 * [Introduction](#introduction)
 * [Notation](#notation)
-* [Get Started](#get-started)
+* [Install](#install)
+  * [Install Interactively from MELPA](#install-interactively-from-melpa)
+  * [Install Automatically from MELPA](#install-automatically-from-melpa)
+  * [Install from Git Source](#install-from-git-source)
 * [Use Devil](#use-devil)
 * [Typing Commas](#typing-commas)
 * [Devil Reader](#devil-reader)
@@ -80,12 +83,74 @@ general and how Emacs functions like `key-description`,
 type a space, it is represented as `SPC`.
 
 
-Get Started
------------
+Install
+-------
 
-To get started quickly with Devil, clone its Git repository to your
-system and load it in your Emacs initialization file with the
-following steps:
+### Install Interactively from MELPA
+
+Devil is available via [MELPA](https://melpa.org/). You may already
+have a preferred way of installing packages from MELPA. If so, install
+the package named `devil` to get Devil. For the sake of completeness,
+here is a very basic way of installing Devil from MELPA:
+
+ 1. Add the following to the Emacs initialization file (i.e.,
+    `~/.emacs` or `~/.emacs.d/init.el` or `~/.config/emacs/init.el`):
+
+    ```sh
+    (require 'package)
+    (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+    (package-initialize)
+    ```
+
+ 2. Start Emacs with the updated initialization file and then type
+    these commands:
+
+    ```
+    M-x package-refresh-contents RET
+    M-x package-install RET devil RET
+    ```
+
+ 3. Confirm that Devil is installed successfully with this command:
+
+    ```
+    M-x devil-show-version RET
+    ```
+
+ 4. Enable Devil mode with this command:
+
+    ```
+    M-x global-devil-mode RET
+    ```
+
+ 4. Type `, x , f` and watch Devil translate it to `C-x C-f` and
+    invoke the corresponding command.
+
+
+### Install Automatically from MELPA
+
+Here is yet another basic way to install and enable Devil using Elisp:
+
+```elisp
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
+(unless package-archive-contents
+  (package-refresh-contents))
+(unless (package-installed-p 'devil)
+  (package-install 'devil))
+(global-devil-mode)
+(global-set-key (kbd "C-,") 'global-devil-mode)
+```
+
+Now type `, x , f` and watch Devil translate it to `C-x C-f` and
+invoke the corresponding command. Type `C-,` to disable Devil mode.
+Type `C-,` again to enable it.
+
+
+### Install from Git Source
+
+If you prefer obtaining Devil from its Git repository, follow these
+steps:
 
  1. Clone Devil to your system:
 
@@ -93,8 +158,7 @@ following steps:
     git clone https://github.com/susam/devil.git
     ```
 
- 2. Add the following to your Emacs initialization file (i.e., to your
-    `~/.emacs` or `~/.emacs.d/init.el` or `~/.config/emacs/init.el`):
+ 2. Add the following to your Emacs initialization:
 
     ```elisp
     (add-to-list 'load-path "/path/to/devil/")
@@ -108,9 +172,8 @@ following steps:
     lighter.
 
  4. Type `, x , f` and watch Devil translate it to `C-x C-f` and
-    invoke the corresponding command.
-
- 5. Type `C-,` to disable Devil mode. Type `C-,` again to enable it.
+    invoke the corresponding command. Type `C-,` to disable Devil
+    mode. Type `C-,` again to enable it.
 
 
 Use Devil
