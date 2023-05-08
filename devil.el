@@ -112,7 +112,7 @@ to represent `devil-key' in the keys.")
         "%k b"
         "%k m m f"
         "%k m m b"
-        "%k m m p"
+        "%k m m y"
         "%k x o")
   "Devil mode repeatable key sequences.
 
