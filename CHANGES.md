@@ -9,6 +9,7 @@ Changelog
 - Add `, k` to the default list of repeatable keys.
 - Add `, /` to the default list of repeatable keys.
 - Add `, m m y` to the default list of repeatable keys.
+- Add command `devil-show-version` to display Devil version.
 
 
 ### Changed
