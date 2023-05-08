@@ -3,7 +3,7 @@
 ;; Copyright (c) 2022-2023 Susam Pal
 
 ;; Author: Susam Pal
-;; Version: 0.2.0pre1
+;; Version: 0.2.0pre2
 ;; Package-Requires: ((emacs "24.4"))
 ;; Keywords: convenience
 ;; URL: https://github.com/susam/devil
@@ -50,7 +50,13 @@ Devil mode for it to take effect.")
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd devil-key) #'devil)
     map)
-  "Keymap to wake up Devil when `devil-key' is typed.")
+  "Keymap to wake up Devil when `devil-key' is typed.
+
+By default, only `devil-key' is added to this keymap so that
+Devil can be activated using it. To support multiple activation
+keys, this variable may be modified to a new keymap that defines
+multiple different keys to activate Devil. This variable should
+be modified before loading Devil for it to take effect.")
 
 ;;;###autoload
 (define-minor-mode devil-mode
