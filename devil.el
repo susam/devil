@@ -364,7 +364,7 @@ the original Emacs key sequence."
 (defun devil--log (format-string &rest args)
   "Write log message with the given FORMAT-STRING and ARGS."
   (when devil-logging
-    (apply 'message (concat "Devil: " format-string) args)))
+    (apply #'message (concat "Devil: " format-string) args)))
 
 (defmacro devil--assert (form)
   "Evaluate FORM and cause error if the result is nil."
@@ -373,7 +373,6 @@ the original Emacs key sequence."
 
 (defun devil--tests ()
   "Test Devil functions assuming Devil has not been customized."
-  (interactive)
   (devil--assert (string= (devil-translate (vconcat ",")) "C-"))
   (devil--assert (string= (devil-translate (vconcat ",x")) "C-x"))
   (devil--assert (string= (devil-translate (vconcat ",x,")) "C-x C-"))
