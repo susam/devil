@@ -258,7 +258,7 @@ sequences should be read from the user."
            (devil--log "Executing key: %s => %s => %s"
                        described-key translated-key binding)
            (call-interactively binding)
-           (when (devil--repetable-key-p described-key)
+           (when (devil--repeatable-key-p described-key)
              (devil--set-transient-map (substring described-key -1) binding))
            t)
           (t
@@ -333,7 +333,7 @@ the original Emacs key sequence."
            (format "last-command: %s; " last-command)
            (format "last-repeatable-command: %s" last-repeatable-command))))
 
-(defun devil--repetable-key-p (described-key)
+(defun devil--repeatable-key-p (described-key)
   "Return t iff DESCRIBED-KEY belongs to `devil-repeatable-keys'."
   (catch 'break
     (dolist (repeatable-key devil-repeatable-keys)
