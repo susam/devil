@@ -35,6 +35,7 @@ Contents
   * [Custom Devil Key](#custom-devil-key)
   * [Multiple Devil Keys](#multiple-devil-keys)
 * [Why?](#why)
+* [Comparison with God Mode](#comparison-with-god-mode)
 * [Support](#support)
 * [Channels](#channels)
 * [More](#more)
@@ -539,6 +540,61 @@ implemented purely as Elisp and therefore does not have any external
 dependency. I am sharing this solution here in the form of a minor
 mode, just in case, there is someone out there who might find this
 useful too.
+
+
+Comparison with God Mode
+------------------------
+
+God mode provides a modal editing experience but Devil does not. Devil
+has the same underlying philosophy as that of God mode, i.e., the user
+should not have to learn new key bindings. However, Devil does not
+have a hard separation between insert mode and command mode like God
+mode has. Instead, Devil waits for an activation key (`,` by default)
+and as soon as it is activated, it intercepts and translates keys,
+runs the corresponding command, and then gets out of the way. So Devil
+tries to retain the modeless editing experience of vanilla Emacs as
+much as possible.
+
+Now it is worth mentioning that some of this modeless editing
+experience can be reproduced in god-mode too using its
+`god-execute-with-current-bindings` function. Here is an example:
+
+```elisp
+(global-set-key (kbd ",") #'god-execute-with-current-bindings)
+```
+
+With this configuration, God mode translates `, x f` to `C-x C-f`.
+Similarly `, g x` invokes `M-x` and `, G s` invokes `C-M-x`. This
+provides a modeless editing experience in God mode too. However, this
+experience does not extend seamlessly to minibuffers. Devil does
+extend its Devil key translation to minibuffers.
+
+Further note that in God mode the <kbd>ctrl</kbd> modifier has sticky
+behaviour, i.e., the modifier remains active automatically for the
+entire key sequence. Therefore in the above example, we type `,` only
+once while typing `, x f` to invoke `C-x C-f`. However, this sticky
+behaviour implies that we need some way to disambiguate between key
+sequences like `C-x C-o` (delete blank lines) and `C-x o` (other
+window). God mode solves this by introducing `SPC` to deactivate the
+modifier, e.g., `, x o` translates to `C-x C-o` but `, x SPC o`
+translates to `C-x o`. Devil does not treat the modifier key as sticky
+which leads to simpler key sequences at the cost of a little
+additional typing, i.e., `, x , o` translates to `C-x C-o` and `, x o`
+translates to `C-x o`.
+
+To summarize, there are primarily three things that Devil does
+differently:
+
+  - Provide a modeless editing experience from the outset.
+  - Seamlessly extend the same editing experience to minibuffer,
+    incremental search, etc.
+  - Translate key sequences using string replacements. This allows for
+    arbitrary and sophisticated key translations for the adventurous.
+  - Choose non-sticky behaviour for the modifier keys.
+
+These differences could make Devil easier to use than God mode for
+some people but clumsy for other people. It depends on one's tastes
+and preferences.
 
 
 Support
