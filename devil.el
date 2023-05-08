@@ -110,6 +110,8 @@ to represent `devil-key' in the keys.")
         "%k n"
         "%k f"
         "%k b"
+        "%k k"
+        "%k /"
         "%k m m f"
         "%k m m b"
         "%k m m y"

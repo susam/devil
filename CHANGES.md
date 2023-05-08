@@ -1,6 +1,27 @@
 Changelog
 =========
 
+0.2.0 (UNRELEASED)
+------------------
+
+### Added
+
+- Add `, k` to the default list of repeatable keys.
+- Add `, /` to the default list of repeatable keys.
+- Add `, m m y` to the default list of repeatable keys.
+
+
+### Changed
+
+- Automatically detect the activation key and accumulate it in order
+  to support `devil-mode-map` with multiple activation keys.
+
+
+### Fixed
+
+- Remove a stray `message` call.
+
+
 0.1.0 (2023-05-07)
 ------------------
 
