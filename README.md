@@ -28,11 +28,12 @@ Contents
 * [Devil Reader](#devil-reader)
 * [Translation Rules](#translation-rules)
 * [Translation Examples](#translation-examples)
-* [Extra Key Bindings](#extra-key-bindings)
-* [Local Mode](#local-mode)
-* [Custom Appearance](#custom-appearance)
-* [Custom Devil Key](#custom-devil-key)
-* [Multiple Devil Keys](#multiple-devil-keys)
+* [Bonus Key Bindings](#bonus-key-bindings)
+* [Custom Configuration Examples](#custom-configuration-examples)
+  * [Local Mode](#local-mode)
+  * [Custom Appearance](#custom-appearance)
+  * [Custom Devil Key](#custom-devil-key)
+  * [Multiple Devil Keys](#multiple-devil-keys)
 * [Why?](#why)
 * [Support](#support)
 * [Channels](#channels)
@@ -236,9 +237,9 @@ Typing Commas
 -------------
 
 Devil makes the questionable choice of using the comma as its
-activation key. As illustrated in the previous section, typing `, x ,
-f` produces the same effect as typing `C-x C-f`. One might naturally
-wonder how then we are supposed to type literal commas.
+activation key. As illustrated in the previous section, typing
+`, x , f` produces the same effect as typing `C-x C-f`. One might
+naturally wonder how then we are supposed to type literal commas.
 
 Most often when we edit text, we do not really type a comma in
 isolation. Often we immediately follow the comma with a space or a
@@ -367,7 +368,7 @@ Also, note how the translation of `, m m` to `M-` allows us to enter a
 key sequence that begins with the `M-` modifier key.
 
 
-Extra Key Bindings
+Bonus Key Bindings
 ------------------
 
 Devil adds the following additional key bindings only when Devil is
@@ -384,8 +385,18 @@ enabled globally with `global-devil-mode`. If Devil is enabled locally
 with `devil-mode`, then these features are not available.
 
 
-Local Mode
-----------
+Custom Configuration Examples
+-----------------------------
+
+In the examples presented below, the `(require 'devil)` calls may be
+safely omitted if Devil has been installed from MELPA. There are
+appropriate autoloads in place in the Devil package that would ensure
+that it is loaded automatically on enabling Devil mode. However, the
+`require` calls have been included in the examples below for the sake
+of completeness.
+
+
+### Local Mode
 
 While the section [Get Started](#get-started) shows how we enable
 Devil mode globally, this section shows how we can enable it locally.
@@ -407,8 +418,7 @@ minibuffer. Further the special keymaps described in the previous
 section work only when Devil is enabled globally.
 
 
-Custom Appearance
------------------
+### Custom Appearance
 
 The following initialization code shows how we can customise Devil to
 show a Devil smiley (😈) in the modeline and the echo area.
@@ -429,8 +439,7 @@ This is how Emacs may look if emojis are rendered correctly:
 [smiley-screenshot]: https://i.imgur.com/oYtwnGi.png
 
 
-Custom Devil Key
-----------------
+### Custom Devil Key
 
 The following initialization code shows how we can customise Devil to
 use a different Devil key.
@@ -452,8 +461,7 @@ see the variables `devil-special-keys`, `devil-translations`, and
 `devil-repeatable-keys`, respectively.
 
 
-Multiple Devil Keys
--------------------
+### Multiple Devil Keys
 
 While this package provides the comma (`,`) as the default and the
 only Devil key, nothing stops you from extending the mode map to
@@ -489,7 +497,8 @@ intrusive Devil becomes during regular editing tasks. Each key we
 reserve to activate Devil key loses its default function and then we
 need workarounds to somehow invoke the default function associated
 with that key (like repeating `.` twice to type a single `.` in the
-above example).
+above example). Therefore, it is a good idea to keep the number of
+Devil keys to be as small as possible.
 
 
 Why?
@@ -498,13 +507,17 @@ Why?
 Why go to the trouble of creating and using something like this? Why
 not just remap <kbd>caps lock</kbd> to <kbd>ctrl</kbd> like every
 other sane person does? Or if it is so important to avoid modifier
-keys, why not use something like God mode?
+keys, why not use something like God mode or Evil mode?
 
-Well, this minor mode began as a fun little tiny experiment. From the
-outset, it was clear that using something as crucial as the comma for
-specifying the modifier key is asking for trouble. However, I still
-wanted to see how far I could go with it. It turned out that in a
-matter of days, I was using it full-time for all of my Emacs usage.
+Well, for one, both God mode and Evil mode are modal editing modes.
+Devil, on the other hand, provides a modeless editing experience of
+Emacs as possible.
+
+Devil mode began as a fun little tiny experiment. From the outset, it
+was clear that using something as crucial as the comma for specifying
+the modifier key is asking for trouble. However, I still wanted to see
+how far I could go with it. It turned out that in a matter of days, I
+was using it full-time for all of my Emacs usage.
 
 This experiment was partly motivated by Macbook keyboards which do not
 have a right <kbd>ctrl</kbd> key. Being a touch-typist myself, I found
