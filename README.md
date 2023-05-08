@@ -390,11 +390,11 @@ Custom Configuration Examples
 -----------------------------
 
 In the examples presented below, the `(require 'devil)` calls may be
-safely omitted if Devil has been installed from MELPA. There are
-appropriate autoloads in place in the Devil package that would ensure
-that it is loaded automatically on enabling Devil mode. However, the
-`require` calls have been included in the examples below for the sake
-of completeness.
+omitted if Devil has been installed from MELPA. There are appropriate
+autoloads in place in the Devil package that would ensure that it is
+loaded automatically on enabling Devil mode. However, the `require`
+calls have been included in the examples below for the sake of
+completeness.
 
 
 ### Local Mode
@@ -405,7 +405,6 @@ Here is an example initialization code that enables Devil locally only
 in text buffers.
 
 ```elisp
-(add-to-list 'load-path "/path/to/devil/")
 (require 'devil)
 (add-hook 'text-mode-hook 'devil-mode)
 (global-set-key (kbd "C-,") 'devil-mode)
@@ -425,7 +424,6 @@ The following initialization code shows how we can customise Devil to
 show a Devil smiley (😈) in the modeline and the echo area.
 
 ```elisp
-(add-to-list 'load-path "/path/to/devil/")
 (require 'devil)
 (setq devil-lighter " \U0001F608")
 (setq devil-prompt "\U0001F608 %t")
@@ -446,8 +444,8 @@ The following initialization code shows how we can customise Devil to
 use a different Devil key.
 
 ```elisp
-(add-to-list 'load-path "/path/to/devil/")
-(setq devil-key "<left>")
+(defvar devil-key "<left>")
+(defvar devil-special-keys '(("%k %k" . (lambda () (interactive) (devil-run-key "%k")))))
 (require 'devil)
 (global-devil-mode)
 (global-set-key (kbd "C-<left>") 'global-devil-mode)
@@ -457,9 +455,12 @@ The above example sets the Devil key to the left arrow key, perhaps
 another dubious choice for the Devil key. With this configuration, we
 can use `<left> x <left> f` and have Devil translate it to `C-x C-f`.
 
-To customise the special keys, translation rules, and repeatable keys,
-see the variables `devil-special-keys`, `devil-translations`, and
-`devil-repeatable-keys`, respectively.
+Additionally, the above example defines the `devil-special-keys`
+variable to have a single entry that allows typing `<left> <left>` to
+produce the same effect as the original `<left>`. It removes the other
+entries, so that `<left> SPC` is no longer reserved as a special key.
+Thus `<left> SPC` can now be used to set a mark like one would
+normally expect.
 
 
 ### Multiple Devil Keys
@@ -479,12 +480,12 @@ requirements:
     (define-key map (kbd ",") #'devil)
     (define-key map (kbd ".") #'devil)
     map))
+(defvar devil-special-keys '((", ," . (lambda () (insert ",")))
+                             (". ." . (lambda () (insert ".")))))
+(defvar devil-translations '(("," . "C-")
+                             ("." . "M-")))
 (require 'devil)
 (global-devil-mode)
-(setq devil-special-keys '((", ," . (lambda () (insert ",")))
-                           (". ." . (lambda () (insert ".")))))
-(setq devil-translations '(("," . "C-")
-                           ("." . "M-")))
 ```
 
 With this configuration, we can type `, x , f` for `C-x C-f` like
@@ -492,14 +493,14 @@ before. But now we can also type `. x` for `M-x`. Similarly, we can
 type `, . s` for `C-M-s` and so on. Further, `, ,` inserts a literal
 comma and `. .` inserts a literal dot.
 
-Note that by default, Devil configures only one activation key, i.e.,
-the comma (`,`) because the more activation keys we add, the more
-intrusive Devil becomes during regular editing tasks. Each key we
-reserve to activate Devil key loses its default function and then we
-need workarounds to somehow invoke the default function associated
-with that key (like repeating `.` twice to type a single `.` in the
-above example). Therefore, it is a good idea to keep the number of
-Devil keys to be as small as possible.
+Note that by default Devil configures only one activation key (`,`)
+because the more activation keys we add, the more intrusive Devil
+becomes during regular editing tasks. Every key that we reserve for
+activating Devil loses its default function and then we need
+workarounds to somehow invoke the default function associated with
+that key (like repeating `.` twice to insert a single `.` in the above
+example). Therefore, it is a good idea to keep the number of Devil
+keys as small as possible.
 
 
 Why?
