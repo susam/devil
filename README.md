@@ -392,12 +392,12 @@ see the variables `devil-special-keys`, `devil-translations`, and
 Multiple Devil Keys
 -------------------
 
-While this package provides the comma as the default and the only
-Devil key, nothing stops you from extending the mode map to support
-multiple Devil keys. Say, you decide that in addition to activating
-Devil with `,` which also plays the role of `C-`, you also want to
-activate Devil with `.` which must now play the role of `M-`. To
-achieve such a result, you could tuse this initialization code as a
+While this package provides the comma (`,`) as the default and the
+only Devil key, nothing stops you from extending the mode map to
+support multiple Devil keys. Say, you decide that in addition to
+activating Devil with `,` which also plays the role of `C-`, you also
+want to activate Devil with `.` which must now play the role of `M-`.
+To achieve such a result, you could use this initialization code as a
 starting point and then customise it further based on your
 requirements:
 
@@ -420,6 +420,14 @@ before. But now we can also type `. x` for `M-x`. Similarly, we can
 type `, . s` for `C-M-s` and so on. Further, `, ,` inserts a literal
 comma and `. .` inserts a literal dot.
 
+Note that by default, Devil configures only one activation key, i.e.,
+the comma (`,`) because the more activation keys we add, the more
+intrusive Devil becomes during regular editing tasks. Each key we
+reserve to activate Devil key loses its default function and then we
+need workarounds to somehow invoke the default function associated
+with that key (like repeating `.` twice to type a single `.` in the
+above example).
+
 
 Why?
 ----
@@ -429,12 +437,11 @@ not just remap <kbd>caps lock</kbd> to <kbd>ctrl</kbd> like every
 other sane person does? Or if it is so important to avoid modifier
 keys, why not use something like God mode?
 
-Well, this minor mode began as a tiny little experiment just for fun.
-From the outset, it was clear that using something as crucial as the
-comma for specifying the modifier key is asking for trouble. However,
-I still wanted to see how far I could go with it. It turned out that
-in a matter of days, I was using it full-time for all of my Emacs
-usage.
+Well, this minor mode began as a fun little tiny experiment. From the
+outset, it was clear that using something as crucial as the comma for
+specifying the modifier key is asking for trouble. However, I still
+wanted to see how far I could go with it. It turned out that in a
+matter of days, I was using it full-time for all of my Emacs usage.
 
 This experiment was partly motivated by Macbook keyboards which do not
 have a right <kbd>ctrl</kbd> key. Being a touch-typist myself, I found
