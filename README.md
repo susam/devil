@@ -131,7 +131,10 @@ Devil may be used:
     sequence over and over again.
 
  4. Another example of a repeatable Devil key sequence is `, f f f`
-    which moves the cursor word by multiple characters.
+    which moves the cursor word by multiple characters. A few other
+    examples of repeatable keys are `, k k k` to kill lines, `, / / /`
+    to undo changs, etc. Type `C-h v devil-repeatable-keys RET` to see
+    the complete list of repeatable keys.
 
  5. Type `, s` and watch Devil translate it to `C-s` and invoke
     incremental search.
