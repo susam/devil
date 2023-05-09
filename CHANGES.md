@@ -21,6 +21,11 @@ Changelog
 ### Fixed
 
 - Remove a stray `message` call.
+- Make the function `dev--tests` non-interactive.
+- Translation issue that caused invalid Emacs key sequences on mapping
+  `-`. For example, mapping `-` to `C-x` and typing `- C-f` produced
+  `C-x CC-xf`. This has been fixed so that `- C-f` is now translated
+  to `C-x C-f`.
 
 
 0.1.0 (2023-05-07)

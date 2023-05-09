@@ -254,7 +254,7 @@ sequences should be read from the user."
          (translated-key (devil-translate key))
          (parsed-key (condition-case nil (kbd translated-key) (error nil)))
          (binding (when parsed-key (key-binding parsed-key))))
-    (cond ((string-match "[ACHMsS]-$" translated-key)
+    (cond ((string-match "[ACHMSs]-$" translated-key)
            (devil--log "Ignoring incomplete key: %s => %s"
                        described-key translated-key)
            nil)
@@ -293,7 +293,7 @@ read so far."
                  (try-key))
             (when (string-prefix-p from-key in-key)
               (setq try-key (devil--clean-key (concat result to-key)))
-              (when (devil--valid-key-p try-key)
+              (unless (devil--invalid-key-p try-key)
                 (setq result try-key)
                 (setq index (+ index (length from-key)))
                 (throw 'break t)))))
@@ -359,13 +359,16 @@ the original Emacs key sequence."
 
 (defun devil--clean-key (translated-key)
   "Clean up TRANSLATED-KEY to properly formatted Emacs key sequence."
-  (replace-regexp-in-string "\\([ACHMsS]\\)- " "\\1-" translated-key))
+  (replace-regexp-in-string "\\([ACHMSs]\\)- " "\\1-" translated-key))
 
-(defun devil--valid-key-p (translated-key)
-  "Return nil iff TRANSLATED-KEY is an invalid Emacs key sequence."
-  (not (string-match-p (concat "A-[^ ]*A-\\|" "C-[^ ]*C-\\|" "H-[^ ]*H-\\|"
-                               "M-[^ ]*M-\\|" "s-[^ ]*s-\\|" "S-[^ ]*S-")
-                       translated-key)))
+(defun devil--invalid-key-p (translated-key)
+  "Return t iff TRANSLATED-KEY is an invalid Emacs key sequence."
+  (catch 'break
+    (dolist (chunk (split-string translated-key " "))
+      (when (or (string= chunk "")
+                (not (string-match-p "^\\(?:[ACHMSs]-\\)*[^ ]?$" chunk))
+                (string-match-p "\\([ACHMSs]-\\)[^ ]*\\1" chunk))
+        (throw 'break t)))))
 
 (defun devil-format (string)
   "Replace %k in STRING with `devil-key'."
@@ -383,16 +386,21 @@ the original Emacs key sequence."
 
 (defun devil--tests ()
   "Test Devil functions assuming Devil has not been customized."
+  (devil--assert (devil--invalid-key-p ""))
+  (devil--assert (devil--invalid-key-p "C-x-C-f"))
+  (devil--assert (devil--invalid-key-p "C-x CC-f"))
+  (devil--assert (not (devil--invalid-key-p "C-x C-f")))
+  (devil--assert (not (devil--invalid-key-p "C-M-x")))
   (devil--assert (string= (devil-translate (vconcat ",")) "C-"))
   (devil--assert (string= (devil-translate (vconcat ",x")) "C-x"))
   (devil--assert (string= (devil-translate (vconcat ",x,")) "C-x C-"))
   (devil--assert (string= (devil-translate (vconcat ",x,f")) "C-x C-f"))
-  (devil--assert (string= (devil-translate (vconcat ",,")) "C-,"))
-  (devil--assert (string= (devil-translate (vconcat ",,,,")) "C-, C-,"))
+  (devil--assert (string= (devil-translate (vconcat ",,")) ","))
+  (devil--assert (string= (devil-translate (vconcat ",,,,")) ", ,"))
   (devil--assert (string= (devil-translate (vconcat ",mx")) "C-M-x"))
-  (devil--assert (string= (devil-translate (vconcat ",,mx")) "M-x"))
+  (devil--assert (string= (devil-translate (vconcat ",mmx")) "M-x"))
   (devil--assert (string= (devil-translate (vconcat ",mmm")) "M-m"))
-  (devil--log "Tests completed"))
+  (message "Done"))
 
 (provide 'devil)
 
