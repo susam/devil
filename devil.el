@@ -3,7 +3,7 @@
 ;; Copyright (c) 2022-2023 Susam Pal
 
 ;; Author: Susam Pal
-;; Version: 0.2.0pre2
+;; Version: 0.2.0
 ;; Package-Requires: ((emacs "24.4"))
 ;; Keywords: convenience
 ;; URL: https://github.com/susam/devil
@@ -36,7 +36,7 @@
 ;; key sequences without using modifier keys.
 
 ;;; Code:
-(defconst devil-version "0.2.0.pre2"
+(defconst devil-version "0.2.0"
   "Devil version number.")
 
 (defun devil-show-version ()
