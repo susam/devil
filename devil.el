@@ -387,29 +387,5 @@ this-command: %s; last-command: %s; last-repeatable-command: %s"
   (when devil-logging
     (apply #'message (concat "Devil: " format-string) args)))
 
-(defmacro devil--assert (form)
-  "Evaluate FORM and cause error if the result is nil."
-  `(unless ,form
-     (error "Assertion failed: %s" ',form)))
-
-(defun devil--tests ()
-  "Test Devil functions assuming Devil has not been customized."
-  (devil--assert (devil--invalid-key-p ""))
-  (devil--assert (devil--invalid-key-p "C-x-C-f"))
-  (devil--assert (devil--invalid-key-p "C-x CC-f"))
-  (devil--assert (not (devil--invalid-key-p "C-x C-f")))
-  (devil--assert (not (devil--invalid-key-p "C-M-x")))
-  (devil--assert (string= (devil-translate (vconcat ",")) "C-"))
-  (devil--assert (string= (devil-translate (vconcat ",x")) "C-x"))
-  (devil--assert (string= (devil-translate (vconcat ",x,")) "C-x C-"))
-  (devil--assert (string= (devil-translate (vconcat ",x,f")) "C-x C-f"))
-  (devil--assert (string= (devil-translate (vconcat ",,")) ","))
-  (devil--assert (string= (devil-translate (vconcat ",,,,")) ", ,"))
-  (devil--assert (string= (devil-translate (vconcat ",mx")) "C-M-x"))
-  (devil--assert (string= (devil-translate (vconcat ",mmx")) "M-x"))
-  (devil--assert (string= (devil-translate (vconcat ",mmm")) "M-m"))
-  (message "Done"))
-
 (provide 'devil)
-
 ;;; devil.el ends here
