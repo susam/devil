@@ -37,13 +37,7 @@
 ;; key sequences without using modifier keys.
 
 ;;; Code:
-(defconst devil-version "0.2.0"
-  "Devil version number.")
 
-(defun devil-show-version ()
-  "Show Devil version number in the echo area."
-  (interactive)
-  (message "Devil %s" devil-version))
 
 (defvar devil-key ","
   "The key sequence that begins Devil input.
