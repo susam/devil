@@ -2,10 +2,11 @@
 
 ;; Copyright (c) 2022-2023 Susam Pal
 
-;; Author: Susam Pal
+;; Author: Susam Pal <susam@susam.net>
+;; Maintainer: Susam Pal <susam@susam.net>
 ;; Version: 0.2.0
 ;; Package-Requires: ((emacs "24.4"))
-;; Keywords: convenience
+;; Keywords: convenience, abbrev
 ;; URL: https://github.com/susam/devil
 
 ;; This file is not part of GNU Emacs.
