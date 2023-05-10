@@ -47,7 +47,7 @@
   "The key sequence that begins Devil input.
 
 The key sequence must be specified in the format returned by `C-h
-k' (`describe-key'). This variable should be set before enabling
+k' (`describe-key').  This variable should be set before enabling
 Devil mode for it to take effect."
   :type 'key-sequence)
 
@@ -62,9 +62,9 @@ Devil mode for it to take effect."
   "Keymap to wake up Devil when `devil-key' is typed.
 
 By default, only `devil-key' is added to this keymap so that
-Devil can be activated using it. To support multiple activation
+Devil can be activated using it.  To support multiple activation
 keys, this variable may be modified to a new keymap that defines
-multiple different keys to activate Devil. This variable should
+multiple different keys to activate Devil.  This variable should
 be modified before loading Devil for it to take effect.")
 
 ;;;###autoload
@@ -93,9 +93,9 @@ be modified before loading Devil for it to take effect.")
   "Special Devil keys that are executed as soon as they are typed.
 
 The value of this variable is an alist where each key represents
-a Devil key sequence. If a Devil key sequence matches any key in
+a Devil key sequence.  If a Devil key sequence matches any key in
 this alist, the function or lambda in the corresponding value is
-invoked. The format control specifier `%k' may be used to
+invoked.  The format control specifier `%k' may be used to
 represent `devil-key' in the keys.")
 
 (defcustom devil-translations
@@ -110,9 +110,9 @@ The value of this variable is an alist where each item represents
 a translation rule that is applied on the Devil key sequence read
 from the user to obtain the Emacs key sequence to be executed.
 The translation rules are applied in the sequence they occur in
-the alist. For each rule, if the key occurs anywhere in the Devil
+the alist.  For each rule, if the key occurs anywhere in the Devil
 key sequence, it is replaced with the corresponding value in the
-translation rule. The format control specifier `%k' may be used
+translation rule.  The format control specifier `%k' may be used
 to represent `devil-key' in the keys."
   :type '(alist :key-type string :value-type string))
 
@@ -131,7 +131,7 @@ to represent `devil-key' in the keys."
 
 The value of this variable is a list where each item represents a
 key sequence that may be repeated merely by typing the last
-character in the key sequence. The format control specified `%k'
+character in the key sequence.  The format control specified `%k'
 may be used to represent `devil-key' in the keys."
   :type '(repeat string))
 
@@ -182,11 +182,11 @@ translation to Emacs key sequence, or an undefined key sequence
 after translation to Emacs key sequence.
 
 The argument KEY is a vector that represents the key sequence
-read so far. This function reads a new key from the user, appends
+read so far.  This function reads a new key from the user, appends
 it to KEY, and then checks if the result is a valid key sequence
-or an undefined key sequence. If the result is a valid key
+or an undefined key sequence.  If the result is a valid key
 sequence for a special key command or an Emacs command, then the
-command is executed. Otherwise, this function calls itself
+command is executed.  Otherwise, this function calls itself
 recursively to read yet another key from the user."
   (setq key (vconcat key (vector (read-key (devil--make-prompt key)))))
   (unless (devil--run-command key)
@@ -204,6 +204,8 @@ The following format control sequences are supported:
 
 (defun devil--make-prompt (key)
   "Create Devil prompt based on the given KEY."
+  ;; If you are interested in adding Compat as a dependency, you can
+  ;; make use of `format-spec' without raining the minimum version.
   (let ((result devil-prompt)
         (controls (list (cons "%k" (key-description key))
                         (cons "%t" (devil-translate key))
@@ -215,16 +217,16 @@ The following format control sequences are supported:
 (defun devil--run-command (key)
   "Try running the command bound to the key sequence in KEY.
 
-KEY is a vector that represents a sequence of keystrokes. If KEY
+KEY is a vector that represents a sequence of keystrokes.  If KEY
 is found to be a special key in `devil-special-keys', the
 corresponding special command is executed immediately and t is
 returned.
 
 Otherwise, it is translated to an Emacs key sequence using
-`devil-translations'. If the resulting Emacs key sequence is
+`devil-translations'.  If the resulting Emacs key sequence is
 found to be a complete key sequence, the command it is bound to
-is executed interactively and t is returned. If it is found to be
-an undefined key sequence, then t is returned. If the resulting
+is executed interactively and t is returned.  If it is found to be
+an undefined key sequence, then t is returned.  If the resulting
 Emacs key sequence is found to be an incomplete key sequence,
 then nil is returned."
   (devil--log "Trying to execute key: %s" (key-description key))
@@ -236,7 +238,7 @@ then nil is returned."
 
 If the given key sequence KEY is found to be a special key in
 `devil-special-keys', the corresponding special command is
-executed, and t is returned. Otherwise nil is returned."
+executed, and t is returned.  Otherwise nil is returned."
   (catch 'break
     (dolist (entry devil-special-keys)
       (when (string= (key-description key) (devil-format (car entry)))
@@ -250,9 +252,9 @@ executed, and t is returned. Otherwise nil is returned."
 
 After translating KEY to an Emacs key sequence, if the resulting
 key sequence turns out to be an incomplete key, then nil is
-returned. If it turns out to be a complete key sequence, the
-corresponding Emacs command is executed, and t is returned. If it
-turns out to be an undefined key sequence, t is returned. The
+returned.  If it turns out to be a complete key sequence, the
+corresponding Emacs command is executed, and t is returned.  If it
+turns out to be an undefined key sequence, t is returned.  The
 return value t indicates to the caller that no more Devil key
 sequences should be read from the user."
   (let* ((described-key (key-description key))
@@ -312,27 +314,27 @@ read so far."
   "Update variables that maintain command loop information.
 
 The given KEY and BINDING is used to update variables that
-maintain command loop information. This allows the commands that
+maintain command loop information.  This allows the commands that
 depend on them behave as if they were being invoked directly with
 the original Emacs key sequence."
   ;;
   ;; Set `last-command-event' so that `digit-argument' can determine
-  ;; the correct digit for key sequences like , 5 (C-5). See M-x
+  ;; the correct digit for key sequences like , 5 (C-5).  See M-x
   ;; find-function RET digit-argument RET for details.
   (setq last-command-event (aref key (- (length key) 1)))
   ;;
   ;; Set `this-command' to make several commands like , z SPC , z SPC
-  ;; (C-SPC C-SPC) and , p (C-p) work correctly. Emacs copies
-  ;; `this-command' to `last-command'. Both variables are used by
+  ;; (C-SPC C-SPC) and , p (C-p) work correctly.  Emacs copies
+  ;; `this-command' to `last-command'.  Both variables are used by
   ;; `set-mark-command' to decide whether to activate/deactivate the
-  ;; current mark. The first variable is used by vertical motion
-  ;; commands to keep the cursor at the `temporary-goal-column'. There
+  ;; current mark.  The first variable is used by vertical motion
+  ;; commands to keep the cursor at the `temporary-goal-column'.  There
   ;; may be other commands too that depend on this variable.
   (setq this-command binding)
   ;;
   ;; Set `real-this-command' to make , x z (C-x z) work correctly.
   ;; Emacs copies it to `last-repeatable-command' which is then used
-  ;; by repeat. See the following for more details:
+  ;; by repeat.  See the following for more details:
   ;;
   ;;   - M-x find-function RET repeat RET
   ;;   - C-h v last-repeatable-command RET
