@@ -38,20 +38,26 @@
 
 ;;; Code:
 
+(defgroup devil '()
+  "Minor mode for Devil-like command entering."
+  :prefix "devil-"
+  :group 'editing)
 
-(defvar devil-key ","
+(defcustom devil-key ","
   "The key sequence that begins Devil input.
 
 The key sequence must be specified in the format returned by `C-h
 k' (`describe-key'). This variable should be set before enabling
-Devil mode for it to take effect.")
+Devil mode for it to take effect."
+  :type 'key-sequence)
 
-(defvar devil-lighter " Devil"
-  "String displayed on the mode line when Devil mode is enabled.")
+(defcustom devil-lighter " Devil"
+  "String displayed on the mode line when Devil mode is enabled."
+  :type 'string)
 
 (defvar devil-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd devil-key) #'devil)
+    (define-key map devil-key #'devil)
     map)
   "Keymap to wake up Devil when `devil-key' is typed.
 
@@ -69,15 +75,16 @@ be modified before loading Devil for it to take effect.")
 
 ;;;###autoload
 (define-globalized-minor-mode
-  global-devil-mode devil-mode devil--on :group 'devil
+  global-devil-mode devil-mode devil--on
   (if global-devil-mode (devil-add-extra-keys) (devil-remove-extra-keys)))
 
 (defun devil--on ()
   "Turn Devil mode on."
   (devil-mode 1))
 
-(defvar devil-logging nil
-  "Non-nil if and only if Devil should print log messages.")
+(defcustom devil-logging nil
+  "Non-nil if and only if Devil should print log messages."
+  :type 'boolean)
 
 (defvar devil-special-keys
   (list (cons "%k %k" (lambda () (interactive) (devil-run-key "%k")))
@@ -91,7 +98,7 @@ this alist, the function or lambda in the corresponding value is
 invoked. The format control specifier `%k' may be used to
 represent `devil-key' in the keys.")
 
-(defvar devil-translations
+(defcustom devil-translations
   (list (cons "%k z" "C-")
         (cons "%k %k" "%k")
         (cons "%k m m" "M-")
@@ -106,9 +113,10 @@ The translation rules are applied in the sequence they occur in
 the alist. For each rule, if the key occurs anywhere in the Devil
 key sequence, it is replaced with the corresponding value in the
 translation rule. The format control specifier `%k' may be used
-to represent `devil-key' in the keys.")
+to represent `devil-key' in the keys."
+  :type '(alist :key-type string :value-type string))
 
-(defvar devil-repeatable-keys
+(defcustom devil-repeatable-keys
   (list "%k p"
         "%k n"
         "%k f"
@@ -124,7 +132,8 @@ to represent `devil-key' in the keys.")
 The value of this variable is a list where each item represents a
 key sequence that may be repeated merely by typing the last
 character in the key sequence. The format control specified `%k'
-may be used to represent `devil-key' in the keys.")
+may be used to represent `devil-key' in the keys."
+  :type '(repeat string))
 
 (defun devil-run-key (key)
   "Execute the given key sequence KEY.
@@ -183,14 +192,15 @@ recursively to read yet another key from the user."
   (unless (devil--run-command key)
     (devil--read-key key)))
 
-(defvar devil-prompt "Devil: %t"
+(defcustom devil-prompt "Devil: %t"
   "A format control string that determines the Devil prompt.
 
 The following format control sequences are supported:
 
 %k - Devil key sequence read by Devil so far.
 %t - Emacs key sequence translated from Devil key sequence read so far.
-%% - The percent sign.")
+%% - The percent sign."
+  :type 'string)
 
 (defun devil--make-prompt (key)
   "Create Devil prompt based on the given KEY."
