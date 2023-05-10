@@ -144,7 +144,7 @@ occurrence `devil-key' is inserted into the buffer."
   (dolist (key (split-string key))
     (if (string= key "%k") (insert devil-key) (execute-kbd-macro (kbd key)))))
 
-(defvar devil--saved-keys
+(defvar devil--saved-keys nil
   "Original key bindings saved by Devil.")
 
 (defun devil-add-extra-keys ()
