@@ -344,11 +344,12 @@ the original Emacs key sequence."
 (defun devil--log-command-loop-info ()
   "Log command loop information for debugging purpose."
   (devil--log
-   (concat "Found "
-           (format "current-prefix-arg: %s; " current-prefix-arg)
-           (format "this-command: %s; " this-command)
-           (format "last-command: %s; " last-command)
-           (format "last-repeatable-command: %s" last-repeatable-command))))
+   (format "Found current-prefix-arg: %s; \
+this-command: %s; last-command: %s; last-repeatable-command: %s"
+	   current-prefix-arg
+	   this-command
+	   last-command
+	   last-repeatable-command)))
 
 (defun devil--repeatable-key-p (described-key)
   "Return t iff DESCRIBED-KEY belongs to `devil-repeatable-keys'."
