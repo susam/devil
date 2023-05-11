@@ -281,6 +281,7 @@ sequences should be read from the user."
              (devil--set-transient-map (substring described-key -1) binding))
            t)
           (t
+           (devil--log "Undefined key: %s => %s" described-key translated-key)
            (message "Devil: %s is undefined" translated-key)
            t))))
 
@@ -376,7 +377,7 @@ this-command: %s; last-command: %s; last-repeatable-command: %s"
   (catch 'break
     (dolist (chunk (split-string translated-key " "))
       (when (or (string= chunk "")
-                (not (string-match-p "^\\(?:[ACHMSs]-\\)*[^ ]?$" chunk))
+                (not (string-match-p "^\\(?:[ACHMSs]-\\)*[^ ]*$" chunk))
                 (string-match-p "\\([ACHMSs]-\\)[^ ]*\\1" chunk))
         (throw 'break t)))))
 
