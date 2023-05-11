@@ -1,4 +1,4 @@
-;;; devil.el --- Minor mode for Devil-like command entering  -*- lexical-binding: t; -*-
+;;; devil.el --- Minor mode for translating key sequences  -*- lexical-binding: t; -*-
 
 ;; Copyright (c) 2022-2023 Susam Pal
 
@@ -34,12 +34,14 @@
 ;;; Commentary:
 
 ;; Devil intercepts your devil key (comma by default) to let you type
-;; key sequences without using modifier keys.
+;; key sequences without using modifier keys.  Devil is highly
+;; configurable and it can be configured to perform other key sequence
+;; translations.
 
 ;;; Code:
 
 (defgroup devil '()
-  "Minor mode for Devil-like command entering."
+  "Minor mode for translating key sequences."
   :prefix "devil-"
   :group 'editing)
 
