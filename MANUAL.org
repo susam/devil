@@ -465,7 +465,7 @@ The following initialization code shows how we can customise Devil to
 use yet another different Devil key.
 
 #+begin_src elisp
-  (defvar devil-key "<left>")
+  (defvar devil-key (kbd "<left>"))
   (defvar devil-special-keys '(("%k %k" . (lambda () (interactive) (devil-run-key "%k")))))
   (require 'devil)
   (global-devil-mode)

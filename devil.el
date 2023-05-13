@@ -4,7 +4,7 @@
 
 ;; Author: Susam Pal <susam@susam.net>
 ;; Maintainer: Susam Pal <susam@susam.net>
-;; Version: 0.3.0
+;; Version: 0.4.0.pre
 ;; Package-Requires: ((emacs "24.4"))
 ;; Keywords: convenience, abbrev
 ;; URL: https://github.com/susam/devil
@@ -39,18 +39,13 @@
 ;; translations.
 
 ;;; Code:
-
 (defgroup devil '()
   "Minor mode for translating key sequences."
   :prefix "devil-"
   :group 'editing)
 
 (defcustom devil-key ","
-  "The key sequence that begins Devil input.
-
-The key sequence must be specified in the format returned by `C-h
-k' (`describe-key').  This variable should be set before enabling
-Devil mode for it to take effect."
+  "The key sequence that begins Devil input."
   :type 'key-sequence)
 
 (defcustom devil-lighter " Devil"
@@ -98,7 +93,7 @@ The value of this variable is an alist where each key represents
 a Devil key sequence.  If a Devil key sequence matches any key in
 this alist, the function or lambda in the corresponding value is
 invoked.  The format control specifier `%k' may be used to
-represent `devil-key' in the keys.")
+represent `key-description' of `devil-key' in the keys.")
 
 (defcustom devil-translations
   (list (cons "%k z" "C-")
@@ -112,10 +107,11 @@ The value of this variable is an alist where each item represents
 a translation rule that is applied on the Devil key sequence read
 from the user to obtain the Emacs key sequence to be executed.
 The translation rules are applied in the sequence they occur in
-the alist.  For each rule, if the key occurs anywhere in the Devil
-key sequence, it is replaced with the corresponding value in the
-translation rule.  The format control specifier `%k' may be used
-to represent `devil-key' in the keys."
+the alist.  For each rule, if the key occurs anywhere in the
+Devil key sequence, it is replaced with the corresponding value
+in the translation rule.  The format control specifier `%k' may
+be used to represent `key-description' of `devil-key' in the
+keys."
   :type '(alist :key-type string :value-type string))
 
 (defcustom devil-repeatable-keys
@@ -134,10 +130,10 @@ to represent `devil-key' in the keys."
 The value of this variable is a list where each item represents a
 key sequence that may be repeated merely by typing the last
 character in the key sequence.  The format control specified `%k'
-may be used to represent `devil-key' in the keys.  Only key
-sequences that translate to a complete Emacs key sequence
-according to `devil-translations' and execute an Emacs command
-are made repeatable.  Key sequences that belong to
+may be used to represent `key-description' of `devil-key' in the
+keys.  Only key sequences that translate to a complete Emacs key
+sequence according to `devil-translations' and execute an Emacs
+command are made repeatable.  Key sequences that belong to
 `devil-special-keys' are never made repeatable.  Note that this
 variable is ignored if `devil-all-keys-repeatable' is set to t."
   :type '(repeat string))
@@ -161,9 +157,12 @@ determine whether a key sequence is repeatable or not."
 
 KEY must be in the format returned by `C-h k` (`describe-key').
 If the format control specifier `%k' occurs in KEY, for each such
-occurrence `devil-key' is inserted into the buffer."
+occurrence `key-description' of `devil-key' is inserted into the
+buffer."
   (dolist (key (split-string key))
-    (if (string= key "%k") (insert devil-key) (execute-kbd-macro (kbd key)))))
+    (if (string= key "%k")
+        (insert (key-description devil-key))
+      (execute-kbd-macro (kbd key)))))
 
 (defvar devil--saved-keys nil
   "Original key bindings saved by Devil.")
@@ -172,7 +171,7 @@ occurrence `devil-key' is inserted into the buffer."
   "Add key bindings to keymaps for Isearch and universal argument."
   (devil--log "Adding extra key bindings")
   (setq devil--saved-keys (devil--original-keys-to-be-saved))
-  (define-key isearch-mode-map (kbd devil-key) #'devil)
+  (define-key isearch-mode-map devil-key #'devil)
   (define-key universal-argument-map (kbd "u") #'universal-argument-more))
 
 (defun devil-remove-extra-keys ()
@@ -185,7 +184,7 @@ occurrence `devil-key' is inserted into the buffer."
 
 (defun devil--original-keys-to-be-saved ()
   "Return an alist of keys that will be modified by Devil."
-  (list (cons 'isearch-comma (lookup-key isearch-mode-map (kbd devil-key)))
+  (list (cons 'isearch-comma (lookup-key isearch-mode-map devil-key))
         (cons 'universal-u (lookup-key universal-argument-map (kbd "u")))))
 
 (defun devil ()
@@ -402,8 +401,8 @@ this-command: %s; last-command: %s; last-repeatable-command: %s"
         (throw 'break t)))))
 
 (defun devil-format (string)
-  "Replace %k in STRING with `devil-key'."
-  (replace-regexp-in-string "%k" devil-key string))
+  "Replace %k in STRING with `key-description' of `devil-key'."
+  (replace-regexp-in-string "%k" (key-description devil-key) string))
 
 (defun devil--log (format-string &rest args)
   "Write log message with the given FORMAT-STRING and ARGS."

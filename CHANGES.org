@@ -9,6 +9,11 @@
 
 - Add customisable variable =devil-all-keys-repeatable=.
 
+*** Fixed
+
+- Fix key translation when the Devil key is a key vector, e.g., =(kbd
+  "<left>")=
+
 
 ** 0.3.0 (2023-05-11)
 :PROPERTIES:
