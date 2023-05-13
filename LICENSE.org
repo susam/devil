@@ -1,6 +1,6 @@
 * The MIT License (MIT)
 :PROPERTIES:
-:CUSTOM_ID: the-mit-license-mit
+:CUSTOM_ID: the-mit-license
 :END:
 Copyright (c) 2022-2023 Susam Pal
 

@@ -1,6 +1,9 @@
 * Changelog
 
 ** 0.3.0 (2023-05-11)
+:PROPERTIES:
+:CUSTOM_ID: 0.3.0
+:END:
 
 *** Added
 
@@ -15,7 +18,11 @@
 - Fix spacing in documentation strings.
 - Remove =devil-version= and =devil-show-version=.
 
+
 ** 0.2.0 (2023-05-09)
+:PROPERTIES:
+:CUSTOM_ID: 0.2.0
+:END:
 
 *** Added
 
@@ -40,6 +47,9 @@
 
 
 ** 0.1.0 (2023-05-07)
+:PROPERTIES:
+:CUSTOM_ID: 0.1.0
+:END:
 
 *** Added
 
