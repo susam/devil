@@ -16,7 +16,7 @@ if you can charm the Devil!  But beware, for in this sinister domain,
 you must relinquish your comma key and embrace an editing experience
 that whispers wicked secrets into your fingertips!
 
-Read the [[./MANUAL.org][manual]] for more details on how to use Devil.
+Read the [[https://susam.github.io/devil/][manual]] for more details on how to use Devil.
 
 ** Channels
 :PROPERTIES:
