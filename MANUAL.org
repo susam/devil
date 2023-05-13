@@ -10,7 +10,7 @@
 #+texinfo: @insertcopying
 
 Devil mode trades your comma key in exchange for a modifier-free
-editing experience in Emacs!  Yes, the comma key!  The key you would
+editing experience in Emacs.  Yes, the comma key!  The key you would
 normally wield for punctuation in nearly every corner of text.  Yes,
 this is twisted!  It would not be called the Devil otherwise, would
 it?  If it were any more rational, we might call it something divine,
