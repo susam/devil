@@ -1,5 +1,9 @@
 * Devil Mode
 
+[[https://melpa.org/#/devil][file:https://melpa.org/packages/devil-badge.svg]]
+[[https://stable.melpa.org/#/devil][file:https://stable.melpa.org/packages/devil-badge.svg]]
+[[https://mastodon.social/@susam][file:https://img.shields.io/badge/mastodon-%40susam-%2355f.svg]]
+
 Devil mode trades your comma key in exchange for a modifier-free
 editing experience!  Yes, the comma key!  The key you would normally
 wield for punctuation in nearly every corner of text.  Yes, this is
