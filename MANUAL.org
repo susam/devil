@@ -524,6 +524,41 @@ that key (like repeating =.= twice to insert a single =.= in the above
 example).  Therefore, it is a good idea to keep the number of Devil
 keys as small as possible.
 
+** Make All Keys Repeatable
+:PROPERTIES:
+:CUSTOM_ID: make-all-keys-repeatable
+:END:
+By default Devil has a small list of key sequences that are considered
+repeatable.  This list is defined in the variable
+=devil-repeatable-keys=.  Type =C-h v devil-repeatable-keys RET= to
+view this list.  For example, consider the repeatable key sequence =%k
+p= in this list.  Assuming that the default Devil and Emacs key
+bindings have not been changed, this means that after we type =C-p=
+and move the cursor to the previous line, we can repeat this operation
+by typing =p= over and over again.  The repetition occurs as long as
+the last character of the repeatable key sequence is typed over and
+over again.  Typing any other key stops the repetition and the default
+behaviour of the other key is then observed.
+
+It is possible to make all key sequences repeatable by setting the
+variable =devil-all-keys-repeatable= to =t=.  Here is an example
+configuration:
+
+#+begin_src elisp
+  (require 'devil)
+  (setq devil-all-keys-repeatable t)
+  (global-devil-mode)
+#+end_src
+
+Now all every Devil key sequence that ends up executing an Emacs
+command can be repeated by merely repeating the last character of the
+key sequence.  The list in =devil-repeatable-keys= is ignored.
+
+Note that only Devil key sequences that get translated to a regular
+Emacs key sequence and result in the execution of an Emacs command can
+be repeatable.  The special keys defined in =devil-special-keys= are
+never repeatable.
+
 * Why?
 :PROPERTIES:
 :CUSTOM_ID: why
