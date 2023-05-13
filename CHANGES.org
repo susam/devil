@@ -1,5 +1,15 @@
 * Changelog
 
+** 0.4.0 (UNRELEASED)
+:PROPERTIES:
+:CUSTOM_ID: 0.4.0
+:END:
+
+*** Added
+
+- Add customisable variable =devil-all-keys-repeatable=.
+
+
 ** 0.3.0 (2023-05-11)
 :PROPERTIES:
 :CUSTOM_ID: 0.3.0
@@ -7,7 +17,7 @@
 
 *** Added
 
-- Add customization group.
+- Add customisation group =devil=.
 
 *** Changed
 
