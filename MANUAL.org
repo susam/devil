@@ -651,9 +651,3 @@ differently:
 These differences could make Devil easier to use than God mode for
 some people but clumsy for other people.  It depends on one's tastes
 and preferences.
-
-* Support
-:PROPERTIES:
-:CUSTOM_ID: support
-:END:
-To report bugs, suggest improvements, or ask questions, [[https://github.com/susam/devil/issues][create issues]].
