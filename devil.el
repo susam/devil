@@ -172,8 +172,8 @@ occurrence `devil-key' is inserted into the buffer."
   "Add key bindings to keymaps for Isearch and universal argument."
   (devil--log "Adding extra key bindings")
   (setq devil--saved-keys (devil--original-keys-to-be-saved))
-  (define-key isearch-mode-map (kbd devil-key) 'devil)
-  (define-key universal-argument-map (kbd "u") 'universal-argument-more))
+  (define-key isearch-mode-map (kbd devil-key) #'devil)
+  (define-key universal-argument-map (kbd "u") #'universal-argument-more))
 
 (defun devil-remove-extra-keys ()
   "Remove Devil key bindings from Isearch and universal argument."
