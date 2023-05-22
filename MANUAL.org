@@ -179,8 +179,10 @@ Devil may be used:
 4. Another example of a repeatable Devil key sequence is =, f f f=
    which moves the cursor word by multiple characters.  A few other
    examples of repeatable keys are =, k k k= to kill lines, =, / / /=
-   to undo changs, etc.  Type =C-h v devil-repeatable-keys RET= to see
-   the complete list of repeatable keys.
+   to undo changes, etc.  Type =C-h v devil-repeatable-keys RET= to
+   see the complete list of repeatable keys.  If you want all Devil
+   key sequences to be repeatable, see the section [[*Make All Keys
+   Repeatable]] to find out how to do this.
 
 5. Type =, s= and watch Devil translate it to =C-s= and invoke
    incremental search.
@@ -203,7 +205,9 @@ Devil may be used:
 10. Type =, SPC= to type a comma followed by space.  This is a special
     key sequence to make it convenient to type a comma in the text.
     Note that this sacrifices the use of =, SPC= to mean =C-SPC= which
-    could have been a convenient way to set a mark.
+    could have been a convenient way to set a mark.  See the section
+    [[*Reclaim , SPC to Set Mark]] if you do not want to make this
+    sacrifice.
 
 11. Type =, z SPC= and watch Devil translate it to =C-SPC= and set a
     mark.  Yes, =, z= is translated to =C-= too.
@@ -535,10 +539,10 @@ view this list.  For example, consider the repeatable key sequence =%k
 p= in this list.  Assuming that the default Devil and Emacs key
 bindings have not been changed, this means that after we type =C-p=
 and move the cursor to the previous line, we can repeat this operation
-by typing =p= over and over again.  The repetition occurs as long as
-the last character of the repeatable key sequence is typed over and
-over again.  Typing any other key stops the repetition and the default
-behaviour of the other key is then observed.
+by typing =p= again.  The repetition occurs as long as the last
+character of the repeatable key sequence is typed over and over again.
+Typing any other key stops the repetition and the default behaviour of
+the other key is then observed.
 
 It is possible to make all key sequences repeatable by setting the
 variable =devil-all-keys-repeatable= to =t=.  Here is an example
