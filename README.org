@@ -16,7 +16,27 @@ if you can charm the Devil!  But beware, for in this sinister domain,
 you must relinquish your comma key and embrace an editing experience
 that whispers wicked secrets into your fingertips!
 
-Read the [[https://susam.github.io/devil/][manual]] for more details on how to use Devil.
+** Get Started
+:PROPERTIES:
+:CUSTOM_ID: get-started
+:END:
+
+By default, Devil mode rebinds the comma key to activate Devil. Once
+activated, Devil reads a so-called Devil key sequence from you. As you
+type your Devil key sequence, Emacs translates the key sequence to a
+regular Emacs key sequence. If any command is bound to the translated
+Emacs key sequence, Devil runs that command and then deactivates
+itself.
+
+By default, each comma in the Devil key sequence is translated to
+"C-". For example, if you type ", x , f", Devil translates it to "C-x
+C-f". Similarly, "m" is translated to "M-", so if you type ", m s",
+Devil translates it to "C-M-s". There are several other translations
+available in the default translation rules that let you enjoy working
+with Emacs while avoiding modifier keys. Further, the Devil activation
+key, translation rules, etc. are customisable.
+
+Read the [[https://susam.github.io/devil/][manual]] to learn how to install, use, and customise Devil.
 
 ** Channels
 :PROPERTIES:
@@ -33,11 +53,20 @@ You are welcome to subscribe to, follow, or join one or more of the
 above channels to receive updates from the author or ask questions
 about this project.
 
-* Support
+** Support
 :PROPERTIES:
 :CUSTOM_ID: support
 :END:
 To report bugs, suggest improvements, or ask questions, [[https://github.com/susam/devil/issues][create issues]].
+
+** Thanks
+:PROPERTIES:
+:CUSTOM_ID: thanks
+:END:
+Thanks to:
+
+- [[https://github.com/riscy][Chris Rayner]] for initial code review.
+- [[https://github.com/phikal][Philip Kaludercic]] for initial code review and patches.
 
 ** More
 :PROPERTIES:
