@@ -238,8 +238,14 @@ In scenarios where the above assumption holds good, typing =, SPC=
 inserts a comma and a space.  Similarly, typing =, RET= inserts a
 comma and a newline.
 
-In scenarios, when we do need to type a single comma, type =, ,=
+In scenarios where we do need to type a single comma, type =, ,=
 instead.
+
+Note that you could also type a single comma with =, q ,= which
+translates to =C-q ,= and inserts a literal comma.  The Emacs key
+sequence =C-q= invokes the command =quoted-insert= which inserts the
+next input character.  The =, ,= special key sequence is probably
+easier to type than this.
 
 Also, it is worth mentioning here that if all this fiddling with the
 comma key feels clumsy, we could always customise the Devil key to
@@ -305,15 +311,15 @@ Devil follows in order to convert a Devil key sequence entered by the
 user to an Emacs key sequence:
 
 1. The input key vector read from the user is converted to a key
-   description (i.e., the string functions like =describe-key=,
-   =key-description=, produce).  For example, if the user types ,x,f,
-   it is converted to =, x , f=.
+   description (i.e., the string produced by functions like
+   =describe-key= and =key-description=).  For example, if the user
+   types =,x,f,= it is converted to =, x , f=.
 
 2. Now the resulting key description is translated with simple string
    replacements.  If any part of the string matches a key in
    =devil-translations=, then it is replaced with the corresponding
    value.  For example, =, x , f= is translated to =C- x C- f=.  Then
-   Devil normalises the result to =C-x C-f= by removing superfluous
+   Devil normalises the result to =C-x C-f= by removing the stray
    spaces after the modifier keys.
 
 3. However, if the simple string based replacement leads to an invalid
@@ -398,7 +404,7 @@ initialization code that enables Devil locally only in text buffers.
 This is not recommended though because this does not provide a
 seamless Devil experience.  For example, with Devil enabled locally in
 a text buffer like this, although we can type =, x , f= to launch the
-find-file minibuffer, we cannot use Devil key sequences in the
+=find-file= minibuffer, we cannot use Devil key sequences in the
 minibuffer.  Further the special keymaps described in the previous
 section work only when Devil is enabled globally.
 
@@ -423,15 +429,15 @@ show a Devil smiley (😈) in the modeline and in the Devil prompt.
 :END:
 The default configuration for special keys reserves =, SPC= to insert
 a literal comma followed by space.  This default makes it easy to type
-space in various contexts.  However, this means that =, SPC= does not
+comma in various contexts.  However, this means that =, SPC= does not
 translate to =C-SPC=.  Therefore =, SPC= cannot be used to set mark.
 Instead, the default translation rules offer =, z SPC= as a way to set
 mark.
 
 If you would rather set mark using =, SPC= and you are happy with the
-special key =, ,= alone to insert a literal comma and you are okay
-with typing comma twice everytime you want to insert a literal comma,
-then the special keys
+special key =, ,= alone to insert a literal comma and you are also
+okay with typing comma twice everytime you want to insert a literal
+comma, then use the following configuration:
 
 #+begin_src elisp
   (require 'devil)
@@ -470,15 +476,15 @@ use yet another different Devil key.
 
 #+begin_src elisp
   (defvar devil-key (kbd "<left>"))
-  (defvar devil-special-keys '(("%k %k" . (lambda () (interactive) (devil-run-key "%k")))))
+  (defvar devil-special-keys '(("%k %k" . left-char)))
   (require 'devil)
   (global-devil-mode)
   (global-set-key (kbd "C-<left>") 'global-devil-mode)
 #+end_src
 
-The above example sets the Devil key to the left arrow key, perhaps
-another dubious choice for the Devil key.  With this configuration, we
-can use =<left> x <left> f= and have Devil translate it to =C-x C-f=.
+The above example sets the Devil key to the left arrow key.  With this
+configuration, we can use =<left> x <left> f= and have Devil translate
+it to =C-x C-f=.
 
 Additionally, the above example defines the =devil-special-keys=
 variable to have a single entry that allows typing =<left> <left>= to
@@ -539,10 +545,10 @@ view this list.  For example, consider the repeatable key sequence =%k
 p= in this list.  Assuming that the default Devil and Emacs key
 bindings have not been changed, this means that after we type =C-p=
 and move the cursor to the previous line, we can repeat this operation
-by typing =p= again.  The repetition occurs as long as the last
-character of the repeatable key sequence is typed over and over again.
-Typing any other key stops the repetition and the default behaviour of
-the other key is then observed.
+by typing =p= over and again.  The repetition occurs as long as the
+last character of the repeatable key sequence is typed again.  Typing
+any other key stops the repetition and the default behaviour of the
+other key is then observed.
 
 It is possible to make all key sequences repeatable by setting the
 variable =devil-all-keys-repeatable= to =t=.  Here is an example
@@ -554,9 +560,9 @@ configuration:
   (global-devil-mode)
 #+end_src
 
-Now all every Devil key sequence that ends up executing an Emacs
-command can be repeated by merely repeating the last character of the
-key sequence.  The list in =devil-repeatable-keys= is ignored.
+Now every Devil key sequence that ends up executing an Emacs command
+can be repeated by merely repeating the last character of the key
+sequence.  The list in =devil-repeatable-keys= is ignored.
 
 Note that only Devil key sequences that get translated to a regular
 Emacs key sequence and result in the execution of an Emacs command can
@@ -635,12 +641,13 @@ behaviour, i.e., the modifier remains active automatically for the
 entire key sequence.  Therefore in the above example, we type =,= only
 once while typing =, x f= to invoke =C-x C-f=.  However, this sticky
 behaviour implies that we need some way to disambiguate between key
-sequences like =C-x C-f= (find-file) and =C-x o= (set-fill-column).
-God mode solves this by introducing =SPC= to deactivate the modifier,
-e.g., =x f= translates to =C-x C-f= but =x SPC o= translates to =C-x
-o=.  Devil does not treat the modifier key as sticky which leads to
-simpler key sequences at the cost of a little additional typing, i.e.,
-=, x , o= translates to =C-x C-o= and =, x o= translates to =C-x o=.
+sequences like =C-x C-f= (=find-file=) and =C-x f=
+(=set-fill-column=).  God mode solves this by introducing =SPC= to
+deactivate the modifier, e.g., =, x f= translates to =C-x C-f= but =,
+x SPC f= translates to =C-x f=.  Devil does not treat the modifier key
+as sticky which leads to simpler key sequences at the cost of a little
+additional typing, i.e., =, x , f= translates to =C-x C-f= and =, x f=
+translates to =C-x f=.
 
 To summarize, there are primarily three things that Devil does
 differently:
