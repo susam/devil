@@ -9,6 +9,13 @@
 
 - Add customisable variable =devil-all-keys-repeatable=.
 
+*** Changed
+
+- When a Devil key sequence translates to an Emacs key sequence with
+  both the control key and an uppercase letter, the uppercase letter
+  is further translated to its shifted form, e.g., =C-M-V= is
+  translated to =C-M-S-v=.
+
 *** Fixed
 
 - Fix key translation when the Devil key is a key vector, e.g., =(kbd

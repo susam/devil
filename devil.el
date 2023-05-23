@@ -4,7 +4,7 @@
 
 ;; Author: Susam Pal <susam@susam.net>
 ;; Maintainer: Susam Pal <susam@susam.net>
-;; Version: 0.4.0.pre
+;; Version: 0.4.0.pre2
 ;; Package-Requires: ((emacs "24.4"))
 ;; Keywords: convenience, abbrev
 ;; URL: https://github.com/susam/devil
@@ -231,8 +231,8 @@ The following format control sequences are supported:
                         (cons "%t" (devil-translate key))
                         (cons "%%" "%"))))
     (dolist (control controls result)
-      (setq result (replace-regexp-in-string (car control)
-                                             (cdr control) result)))))
+      (setq result (devil-string-replace (car control)
+                                         (cdr control) result)))))
 
 (defun devil--run-command (key)
   "Try running the command bound to the key sequence in KEY.
@@ -330,7 +330,7 @@ read so far."
         (let ((char (substring key index (1+ index))))
           (setq result (devil--clean-key (concat result char))))
         (setq index (1+ index))))
-    result))
+    (devil--normalize-ctrl-uppercase-chord result)))
 
 (defun devil--update-command-loop-info (key binding)
   "Update variables that maintain command loop information.
@@ -389,20 +389,43 @@ this-command: %s; last-command: %s; last-repeatable-command: %s"
 
 (defun devil--clean-key (translated-key)
   "Clean up TRANSLATED-KEY to properly formatted Emacs key sequence."
-  (replace-regexp-in-string "\\([ACHMSs]\\)- " "\\1-" translated-key))
+  (devil-regexp-replace "\\([ACHMSs]\\)- " "\\1-" translated-key))
+
+(defun devil--normalize-ctrl-uppercase-chord (translated-key)
+  "Normalize chords containing ctrl and uppercase letter in TRANSLATED-KEY."
+  (devil-regexp-replace "C-\\(?:[ACHMs]-\\)*[A-Z]\\(?: \\|$\\)"
+                        'devil--shifted-key translated-key))
+
+(defun devil--shifted-key (translated-key)
+  "Replace the last character in TRANSLATED-KEY with its shifted form."
+  (let* ((hyphen-index (if (string-suffix-p " " translated-key) -2 -1))
+         (prefix (substring translated-key 0 hyphen-index))
+         (suffix (substring translated-key hyphen-index)))
+    (concat prefix "S-" (downcase suffix))))
 
 (defun devil--invalid-key-p (translated-key)
   "Return t iff TRANSLATED-KEY is an invalid Emacs key sequence."
   (catch 'break
     (dolist (chunk (split-string translated-key " "))
       (when (or (string= chunk "")
-                (not (string-match-p "^\\(?:[ACHMSs]-\\)*[^ ]*$" chunk))
+                (not (string-match-p "^\\(?:[ACHMSs]-\\)*[^-]*$" chunk))
                 (string-match-p "\\([ACHMSs]-\\)[^ ]*\\1" chunk))
         (throw 'break t)))))
 
 (defun devil-format (string)
   "Replace %k in STRING with `key-description' of `devil-key'."
-  (replace-regexp-in-string "%k" (key-description devil-key) string))
+  (devil-string-replace "%k" (key-description devil-key) string))
+
+(defun devil-string-replace (from-string to-string in-string)
+  "Replace FROM-STRING with TO-STRING in IN-STRING."
+  (let ((case-fold-search nil))
+    (replace-regexp-in-string (regexp-quote from-string)
+                              to-string in-string t t)))
+
+(defun devil-regexp-replace (regexp replacement in-string)
+  "Replace REGEXP with REPLACEMENT in IN-STRING."
+  (let ((case-fold-search nil))
+    (replace-regexp-in-string regexp replacement in-string t)))
 
 (defun devil--log (format-string &rest args)
   "Write log message with the given FORMAT-STRING and ARGS."

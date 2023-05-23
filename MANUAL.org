@@ -322,14 +322,22 @@ user to an Emacs key sequence:
    Devil normalises the result to =C-x C-f= by removing the stray
    spaces after the modifier keys.
 
-3. However, if the simple string based replacement leads to an invalid
-   Emacs key sequence, it skips the replacement that causes the
-   resulting Emacs key sequence to become invalid.  For example =, m
-   ,= results in =C-M-C-= after the simple string replacement because
-   the default translation rules replace =,= with =C-= and =m= with
-   =M-=.  However, =C-M-C-= is an invalid key sequence, so the
-   replacement of the second =,= to =C-= is skipped.  Therefore, the
-   input =, m ,= is translated to =C-M-,= instead.
+3. If the simple string based replacement discussed in the previous
+   point leads to an invalid Emacs key sequence, it skips the
+   replacement that causes the resulting Emacs key sequence to become
+   invalid.  For example =, m ,= results in =C-M-C-= after the simple
+   string replacement because the default translation rules replace
+   =,= with =C-= and =m= with =M-=.  However, =C-M-C-= is an invalid
+   key sequence, so the replacement of the second =,= to =C-= is
+   skipped.  Therefore, the input =, m ,= is translated to =C-M-,=
+   instead.
+
+4. Finally, Devil looks for key chords in the key sequence that
+   contain both the =C-= modifier and an uppercase letter.  If such a
+   key chord occurs, then it replaces the uppercase letter with its
+   shifted form, e.g., =, m V= first translates to =C-M-V= according
+   to the previous points and then the result is translated to
+   =C-M-S-v= according to this point.
 
 * Translation Examples
 :PROPERTIES:
