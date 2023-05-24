@@ -211,7 +211,7 @@ or an undefined key sequence.  If the result is a valid key
 sequence for a special key command or an Emacs command, then the
 command is executed.  Otherwise, this function calls itself
 recursively to read yet another key from the user."
-  (setq key (vconcat key (vector (read-key (devil--make-prompt key)))))
+  (setq key (vconcat key (vector (read-event (devil--make-prompt key)))))
   (unless (devil--run-command key)
     (devil--read-key key)))
 

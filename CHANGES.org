@@ -24,6 +24,11 @@
 
 - Fix key translation when the Devil key is a key vector, e.g., =(kbd
   "<left>")=
+- Fix key translation of key sequences involving function keys, e.g.,
+  =, <tab>=, =, <backspace>=, etc.  For example, earlier =, <tab>=
+  translated to =C-TAB= and caused "undefined" error even if there was
+  a command bound to =C-<tab>=.  With this fix, =, <tab>= is now
+  translated to =C-<tab>= and invokes the command bound to it, if any.
 
 
 ** 0.3.0 (2023-05-11)
