@@ -126,6 +126,7 @@ keys."
         "%k m m f"
         "%k m m b"
         "%k m m y"
+        "%k m m ^"
         "%k x o")
   "Devil mode repeatable key sequences.
 

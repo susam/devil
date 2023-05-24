@@ -11,6 +11,7 @@
   Devil key sequences repeatable when set to =t=.
 - Add =, s= to the default list of repeatable keys.
 - Add =, d= to the default list of repeatable keys.
+- Add =, m m ^= to the default list of repeatable keys.
 
 *** Changed
 
