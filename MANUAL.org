@@ -66,15 +66,22 @@ type a space, it is represented as =SPC=.
 :PROPERTIES:
 :CUSTOM_ID: install
 :END:
+Devil is available via [[https://elpa.nongnu.org/nongnu/devil.html][NonGNU ELPA]] and [[https://melpa.org/#/devil][MELPA]].  You may already have a
+preferred way of installing packages from ELPA/MELPA.  If so, install
+the package named =devil= to get Devil.  If you have Emacs 28 or a
+more recent version, it has NonGNU ELPA enabled by default, so you can
+install Devil quite easily with =M-x package-install RET devil RET=
+without having to perform any further steps.  However, for the sake of
+completeness, a few very different and basic ways of installing Devil
+is presented in the next few subsections.
 
 ** Install Interactively from MELPA
 :PROPERTIES:
 :CUSTOM_ID: install-interactively-from-melpa
 :END:
-Devil is available via [[https://melpa.org/][MELPA]].  You may already have a preferred way of
-installing packages from MELPA.  If so, install the package named
-=devil= to get Devil.  For the sake of completeness, here is a very
-basic way of installing Devil from MELPA:
+
+To install the latest version of Devil from MELPA, perform the
+following steps:
 
 1. Add the following to the Emacs initialization file (i.e.,
    =~/.emacs= or =~/.emacs.d/init.el= or =~/.config/emacs/init.el=):
@@ -85,8 +92,8 @@ basic way of installing Devil from MELPA:
      (package-initialize)
    #+end_src
 
-2. Start Emacs with the updated initialization file and then type
-   these commands:
+2. Start Emacs with the updated initialization file.  Then type these
+   commands:
 
    #+begin_example
      M-x package-refresh-contents RET

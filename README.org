@@ -2,6 +2,7 @@
 
 [[https://melpa.org/#/devil][file:https://melpa.org/packages/devil-badge.svg]]
 [[https://stable.melpa.org/#/devil][file:https://stable.melpa.org/packages/devil-badge.svg]]
+[[https:/elpa.nongnu.org/nongnu/devil.html][file:https://elpa.nongnu.org/nongnu/devil.svg]]
 [[https://mastodon.social/@susam][file:https://img.shields.io/badge/mastodon-%40susam-%2355f.svg]]
 
 Devil mode trades your comma key in exchange for a modifier-free
