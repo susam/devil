@@ -43,6 +43,7 @@ Read the [[https://susam.github.io/devil/][manual]] to learn how to install, use
 :PROPERTIES:
 :CUSTOM_ID: channels
 :END:
+
 The author of this project hangs out at the following places online:
 
 - Website: [[https://susam.net][susam.net]]
@@ -58,18 +59,24 @@ about this project.
 :PROPERTIES:
 :CUSTOM_ID: support
 :END:
+
 To report bugs, suggest improvements, or ask questions, [[https://github.com/susam/devil/issues][create issues]].
 
 ** Thanks
 :PROPERTIES:
 :CUSTOM_ID: thanks
 :END:
+
 Thanks to:
 
 - [[https://github.com/riscy][Chris Rayner]] for initial code review.
 - [[https://github.com/phikal][Philip Kaludercic]] for initial code review and patches.
 
 ** Reactions
+:PROPERTIES:
+:CUSTOM_ID: reactions
+:END:
+
 Some amusing reactions to this project collected from various corners
 of the world wide web:
 
@@ -98,6 +105,7 @@ Defiantly! -- [[https://www.reddit.com/r/emacs/comments/13aj99j/comment/jj98owf/
 :PROPERTIES:
 :CUSTOM_ID: more
 :END:
+
 See [[https://github.com/susam/emacs4cl][Emacs4CL]], a DIY quick-starter kit to set up Emacs for Common Lisp
 programming.
 
