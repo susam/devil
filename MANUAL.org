@@ -396,11 +396,11 @@ locally with =devil-mode=, then these features are not available.
 :CUSTOM_ID: custom-configuration-examples
 :END:
 In the examples presented below, the =(require 'devil)= calls may be
-omitted if Devil has been installed from MELPA.  There are appropriate
-autoloads in place in the Devil package that would ensure that it is
-loaded automatically on enabling Devil mode.  However, the =require=
-calls have been included in the examples below for the sake of
-completeness.
+omitted if Devil has been installed from a package archive like ELPA
+or MELPA.  There are appropriate autoloads in place in the Devil
+package that would ensure that it is loaded automatically on enabling
+Devil mode.  However, the =require= calls have been included in the
+examples below for the sake of completeness.
 
 ** Local Mode
 :PROPERTIES:
