@@ -69,6 +69,31 @@ Thanks to:
 - [[https://github.com/riscy][Chris Rayner]] for initial code review.
 - [[https://github.com/phikal][Philip Kaludercic]] for initial code review and patches.
 
+** Reactions
+Some amusing reactions to this project collected from various corners
+of the world wide web:
+
+#+begin_quote
+Every bit of this horrifies me, and I can't believe you've done it.
+Outstanding.  Well done! -- [[https://news.ycombinator.com/item?id=35953341][@kstrauser]]
+#+end_quote
+
+#+begin_quote
+This is insane.  I am going to try it immediately. -- [[https://news.ycombinator.com/item?id=35855621][@jrockway]]
+#+end_quote
+
+#+begin_quote
+Will defiantly check this out. -- [[https://www.reddit.com/r/emacs/comments/13aj99j/comment/jj94y35/][@strings]]
+#+end_quote
+
+#+begin_quote
+Defiantly! -- [[https://www.reddit.com/r/emacs/comments/13aj99j/comment/jj98owf/][@oantolin]]
+#+end_quote
+
+#+begin_quote
+😈 -- [[https://www.reddit.com/r/emacs/comments/13aj99j/comment/jj72ive/][@SequentialDesign]]
+#+end_quote
+
 ** More
 :PROPERTIES:
 :CUSTOM_ID: more

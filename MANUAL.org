@@ -677,3 +677,83 @@ differently:
 These differences could make Devil easier to use than God mode for
 some people but clumsy for other people.  It depends on one's tastes
 and preferences.
+
+* Frequently Asked Questions
+:PROPERTIES:
+:CUSTOM_ID: frequently-asked-questions
+:END:
+01. Why was the comma (=,=) chosen as the default Devil key?  Isn't
+    the semicolon (=;=) a better choice since it belongs to the home
+    row?
+
+    Opinions vary!  As the author and maintainer of this minor mode, I
+    made a choice to use the comma as the default Devil key.
+    Although, the semicolon belongs to the home row on most keyboards
+    and the comma does not, I find the vertical movement to reach the
+    comma key with the long finger more convenient than the horizontal
+    movement necessary to reach the semicolon with the little finger.
+
+    As a touch typist, my fingers rest on the eight home row keys when
+    idle.  The horizontal movement necessary to type the semicolon
+    leads to a significant angular movement of the wrist.  Curling the
+    long finger to reach the comma key avoids this angular movement,
+    at least for me.
+
+    It is quite easy to customise the Devil key to be the semicolon or
+    any other key of your choice.  See the section [[*Custom Devil Key]]
+    to learn how to do this.
+
+02. I am happy with typing =, ,= every time, I need to type a comma.
+    Can I free up =, SPC= to invoke =set-mark-command=?
+
+    Yes, see the section [[*Reclaim , SPC to Set Mark]] to find out how to
+    do this.
+
+03. Can I make the Devil key sticky, i.e., can I type =, x f= instead
+    of =, x , f= to invoke =C-x C-f=?
+
+    Devil does not support sticky keys.  Say, Devil were to translate
+    =, x f= to =C-x C-f=, how then would you invoke =C-x f=?  We need
+    some way to disambiguate between =C-x C-f= and =C-x f=.  Different
+    tools take different approaches to disambiguate the two key
+    sequences.  For example, god-mode translates =x f= to =C-x C-f=
+    and =x SPC f= to =C-x f=.  That is, God-mode treats the =C-=
+    modifier as sticky by default but when we want to make it
+    non-sticky, we need to type =SPC= in god-mode.
+
+    Devil treats the Devil key as non-sticky, so that there is no need
+    for additional peculiar rules to switch between sticky and
+    non-sticky behaviour to disambiguate key sequences like =C-x C-f=
+    and =C-x f=.  With Devil =, x , f= translates to =C-x C-f= and
+    similarly =, x f= translates to =C-x f=.  The translation rules
+    are simpler at the cost of a little additional typing.  In most
+    cases, Devil requires typing an additional comma that one might
+    have avoided if the comma were sticky.  This little additional
+    typing becomes muscle memory in no time.
+
+04. Are there some things that are easier to do with Devil than
+    god-mode?
+
+    Devil is not necessarily easier than god-mode.  It is different.
+    Preferences vary, so some may find Devil easier to use while some
+    others may find god-mode easier to use.  See the section
+    [[*Comparison with God Mode]] for more details on the differences
+    between the two modes.
+
+* Conclusion
+:PROPERTIES:
+:CUSTOM_ID: conclusion
+:END:
+Devil is a minor mode to translate key sequences.  Devil utilizes this
+translation capability to provide a modifier-free editing experience
+and it does so without resorting to modal-editing.  Devil retains the
+non-modal editing of vanilla Emacs as much as possible.  This mode was
+written as a quirky experiment to make it easier to use Emacs with
+only one =ctrl= key.  However, the resulting mode turned out to be
+quite convenient to use, in general.  You might find Devil
+comfortable.  Or you might find Devil to be a terrible idea.  It is
+also possible that you might find Devil useful but intrusive.  In such
+cases, there are plenty of customisable options that you can modify to
+configure Devil according to your preferences.  If you need any help
+or if you find any issues, please create an issue at
+[[https://github.com/susam/devil/issues]].
