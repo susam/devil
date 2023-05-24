@@ -4,7 +4,7 @@
 
 ;; Author: Susam Pal <susam@susam.net>
 ;; Maintainer: Susam Pal <susam@susam.net>
-;; Version: 0.4.0.pre2
+;; Version: 0.4.0.pre3
 ;; Package-Requires: ((emacs "24.4"))
 ;; Keywords: convenience, abbrev
 ;; URL: https://github.com/susam/devil
@@ -120,6 +120,7 @@ keys."
         "%k f"
         "%k b"
         "%k k"
+        "%k s"
         "%k /"
         "%k m m f"
         "%k m m b"

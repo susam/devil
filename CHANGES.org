@@ -7,7 +7,9 @@
 
 *** Added
 
-- Add customisable variable =devil-all-keys-repeatable=.
+- Add customisable variable =devil-all-keys-repeatable= that makes all
+  Devil key sequences repeatable when set to =t=.
+- Add =, s= to the default list of repeatable keys.
 
 *** Changed
 
