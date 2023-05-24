@@ -10,6 +10,7 @@
 - Add customisable variable =devil-all-keys-repeatable= that makes all
   Devil key sequences repeatable when set to =t=.
 - Add =, s= to the default list of repeatable keys.
+- Add =, d= to the default list of repeatable keys.
 
 *** Changed
 
