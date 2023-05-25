@@ -309,7 +309,7 @@ the special keys, translation rules, or repeat rules, each =%k= is
 replaced with the actual value of =devil-key= before applying the
 rules.
 
-** Translation Mechanism
+* Translation Mechanism
 :PROPERTIES:
 :CUSTOM_ID: translation-mechanism
 :END:
@@ -402,16 +402,16 @@ we get the following effect:
   mechanism, i.e., =, z ,= translates to =C-,= and similarly within a
   Devil key sequence =m z m= translates to =M-m=.
 
-*Gentle guide to adopting these key sequences:* The above table pretty
-much summarizes the default translation rules.  For beginners using
-Devil, it is not necessary to memorize all of them right away.
-Understanding that =,= translates to =C-= and =m= translates to =M-=
-is sufficient to begin.  Subsequently, learning that =, m m= also
-translates to =M-= unlocks several more key sequences like =, m m x=
-(=M-x=), =, m m f= (=M-f=), etc.  As you encounter more key sequences
-that are not covered by these initial rules, revisit the table to pick
-up new translation rules and adopt them in your day-to-day usage of
-Devil.
+Here is a gentle guide to adopting these key sequences: The above
+table pretty much summarizes the default translation rules.  For
+beginners using Devil, it is not necessary to memorize all of them
+right away.  Understanding that =,= translates to =C-= and =m=
+translates to =M-= is sufficient to begin.  Subsequently, learning
+that =, m m= too translates to =M-= unlocks several more key sequences
+like =, m m x= (=M-x=), =, m m f= (=M-f=), etc.  As you encounter more
+key sequences that are not covered by these initial rules, revisit the
+table to pick up new translation rules and adopt them in your
+day-to-day usage of Devil.
 
 * Bonus Key Bindings
 :PROPERTIES:
