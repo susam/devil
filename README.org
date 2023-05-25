@@ -24,7 +24,7 @@ that whispers wicked secrets into your fingertips!
 
 By default, Devil mode rebinds the comma key to activate Devil.  Once
 activated, Devil reads a so-called Devil key sequence from you.  As
-you type your Devil key sequence, Emacs translates the key sequence to
+you type your Devil key sequence, Devil translates the key sequence to
 a regular Emacs key sequence.  If any command is bound to the
 translated Emacs key sequence, Devil runs that command and then
 deactivates itself.

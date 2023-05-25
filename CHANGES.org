@@ -12,6 +12,9 @@
 - Add =, s= to the default list of repeatable keys.
 - Add =, d= to the default list of repeatable keys.
 - Add =, m m ^= to the default list of repeatable keys.
+- Translate =m m= to =m= to support typing key sequences like =C-c m=.
+- Translate =m z= to =M-= to support typing key sequences like =C-c
+  M-m= and =C-M-m=.
 
 *** Changed
 

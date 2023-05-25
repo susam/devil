@@ -309,9 +309,9 @@ the special keys, translation rules, or repeat rules, each =%k= is
 replaced with the actual value of =devil-key= before applying the
 rules.
 
-* Translation Rules
+** Translation Mechanism
 :PROPERTIES:
-:CUSTOM_ID: translation-rules
+:CUSTOM_ID: translation-mechanism
 :END:
 The following points provide an account of the translation rules that
 Devil follows in order to convert a Devil key sequence entered by the
@@ -346,33 +346,72 @@ user to an Emacs key sequence:
    to the previous points and then the result is translated to
    =C-M-S-v= according to this point.
 
-* Translation Examples
+* Default Translation Rules
 :PROPERTIES:
-:CUSTOM_ID: translation-examples
+:CUSTOM_ID: default-translation-rules
 :END:
 By default, Devil supports a small but peculiar set of translation
 rules that can be used to avoid modifier keys while typing various
 types of key sequences.  See =C-h v devil-translations RET= for the
 translation rules.  Here are some examples that demonstrate the
-default translation rules.  The obvious ones are shown first first.
-The more peculiar translations come later in the table.
+default translation rules.  The obvious ones are shown first.  The
+more peculiar translations come later in the table.  The concluding
+paragraph of this subsection offers a guide on how to gradually and
+gently adopt these key sequences into your daily routine.
 
-| Input     | Translated | Remarks                           |
-|-----------+------------+-----------------------------------|
-| =, s=     | =C-s=      | =,= is replaced with =C-=         |
-| =, m s=   | =C-M-s=    | =m= is replaced with =M-=         |
-| =, z s=   | =C-SPC=    | =, z= is replaced with =C-= too   |
-| =, z z=   | =C-z=      | ditto                             |
-| =, m m x= | =M-x=      | =, m m= is replaced with =M-= too |
-| =, c , ,= | =C-c ,=    | =, ,= is replaced with =,=        |
+| Input       | Translated | Remarks                           |
+|-------------+------------+-----------------------------------|
+| =, s=       | =C-s=      | =,= is replaced with =C-=         |
+| =, m s=     | =C-M-s=    | =m= is replaced with =M-=         |
+| =, z SPC=   | =C-SPC=    | =, z= is replaced with =C-= too   |
+| =, z z=     | =C-z=      | ditto                             |
+| =, z ,=     | =C-,=      | ditto                             |
+| =, c m m=   | =C-c m=    | =m m= is replaced with =m=        |
+| =, c m z m= | =C-c M-m=  | =m z= is replaced with =M-= too   |
+| =, m z m=   | =C-M-m=    | ditto                             |
+| =, m m x=   | =M-x=      | =, m m= is replaced with =M-= too |
+| =, c , ,=   | =C-c ,=    | =, ,= is replaced with =,=        |
 
 Note how we cannot use =, SPC= to set a mark because that key sequence
-is already reserved as a special key sequence in =devil-special-keys=,
-so Devil translates =, z= to =C-= too, so that we can still type
-=C-SPC= using =, z s= and set a mark.
+is already reserved as a special key sequence in =devil-special-keys=.
+In order to conveniently set a mark, Devil translates =, z= to =C-=
+too, so that we can still type =C-SPC= using =, z SPC= and set a mark.
 
 Also, note how the translation of =, m m= to =M-= allows us to enter a
 key sequence that begins with the =M-= modifier key.
+
+The default translation examples presented in the table above look
+weirder and weirder as we go down the table.  But the default
+translation rules are not as arbitrary as they might initially appear
+to be.  The translation rules are arranged in such a way that overall,
+we get the following effect:
+
+- In a Devil key sequence, we see that the special character =,=
+  translates to =C-= and similarly =m= translates to =M-= according to
+  the default translation rules.
+
+- If we really want the Devil key sequence to translate to an actual
+  =,= or =m=, then we need to double type the special character, i.e.,
+  in a Devil key sequence, we see that =, ,= translates to =,= and =m
+  m= translates to =m=.  Doubling the special character serves as an
+  escape mechanism to avoid the special meaning of the character and
+  get the literal form of the character instead.
+
+- Now since =, ,= translates to =,= we need another escape mechanism
+  to type =C-,=.  Putting =z= in between serves as this escape
+  mechanism, i.e., =, z ,= translates to =C-,= and similarly within a
+  Devil key sequence =m z m= translates to =M-m=.
+
+*Gentle guide to adopting these key sequences:* The above table pretty
+much summarizes the default translation rules.  For beginners using
+Devil, it is not necessary to memorize all of them right away.
+Understanding that =,= translates to =C-= and =m= translates to =M-=
+is sufficient to begin.  Subsequently, learning that =, m m= also
+translates to =M-= unlocks several more key sequences like =, m m x=
+(=M-x=), =, m m f= (=M-f=), etc.  As you encounter more key sequences
+that are not covered by these initial rules, revisit the table to pick
+up new translation rules and adopt them in your day-to-day usage of
+Devil.
 
 * Bonus Key Bindings
 :PROPERTIES:

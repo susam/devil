@@ -4,7 +4,7 @@
 
 ;; Author: Susam Pal <susam@susam.net>
 ;; Maintainer: Susam Pal <susam@susam.net>
-;; Version: 0.4.0.pre4
+;; Version: 0.4.0.pre5
 ;; Package-Requires: ((emacs "24.4"))
 ;; Keywords: convenience, abbrev
 ;; URL: https://github.com/susam/devil
@@ -99,6 +99,8 @@ represent `key-description' of `devil-key' in the keys.")
   (list (cons "%k z" "C-")
         (cons "%k %k" "%k")
         (cons "%k m m" "M-")
+        (cons "m z" "M-")
+        (cons "m m" "m")
         (cons "%k"  "C-")
         (cons "m" "M-"))
   "Translation rules to convert Devil input to Emacs key sequence.
