@@ -313,12 +313,12 @@ rules.
 :PROPERTIES:
 :CUSTOM_ID: translation-mechanism
 :END:
-The following points provide an account of the translation rules that
-Devil follows in order to convert a Devil key sequence entered by the
-user to an Emacs key sequence:
+The following points provide an account of the translation mechanism
+that Devil uses in order to convert a Devil key sequence entered by
+the user to an Emacs key sequence:
 
 1. The input key vector read from the user is converted to a key
-   description (i.e., the string produced by functions like
+   description (like the string produced by functions like
    =describe-key= and =key-description=).  For example, if the user
    types =,x,f,= it is converted to =, x , f=.
 
@@ -363,19 +363,20 @@ gently adopt these key sequences into your daily routine.
 |-------------+------------+-----------------------------------|
 | =, s=       | =C-s=      | =,= is replaced with =C-=         |
 | =, m s=     | =C-M-s=    | =m= is replaced with =M-=         |
+| =, m m x=   | =M-x=      | =, m m= is replaced with =M-= too |
+| =, c , ,=   | =C-c ,=    | =, ,= is replaced with =,=        |
+| =, c m m=   | =C-c m=    | =m m= is replaced with =m=        |
 | =, z SPC=   | =C-SPC=    | =, z= is replaced with =C-= too   |
 | =, z z=     | =C-z=      | ditto                             |
 | =, z ,=     | =C-,=      | ditto                             |
-| =, c m m=   | =C-c m=    | =m m= is replaced with =m=        |
 | =, c m z m= | =C-c M-m=  | =m z= is replaced with =M-= too   |
 | =, m z m=   | =C-M-m=    | ditto                             |
-| =, m m x=   | =M-x=      | =, m m= is replaced with =M-= too |
-| =, c , ,=   | =C-c ,=    | =, ,= is replaced with =,=        |
 
 Note how we cannot use =, SPC= to set a mark because that key sequence
 is already reserved as a special key sequence in =devil-special-keys=.
 In order to conveniently set a mark, Devil translates =, z= to =C-=
-too, so that we can still type =C-SPC= using =, z SPC= and set a mark.
+too, so that we can type =, z SPC= and have Devil translate it to
+=C-SPC=.
 
 Also, note how the translation of =, m m= to =M-= allows us to enter a
 key sequence that begins with the =M-= modifier key.
@@ -383,8 +384,8 @@ key sequence that begins with the =M-= modifier key.
 The default translation examples presented in the table above look
 weirder and weirder as we go down the table.  But the default
 translation rules are not as arbitrary as they might initially appear
-to be.  The translation rules are arranged in such a way that overall,
-we get the following effect:
+to be.  The default translation rules are arranged in such a way that
+overall, we get the following effect:
 
 - In a Devil key sequence, we see that the special character =,=
   translates to =C-= and similarly =m= translates to =M-= according to
@@ -399,19 +400,18 @@ we get the following effect:
 
 - Now since =, ,= translates to =,= we need another escape mechanism
   to type =C-,=.  Putting =z= in between serves as this escape
-  mechanism, i.e., =, z ,= translates to =C-,= and similarly within a
-  Devil key sequence =m z m= translates to =M-m=.
+  mechanism, i.e., within a Devil key sequence =, z ,= translates to
+  =C-,= and similarly =m z m= translates to =M-m=.
 
-Here is a gentle guide to adopting these key sequences: The above
-table pretty much summarizes the default translation rules.  For
-beginners using Devil, it is not necessary to memorize all of them
-right away.  Understanding that =,= translates to =C-= and =m=
-translates to =M-= is sufficient to begin.  Subsequently, learning
-that =, m m= too translates to =M-= unlocks several more key sequences
-like =, m m x= (=M-x=), =, m m f= (=M-f=), etc.  As you encounter more
-key sequences that are not covered by these initial rules, revisit the
-table to pick up new translation rules and adopt them in your
-day-to-day usage of Devil.
+Here is a gentle guide to adopting these key sequences: For beginners
+using Devil, it is not necessary to memorize all of them right away.
+Understanding that =,= translates to =C-= and =m= translates to =M-=
+is sufficient to begin.  Subsequently, learning that =, m m= too
+translates to =M-= unlocks several more key sequences like =, m m x=
+(=M-x=), =, m m f= (=M-f=), etc.  As you encounter more key sequences
+that are not covered by these initial rules, revisit the above table
+to pick up new translation rules and adopt them in your day-to-day
+usage of Devil.
 
 * Bonus Key Bindings
 :PROPERTIES:
@@ -489,9 +489,8 @@ Instead, the default translation rules offer =, z SPC= as a way to set
 mark.
 
 If you would rather set mark using =, SPC= and you are happy with the
-special key =, ,= alone to insert a literal comma and you are also
-okay with typing comma twice everytime you want to insert a literal
-comma, then use the following configuration:
+special key =, ,= alone to insert a literal comma, then use the
+following configuration:
 
 #+begin_src elisp
   (require 'devil)
@@ -734,19 +733,19 @@ and preferences.
 
     As a touch typist, my fingers rest on the eight home row keys when
     idle.  The horizontal movement necessary to type the semicolon
-    leads to a significant angular movement of the wrist.  Curling the
-    long finger to reach the comma key avoids this angular movement,
-    at least for me.
-
-    It is quite easy to customise the Devil key to be the semicolon or
-    any other key of your choice.  See the section [[*Custom Devil Key]]
-    to learn how to do this.
+    leads to a significant angular movement of the wrist.  Curling my
+    long finger to reach the comma key helps me avoid this wrist
+    strain.  If you do not like this default, it is quite easy to
+    customise the Devil key to be the semicolon or any other key of
+    your choice.  See the section [[*Custom Devil Key]] to learn how to do
+    this.
 
 02. I am happy with typing =, ,= every time, I need to type a comma.
     Can I free up =, SPC= to invoke =set-mark-command=?
 
-    Yes, see the section [[*Reclaim , SPC to Set Mark]] to find out how to
-    do this.
+    Yes, this can be done by updating =devil-special-keys= to define
+    only =, ,= as a special key and removing the rest.  See the
+    section [[*Reclaim , SPC to Set Mark]] to find out how to do this.
 
 03. Can I make the Devil key sticky, i.e., can I type =, x f= instead
     of =, x , f= to invoke =C-x C-f=?

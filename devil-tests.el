@@ -83,14 +83,14 @@
   ;; Translations provided in the manual as examples.
   (should (string= (devil-translate (vconcat ",s")) "C-s"))
   (should (string= (devil-translate (vconcat ",ms")) "C-M-s"))
+  (should (string= (devil-translate (vconcat ",mmx")) "M-x"))
+  (should (string= (devil-translate (vconcat ",c,,")) "C-c ,"))
+  (should (string= (devil-translate (vconcat ",cmm")) "C-c m"))
   (should (string= (devil-translate (vconcat ",z ")) "C-SPC"))
   (should (string= (devil-translate (vconcat ",zz")) "C-z"))
   (should (string= (devil-translate (vconcat ",z,")) "C-,"))
-  (should (string= (devil-translate (vconcat ",cmm")) "C-c m"))
   (should (string= (devil-translate (vconcat ",cmzm")) "C-c M-m"))
-  (should (string= (devil-translate (vconcat ",mzm")) "C-M-m"))
-  (should (string= (devil-translate (vconcat ",mmx")) "M-x"))
-  (should (string= (devil-translate (vconcat ",c,,")) "C-c ,")))
+  (should (string= (devil-translate (vconcat ",mzm")) "C-M-m")))
 
 (provide 'devil-tests)
 ;;; devil-tests.el ends here
