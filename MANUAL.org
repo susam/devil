@@ -632,8 +632,8 @@ does?  Or if it is so important to avoid modifier keys, why not use
 something like God mode or Evil mode?
 
 Well, for one, both God mode and Evil mode are modal editing modes.
-Devil, on the other hand, provides a modeless editing experience of
-Emacs as possible.
+Devil, on the other hand, retains the non-modal editing experience of
+Emacs as much as possible.
 
 Devil mode began as a fun little tiny experiment.  From the outset, it
 was clear that using something as crucial as the comma for specifying
@@ -672,10 +672,10 @@ does not have a hard separation between insert mode and command mode
 like God mode has.  Instead, Devil waits for an activation key (=,= by
 default) and as soon as it is activated, it intercepts and translates
 keys, runs the corresponding command, and then gets out of the way.
-So Devil tries to retain the modeless editing experience of vanilla
+So Devil tries to retain the non-modal editing experience of vanilla
 Emacs as much as possible.
 
-Now it is worth mentioning that some of this modeless editing
+Now it is worth mentioning that some of this non-modal editing
 experience can be reproduced in god-mode too using its
 =god-execute-with-current-bindings= function.  Here is an example:
 
@@ -685,8 +685,8 @@ experience can be reproduced in god-mode too using its
 
 With this configuration, God mode translates =, x f= to =C-x C-f=.
 Similarly =, g x= invokes =M-x= and =, G s= invokes =C-M-x=.  This
-provides a modeless editing experience in God mode too.  However, this
-experience does not extend seamlessly to minibuffers.  Devil does
+provides a non-modal editing experience in God mode too.  However,
+this experience does not extend seamlessly to minibuffers.  Devil does
 extend its Devil key translation to minibuffers.
 
 Further note that in God mode the =ctrl= modifier has sticky
@@ -705,7 +705,7 @@ translates to =C-x f=.
 To summarize, there are primarily three things that Devil does
 differently:
 
-- Provide a modeless editing experience from the outset.
+- Provide a non-modal editing experience from the outset.
 - Seamlessly extend the same editing experience to minibuffer,
   incremental search, etc.
 - Translate key sequences using string replacements.  This allows for
