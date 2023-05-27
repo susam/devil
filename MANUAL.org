@@ -17,9 +17,9 @@ it?  If it were any more rational, we might call it something divine,
 like, uh, the God mode?  But alas, there is nothing divine to be found
 here.  Welcome, instead, to the realm of the Devil!  You will be
 granted the occasional use of the comma key for punctuation, but only
-if you can charm the Devil!  But beware, for in this sinister domain,
+if you can charm the Devil.  But beware, for in this sinister domain,
 you must relinquish your comma key and embrace an editing experience
-that whispers wicked secrets into your fingertips!
+that whispers wicked secrets into your fingertips.
 
 * Introduction
 :PROPERTIES:
@@ -35,7 +35,7 @@ The choice of the comma key (=,=) to mean the control modifier key
 punctuation both in prose as well as in code.  Can we really get away
 with using =,= to mean the =C-= modifier?  It turns out, this terrible
 idea can be made to work without too much of a hassle.  At least it
-works for me!  It might work for you too.  If it does not, Devil can
+works for me.  It might work for you too.  If it does not, Devil can
 be configured to use another key instead of =,= to mean the =C-=
 modifier.  See the section [[*Custom Devil Key]] for an example.
 
@@ -43,9 +43,9 @@ A sceptical reader may rightfully ask: If =,= is translated to =C-=,
 how on earth are we going to insert a literal =,= into the text when
 we need to?  The section [[*Typing Commas]] answers this.  But before we
 get there, we have some fundamentals to cover.  Take the plunge and
-see what unfolds!  Maybe you will like this!  Maybe you will not!  If
+see what unfolds.  Maybe you will like this.  Maybe you will not.  If
 you do not like this, you can always retreat to God mode, Evil mode,
-the vanilla key bindings, or whatever piques your fancy!
+the vanilla key bindings, or whatever piques your fancy.
 
 * Notation
 :PROPERTIES:
@@ -725,7 +725,7 @@ and preferences.
     the semicolon (=;=) a better choice since it belongs to the home
     row?
 
-    Opinions vary!  As the author and maintainer of this minor mode, I
+    Opinions vary.  As the author and maintainer of this minor mode, I
     made a choice to use the comma as the default Devil key.
     Although, the semicolon belongs to the home row on most keyboards
     and the comma does not, I find the vertical movement to reach the
