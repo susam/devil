@@ -1,6 +1,8 @@
+#+options: num:nil
+
 * Changelog
 
-** 0.4.0 (UNRELEASED)
+** Version 0.4.0 (2023-05-27)
 :PROPERTIES:
 :CUSTOM_ID: 0.4.0
 :END:
@@ -34,7 +36,7 @@
   translated to =C-<tab>= and invokes the command bound to it, if any.
 
 
-** 0.3.0 (2023-05-11)
+** Version 0.3.0 (2023-05-11)
 :PROPERTIES:
 :CUSTOM_ID: 0.3.0
 :END:
@@ -53,7 +55,7 @@
 - Remove =devil-version= and =devil-show-version=.
 
 
-** 0.2.0 (2023-05-09)
+** Version 0.2.0 (2023-05-09)
 :PROPERTIES:
 :CUSTOM_ID: 0.2.0
 :END:
@@ -80,7 +82,7 @@
   to =C-x C-f=.
 
 
-** 0.1.0 (2023-05-07)
+** Version 0.1.0 (2023-05-07)
 :PROPERTIES:
 :CUSTOM_ID: 0.1.0
 :END:
