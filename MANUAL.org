@@ -642,11 +642,12 @@ see how far I could go with it.  It turned out that in a matter of
 days, I was using it full-time for all of my Emacs usage.
 
 This experiment was partly motivated by Macbook keyboards which do not
-have a right =ctrl= key.  Being a touch-typist myself, I found it
-inconvenient to type key combinations like =C-x=, =C-a=, =C-w=, =C-s=,
-etc.  where both the modifier key and the modified key need to be
+have a =ctrl= key on the right side of the keyboard.  Being a
+touch-typist myself, I found it inconvenient to type key combinations
+like =C-x=, =C-s=, =C-r=, =C-d=, =C=f=, =C-w=, =C-a=, =C-e=,
+etc. where both the modifier key and the modified key need to be
 pressed with the left hand fingers.  I am not particularly fond of
-remapping caps lock to behave like =ctrl= because that still suffers
+remapping =caps lock= to behave like =ctrl= because that still suffers
 from the problem that key combinations like =C-x=, =C-a= require
 pressing both the modifier key and the modified key with the left hand
 fingers.  I know many people remap both their =caps lock= and =enter=
@@ -657,9 +658,9 @@ seamlessly across all the various operating systems I work on.
 What began as a tiny whimsical experiment a few years ago turned out
 to be quite effective, at least to me.  I like that this solution is
 implemented purely as Elisp and therefore does not have any external
-dependency.  I am sharing this solution here in the form of a minor
-mode, just in case, there is someone out there who might find this
-useful too.
+dependency.  I am sharing this solution in the form of a minor mode,
+just in case, there is someone out there who might find this useful
+too.
 
 * Comparison with God Mode
 :PROPERTIES:
@@ -744,8 +745,8 @@ and preferences.
     Can I free up =, SPC= to invoke =set-mark-command=?
 
     Yes, this can be done by updating =devil-special-keys= to define
-    only =, ,= as a special key and removing the rest.  See the
-    section [[*Reclaim , SPC to Set Mark]] to find out how to do this.
+    only =, ,= as a special key and remove the rest.  See the section
+    [[*Reclaim , SPC to Set Mark]] to find out how to do this.
 
 03. Can I make the Devil key sticky, i.e., can I type =, x f= instead
     of =, x , f= to invoke =C-x C-f=?
