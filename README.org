@@ -17,10 +17,17 @@ if you can charm the Devil.  But beware, for in this sinister domain,
 you must relinquish your comma key and embrace an editing experience
 that whispers wicked secrets into your fingertips.
 
-** Get Started
+** Introduction
 :PROPERTIES:
-:CUSTOM_ID: get-started
+:CUSTOM_ID: introduction
 :END:
+
+Devil is available in MELPA as well as NonGNU ELPA.  If you are using
+Emacs 28.1 or a more recent version of Emacs, you can get the latest
+stable version of Devil by typing =M-x package-install RET devil RET=.
+Otherwise, you need to add MELPA or NonGNU ELPA to your list of
+package archives and then install MELPA.  More details on the
+installation procedure is provided in the [[https://susam.github.io/devil/][manual]].
 
 By default, Devil mode rebinds the comma key to activate Devil.  Once
 activated, Devil reads a so-called Devil key sequence from you.  As

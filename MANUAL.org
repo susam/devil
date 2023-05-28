@@ -68,7 +68,7 @@ type a space, it is represented as =SPC=.
 :END:
 Devil is available via [[https://elpa.nongnu.org/nongnu/devil.html][NonGNU ELPA]] and [[https://melpa.org/#/devil][MELPA]].  You may already have a
 preferred way of installing packages from ELPA/MELPA.  If so, install
-the package named =devil= to get Devil.  If you have Emacs 28 or a
+the package named =devil= to get Devil.  If you have Emacs 28.1 or a
 more recent version, it has NonGNU ELPA enabled by default, so you can
 install Devil quite easily with =M-x package-install RET devil RET=
 without having to perform any further steps.  However, for the sake of
