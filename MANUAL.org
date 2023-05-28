@@ -79,7 +79,6 @@ are presented in the next few subsections.
 :PROPERTIES:
 :CUSTOM_ID: install-interactively-from-melpa
 :END:
-
 To install the latest version of Devil from MELPA, perform the
 following steps:
 
@@ -495,6 +494,7 @@ following configuration:
 #+begin_src elisp
   (require 'devil)
   (global-devil-mode)
+  (global-set-key (kbd "C-,") 'global-devil-mode)
   (setq devil-special-keys '(("%k %k" . (lambda () (interactive) (devil-run-key "%k")))))
 #+end_src
 
@@ -510,10 +510,10 @@ The following initialization code shows how we can customise Devil to
 use a different Devil key.
 
 #+begin_src elisp
-  (defvar devil-key ";")
   (require 'devil)
   (global-devil-mode)
   (global-set-key (kbd "C-;") 'global-devil-mode)
+  (devil-set-key (kbd ";"))
 #+end_src
 
 The above example sets the Devil key to the semicolon, perhaps another
@@ -528,11 +528,11 @@ The following initialization code shows how we can customise Devil to
 use yet another different Devil key.
 
 #+begin_src elisp
-  (defvar devil-key (kbd "<left>"))
-  (defvar devil-special-keys '(("%k %k" . left-char)))
   (require 'devil)
   (global-devil-mode)
   (global-set-key (kbd "C-<left>") 'global-devil-mode)
+  (devil-set-key (kbd "<left>"))
+  (setq devil-special-keys '(("%k %k" . left-char)))
 #+end_src
 
 The above example sets the Devil key to the left arrow key.  With this
@@ -560,17 +560,13 @@ starting point and then customise it further based on your
 requirements:
 
 #+begin_src elisp
-(defvar devil-mode-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd ",") #'devil)
-    (define-key map (kbd ".") #'devil)
-    map))
-(defvar devil-special-keys '((", ," . (lambda () (insert ",")))
+  (require 'devil)
+  (global-devil-mode)
+  (define-key devil-mode-map (kbd ".") #'devil)
+  (setq devil-special-keys '((", ," . (lambda () (insert ",")))
                              (". ." . (lambda () (insert ".")))))
-(defvar devil-translations '(("," . "C-")
+  (setq devil-translations '(("," . "C-")
                              ("." . "M-")))
-(require 'devil)
-(global-devil-mode)
 #+end_src
 
 With this configuration, we can type =, x , f= for =C-x C-f= like

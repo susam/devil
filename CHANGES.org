@@ -2,6 +2,20 @@
 
 * Changelog
 
+** Version 0.5.0 (UNRELEASED)
+:PROPERTIES:
+:CUSTOM_ID: 0.5.0
+:END:
+
+*** Added
+
+- Function =devil-set-key= to set a new Devil key and update the
+  mode's keymap.
+
+*** Changed
+
+- Customising =devil-key= also updates the mode's keymap.
+
 ** Version 0.4.0 (2023-05-27)
 :PROPERTIES:
 :CUSTOM_ID: 0.4.0
@@ -9,11 +23,11 @@
 
 *** Added
 
-- Add customisable variable =devil-all-keys-repeatable= that makes all
+- Customisable variable =devil-all-keys-repeatable= that makes all
   Devil key sequences repeatable when set to =t=.
-- Add =, s= to the default list of repeatable keys.
-- Add =, d= to the default list of repeatable keys.
-- Add =, m m ^= to the default list of repeatable keys.
+- Key =, s= to the default list of repeatable keys.
+- Key =, d= to the default list of repeatable keys.
+- Key =, m m ^= to the default list of repeatable keys.
 - Translate =m m= to =m= to support typing key sequences like =C-c m=.
 - Translate =m z= to =M-= to support typing key sequences like =C-c
   M-m= and =C-M-m=.
@@ -62,10 +76,10 @@
 
 *** Added
 
-- Add =, k= to the default list of repeatable keys.
-- Add =, /= to the default list of repeatable keys.
-- Add =, m m y= to the default list of repeatable keys.
-- Add command =devil-show-version= to display Devil version.
+- Key =, k= to the default list of repeatable keys.
+- Key =, /= to the default list of repeatable keys.
+- Key =, m m y= to the default list of repeatable keys.
+- Command =devil-show-version= to display Devil version.
 
 *** Changed
 
