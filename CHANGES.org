@@ -16,6 +16,11 @@
 
 - Customising =devil-key= also updates the mode's keymap.
 
+*** Fixed
+
+- Fix special key sequence =, <return>= which was broken by the
+  previous release of version 0.4.0.
+
 ** Version 0.4.0 (2023-05-27)
 :PROPERTIES:
 :CUSTOM_ID: 0.4.0
