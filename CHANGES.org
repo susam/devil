@@ -19,6 +19,13 @@
 *** Changed
 
 - Customising =devil-key= also updates the mode's keymap.
+- When no binding exists for the translated key sequence, convert the
+  key sequence to a fallback key sequence for terminal Emacs according
+  to =local-function-key-map= and execute any command bound to the
+  fallback key sequence.  For example, when the Devil key sequence =,
+  x <tab>= is converted to =C-x <tab>=, since no command is bound to
+  this key sequence, it is further translated to =C-x TAB= and the
+  command =indent-rigidly= bound to it is executed.
 
 *** Fixed
 

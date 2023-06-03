@@ -116,6 +116,7 @@ activated using the given KEY-SEQUENCE."
 (defvar devil-special-keys
   (list (cons "%k %k" (lambda () (interactive) (devil-run-key "%k")))
         (cons "%k SPC" (lambda () (interactive) (devil-run-key "%k SPC")))
+        (cons "%k RET" (lambda () (interactive) (devil-run-key "%k RET")))
         (cons "%k <return>" (lambda () (interactive) (devil-run-key "%k RET"))))
   "Special Devil keys that are executed as soon as they are typed.
 
@@ -225,8 +226,9 @@ buffer."
 (defun devil ()
   "Wake up Devil to read and translate Devil key sequences."
   (interactive)
-  (devil--log "Devil waking up")
-  (devil--read-key (this-command-keys)))
+  (devil--log "Devil awake")
+  (devil--read-key (this-command-keys))
+  (devil--log "Devil asleep"))
 
 (defun devil--read-key (key)
   "Read Devil key sequences.
@@ -280,10 +282,12 @@ returned.
 Otherwise, it is translated to an Emacs key sequence using
 `devil-translations'.  If the resulting Emacs key sequence is
 found to be a complete key sequence, the command it is bound to
-is executed interactively and t is returned.  If it is found to be
-an undefined key sequence, then t is returned.  If the resulting
-Emacs key sequence is found to be an incomplete key sequence,
-then nil is returned."
+is executed interactively and t is returned.  If it is found to
+be an undefined key sequence, then t is returned.  If the
+resulting Emacs key sequence is found to be an incomplete key
+sequence, then nil is returned.  The return value t indicates to
+the caller that no more Devil key sequences should be read from
+the user."
   (devil--log "Trying to execute key: %s" (key-description key))
   (or (devil--run-special-command key)
       (devil--run-regular-command key)))
@@ -312,9 +316,25 @@ corresponding Emacs command is executed, and t is returned.  If it
 turns out to be an undefined key sequence, t is returned.  The
 return value t indicates to the caller that no more Devil key
 sequences should be read from the user."
-  (let* ((described-key (key-description key))
-         (translated-key (devil-translate key))
-         (parsed-key (condition-case nil (kbd translated-key) (error nil)))
+  (let* ((description (key-description key))
+         (translation (devil-translate key))
+         (fallback (devil-fallback-key translation))
+         (result (devil--run-translation key description translation (not fallback))))
+    (if result
+        result
+      (when fallback
+        (devil--run-translation key description fallback t)))))
+
+(defun devil--run-translation (key described-key translated-key default)
+  "Try to run the given TRANSLATED-KEY.
+
+KEY is a vector that represents the original sequence of
+keystrokes from which DESCRIBED-KEY and TRANSLATED-KEY were
+derived.  If TRANSLATED-KEY is an incomplete key sequence, nil is
+returned.  If it is a complete key sequence, the Emacs command
+bound to it is executed, and t is returned.  If it is an
+undefined key sequence, DEFAULT is returned."
+  (let* ((parsed-key (ignore-errors (kbd translated-key)))
          (binding (when parsed-key (key-binding parsed-key))))
     (cond ((string-match "[ACHMSs]-$" translated-key)
            (devil--log "Ignoring incomplete key: %s => %s"
@@ -336,8 +356,9 @@ sequences should be read from the user."
            t)
           (t
            (devil--log "Undefined key: %s => %s" described-key translated-key)
-           (message "Devil: %s is undefined" translated-key)
-           t))))
+           (when default
+             (message "Devil: %s is undefined" translated-key))
+           default))))
 
 (defun devil-translate (key)
   "Translate a given Devil KEY to Emacs key sequence.
@@ -347,25 +368,49 @@ read so far."
   (setq key (key-description key))
   (let ((result "")
         (index 0))
+    ;; Scan Devil key from left to right.
     (while (< index (length key))
       (catch 'break
-        ;; Try translating the current position in Devil key to Emacs key.
+        ;; Try each translation at the current scan position.
         (dolist (entry devil-translations key)
           (let* ((from-key (devil-format (car entry)))
                  (to-key (devil-format (cdr entry)))
                  (in-key (substring key index))
                  (try-key))
             (when (string-prefix-p from-key in-key)
+              ;; Apply matching translation at the current scan position.
               (setq try-key (devil--clean-key (concat result to-key)))
               (unless (devil--invalid-key-p try-key)
+                ;; Translation succeeded.  Do not apply any more
+                ;; translation at the current scan position.  Instead
+                ;; move ahead to the next scan position.
                 (setq result try-key)
                 (setq index (+ index (length from-key)))
                 (throw 'break t)))))
-        ;; If no translation succeeded, advance current position.
+        ;; If no translation succeeded, increment scan position and
+        ;; try applying translations at the new scan position.
         (let ((char (substring key index (1+ index))))
           (setq result (devil--clean-key (concat result char))))
         (setq index (1+ index))))
     (devil--normalize-ctrl-uppercase-chord result)))
+
+(defun devil-fallback-key (translated-key)
+  "Translate TRANSLATED-KEY to an Emacs key sequence for terminal Emacs.
+
+The argument TRANSLATED-KEY is a string that represents an Emacs
+key sequence returned by `devil-translate'.  Each keystroke in
+the key sequence is looked up in `local-function-key-map'.  If a
+match is found, it is replaced with its corresponding binding."
+  (unless (devil--incomplete-key-p translated-key)
+    (let ((result ""))
+      (dolist (chunk (split-string translated-key " " t))
+        (let* ((separator (if (string= result "") "" " "))
+               (binding (lookup-key local-function-key-map (kbd chunk))))
+          (when (and binding (not (keymapp binding)))
+            (setq chunk (key-description binding)))
+          (setq result (concat result separator chunk))))
+      (when (not (member result (list "" translated-key)))
+        result))))
 
 (defun devil--update-command-loop-info (key binding)
   "Update variables that maintain command loop information.
@@ -437,6 +482,10 @@ this-command: %s; last-command: %s; last-repeatable-command: %s"
          (prefix (substring translated-key 0 hyphen-index))
          (suffix (substring translated-key hyphen-index)))
     (concat prefix "S-" (downcase suffix))))
+
+(defun devil--incomplete-key-p (translated-key)
+  "Return t iff TRANSLATED-KEY is an incomplete Emacs key sequence."
+  (string-match "[ACHMSs]-$" translated-key))
 
 (defun devil--invalid-key-p (translated-key)
   "Return t iff TRANSLATED-KEY is an invalid Emacs key sequence."
