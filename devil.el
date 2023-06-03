@@ -4,7 +4,7 @@
 
 ;; Author: Susam Pal <susam@susam.net>
 ;; Maintainer: Susam Pal <susam@susam.net>
-;; Version: 0.5.0-beta1
+;; Version: 0.5.0-beta2
 ;; Package-Requires: ((emacs "24.4"))
 ;; Keywords: convenience, abbrev
 ;; URL: https://github.com/susam/devil
@@ -227,8 +227,7 @@ buffer."
   "Wake up Devil to read and translate Devil key sequences."
   (interactive)
   (devil--log "Devil awake")
-  (devil--read-key (this-command-keys))
-  (devil--log "Devil asleep"))
+  (devil--read-key (this-command-keys)))
 
 (defun devil--read-key (key)
   "Read Devil key sequences.
