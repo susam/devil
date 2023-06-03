@@ -363,6 +363,7 @@ gently adopt these key sequences into your daily routine.
 | =, s=       | =C-s=      | =,= is replaced with =C-=         |
 | =, m s=     | =C-M-s=    | =m= is replaced with =M-=         |
 | =, m m x=   | =M-x=      | =, m m= is replaced with =M-= too |
+| =, [ x=     | =C-[ x=    | equivalent to =M-x=               |
 | =, c , ,=   | =C-c ,=    | =, ,= is replaced with =,=        |
 | =, c m m=   | =C-c m=    | =m m= is replaced with =m=        |
 | =, z SPC=   | =C-SPC=    | =, z= is replaced with =C-= too   |
@@ -378,7 +379,10 @@ too, so that we can type =, z SPC= and have Devil translate it to
 =C-SPC=.
 
 Also, note how the translation of =, m m= to =M-= allows us to enter a
-key sequence that begins with the =M-= modifier key.
+key sequence that begins with the =M-= modifier key.  Additionally,
+consider that =, [= is yet another way to type a key sequence that
+contains =M-= because =, [= translates to =C-[= and =C-[ <key>= is
+equivalent to =ESC <key>= which in turn is equivalent to =M-<key>=.
 
 The default translation examples presented in the table above look
 weirder and weirder as we go down the table.  But the default
