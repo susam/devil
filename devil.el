@@ -4,7 +4,7 @@
 
 ;; Author: Susam Pal <susam@susam.net>
 ;; Maintainer: Susam Pal <susam@susam.net>
-;; Version: 0.5.0.pre1
+;; Version: 0.5.0-beta1
 ;; Package-Requires: ((emacs "24.4"))
 ;; Keywords: convenience, abbrev
 ;; URL: https://github.com/susam/devil
@@ -43,6 +43,9 @@
   "Minor mode for translating key sequences."
   :prefix "devil-"
   :group 'editing)
+
+(defconst devil-version "0.5.0-beta1"
+  "Devil version string.")
 
 (defvar devil-mode-map (make-sparse-keymap)
   "Keymap for Devil mode.

@@ -11,6 +11,10 @@
 
 - Function =devil-set-key= to set a new Devil key and update the
   mode's keymap.
+- Reinstate variable =devil-version= since it is useful in determining
+  the source version conveniently.  It helps during troubleshooting
+  the package when installed from MELPA which sets the package version
+  to a version derived from the current date and time.
 
 *** Changed
 
