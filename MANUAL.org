@@ -224,6 +224,15 @@ Devil may be used:
 13. Type =, ,= to type a single comma.  This special key is useful for
     cases when you really need to type a single literal comma.
 
+14. Type =, h , k= to invoke =devil-describe-key=.  This is a special
+    key that invokes the Devil variant of =describe-key= included in
+    vanilla Emacs.  When the key input prompt appears, type the Devil
+    key sequence =, x , f= and Devil will display the documentation of
+    the function invoked by this Devil key sequence.  Note: The key
+    sequence =, h k= translates to =C-h k= and invokes the vanilla
+    =describe=key=.  It is the Devil key sequence =, h , k= that
+    invokes =devil-describe-key=.
+
 * Typing Commas
 :PROPERTIES:
 :CUSTOM_ID: typing-commas
@@ -416,6 +425,25 @@ that are not covered by these initial rules, revisit the above table
 to pick up new translation rules and adopt them in your day-to-day
 usage of Devil.
 
+* Describe Devil Key
+:PROPERTIES:
+:CUSTOM_ID: devil-describe-key
+:END:
+Devil offers a command named =devil-describe-key= that can be used to
+describe a Devil key sequence.  It works similarly to the
+=describe-key= command of vanilla Emacs that can be invoked with =C-h
+k=.  The =devil-describe-key= command can be invoked with the special
+key sequence =, h , k=.  Type =, h , k= and a prompt appears to read a
+key sequence.  Type any Devil key sequence, say, =, x , f= and Devil
+immediately shows the documentation for the function invoked by this
+key sequence.
+
+Note that =, x , f= (=devil-describe-key=) can also be used to look up
+documentation for vanilla Emacs key sequences like =C-x C-f=.
+
+Also note that the Devil key sequence is =, h k= is still free to
+invoke =C-h k= (=describe-key= of vanilla Emacs).
+
 * Bonus Key Bindings
 :PROPERTIES:
 :CUSTOM_ID: bonus-key-bindings
@@ -482,7 +510,7 @@ show a Devil smiley (😈) in the modeline and in the Devil prompt.
 
 ** Reclaim , SPC to Set Mark
 :PROPERTIES:
-:CUSTOM_ID: reclaim-comma-spc-to-set-mark
+:CUSTOM_ID: reclaim-comma-space-to-set-mark
 :END:
 The default configuration for special keys reserves =, SPC= to insert
 a literal comma followed by space.  This default makes it easy to type
@@ -491,20 +519,19 @@ translate to =C-SPC=.  Therefore =, SPC= cannot be used to set mark.
 Instead, the default translation rules offer =, z SPC= as a way to set
 mark.
 
-If you would rather set mark using =, SPC= and you are happy with the
-special key =, ,= alone to insert a literal comma, then use the
+If you would rather set mark using =, SPC= and you are happy with
+typing the special key =, ,= to insert a literal comma, then use the
 following configuration:
 
 #+begin_src elisp
   (require 'devil)
   (global-devil-mode)
   (global-set-key (kbd "C-,") 'global-devil-mode)
-  (setq devil-special-keys '(("%k %k" . (lambda () (interactive) (devil-run-key "%k")))))
+  (assoc-delete-all "%k SPC" devil-special-keys)
 #+end_src
 
-This reduces the number of special keys so that only =, ,= is treated
-as special.  All the other special key definitions (=, SPC= was one of
-them) are removed.  As a result, =, SPC= is now translated to =C-SPC=.
+This removes the special key =, SPC= from =devil-special-keys= so that
+it is now free to be translated to =C-SPC= and invoke =set-mark-command=.
 
 ** Custom Devil Key
 :PROPERTIES:
@@ -536,19 +563,18 @@ use yet another different Devil key.
   (global-devil-mode)
   (global-set-key (kbd "C-<left>") 'global-devil-mode)
   (devil-set-key (kbd "<left>"))
-  (setq devil-special-keys '(("%k %k" . left-char)))
+  (dolist (key '("%k SPC" "%k RET" "%k <return>"))
+    (assoc-delete-all key devil-special-keys))
 #+end_src
 
 The above example sets the Devil key to the left arrow key.  With this
 configuration, we can use =<left> x <left> f= and have Devil translate
-it to =C-x C-f=.
+it to =C-x C-f=.  We can type the special key =<left> <left>= to
+produce the same effect as the original =<left>=.
 
-Additionally, the above example defines the =devil-special-keys=
-variable to have a single entry that allows typing =<left> <left>= to
-produce the same effect as the original =<left>=.  It removes the
-other entries, so that =<left> SPC= is no longer reserved as a special
-key.  Thus =<left> SPC= can now be used to set a mark like one would
-normally expect.
+The above example removes some special keys that are no longer useful.
+In particular, =<left> SPC= is no longer reserved as a special key, so
+we can use it now to set a mark.
 
 ** Multiple Devil Keys
 :PROPERTIES:
@@ -567,16 +593,20 @@ requirements:
   (require 'devil)
   (global-devil-mode)
   (define-key devil-mode-map (kbd ".") #'devil)
-  (setq devil-special-keys '((", ," . (lambda () (insert ",")))
-                             (". ." . (lambda () (insert ".")))))
-  (setq devil-translations '(("," . "C-")
+  (add-to-list 'devil-special-keys `(". ." . ,(devil-key-executor ".")))
+  (setq devil-translations '((", z" . "C-")
+                             (". z" . "M-")
+                             (", ," . ",")
+                             (". ." . ".")
+                             ("," . "C-")
                              ("." . "M-")))
 #+end_src
 
 With this configuration, we can type =, x , f= for =C-x C-f= like
 before.  But now we can also type =. x= for =M-x=.  Similarly, we can
-type =, . s= for =C-M-s= and so on.  Further, =, ,= inserts a literal
-comma and =. .= inserts a literal dot.
+type =, . s= for =C-M-s= and so on.  Also =, ,= inserts a literal
+comma and =. .= inserts a literal dot.  Further we can type =, z ,= to
+get =C-,= and =. z .= to get =M-.=.
 
 Note that by default Devil configures only one activation key (=,=)
 because the more activation keys we add, the more intrusive Devil
@@ -744,9 +774,9 @@ and preferences.
 02. I am happy with typing =, ,= every time, I need to type a comma.
     Can I free up =, SPC= to invoke =set-mark-command=?
 
-    Yes, this can be done by updating =devil-special-keys= to define
-    only =, ,= as a special key and remove the rest.  See the section
-    [[*Reclaim , SPC to Set Mark]] to find out how to do this.
+    Yes, this can be done by removing the special key =, SPC= from
+    =devil-special-keys=.  See the section [[*Reclaim , SPC to Set Mark]]
+    to find out how to do this.
 
 03. Can I make the Devil key sticky, i.e., can I type =, x f= instead
     of =, x , f= to invoke =C-x C-f=?

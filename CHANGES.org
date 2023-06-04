@@ -15,6 +15,10 @@
   the source version conveniently.  It helps during troubleshooting
   the package when installed from MELPA which sets the package version
   to a version derived from the current date and time.
+- Command =devil-describe-key= to describe Devil key sequences.
+- Command =devil-toggle-logging= to toggle logging.
+- Special key =, h , k= to execute =devil-describe-key=.
+- Special key =, h , l= to execute =devil-toggle-logging=.
 
 *** Changed
 
@@ -26,6 +30,8 @@
   x <tab>= is converted to =C-x <tab>=, since no command is bound to
   this key sequence, it is further translated to =C-x TAB= and the
   command =indent-rigidly= bound to it is executed.
+- Format control sequence to show the Devil key sequence read by Devil
+  has changed from =%k= to =%r=.
 
 *** Fixed
 

@@ -39,12 +39,16 @@
 ;; translations.
 
 ;;; Code:
+
+
+;;; Customization ====================================================
+
 (defgroup devil '()
   "Minor mode for translating key sequences."
   :prefix "devil-"
   :group 'editing)
 
-(defconst devil-version "0.5.0-beta1"
+(defconst devil-version "0.5.0-beta2"
   "Devil version string.")
 
 (defvar devil-mode-map (make-sparse-keymap)
@@ -58,6 +62,12 @@ activate Devil.")
 (defcustom devil-logging nil
   "Non-nil iff Devil should print log messages."
   :type 'boolean)
+
+(defun devil-toggle-logging ()
+  "Toggle the value of `devil-logging'."
+  (interactive)
+  (setq devil-logging (not devil-logging))
+  (message "Devil: Logging %s" (if devil-logging "enabled" "disabled")))
 
 (defun devil--log (format-string &rest args)
   "Write log message with the given FORMAT-STRING and ARGS."
@@ -75,10 +85,6 @@ sequence given in VALUE activates Devil."
   (define-key devil-mode-map value #'devil)
   (devil--log "Keymap updated to %s" devil-mode-map))
 
-(defcustom devil-lighter " Devil"
-  "String displayed on the mode line when Devil mode is enabled."
-  :type 'string)
-
 (defcustom devil-key ","
   "The key sequence that begins Devil input.
 
@@ -90,41 +96,66 @@ updated value of this variable."
   :type 'key-sequence
   :set #'devil--custom-devil-key)
 
-(defun devil-set-key (key-sequence)
-  "Set `devil-key' to the given KEY-SEQUENCE and update `devil-mode-map'.
+(defun devil-set-key (key)
+  "Set `devil-key' to the given KEY and update `devil-mode-map'.
 
-This function clears existing key bindings in `devil-mode-map'
-and sets a single key binding in this keymap so that Devil can be
-activated using the given KEY-SEQUENCE."
-  (devil--custom-devil-key 'devil-key key-sequence))
+KEY is a string or vector that represents a sequence of
+keystrokes, e.g., `\",\"', `(kbd \"<left>\")', etc.  This
+function clears existing key bindings in `devil-mode-map' and
+sets a single key binding in this keymap so that Devil can be
+activated using the given KEY."
+  (devil--custom-devil-key 'devil-key key))
 
-;;;###autoload
-(define-minor-mode devil-mode
-  "Local minor mode to support Devil key sequences."
-  :lighter devil-lighter
-  (devil--log "Mode is %s in %s" devil-mode (buffer-name)))
+(defun devil-key-executor (key)
+  "Create a command to call `devil-execute-key' with KEY when invoked.
 
-;;;###autoload
-(define-globalized-minor-mode
-  global-devil-mode devil-mode devil--on
-  (if global-devil-mode (devil-add-extra-keys) (devil-remove-extra-keys)))
+KEY is a string in the format returned by commands such as `C-h
+k' (`describe-key').  Format control sequences supported by
+`devil-format' may be used in KEY.
 
-(defun devil--on ()
-  "Turn Devil mode on."
-  (devil-mode 1))
+This is a convenience function that returns an interactive lambda
+that may be used as a binding value for a special key defined in
+`devil-special-keys'.  When the lambda returned by this function
+is later invoked, it disables `devil-mode-map' temporarily and
+executes KEY as a keyboard macro."
+  (lambda ()
+    (interactive)
+    (devil-execute-key key)))
 
-(defvar devil-special-keys
-  (list (cons "%k %k" (lambda () (interactive) (devil-run-key "%k")))
-        (cons "%k SPC" (lambda () (interactive) (devil-run-key "%k SPC")))
-        (cons "%k RET" (lambda () (interactive) (devil-run-key "%k RET")))
-        (cons "%k <return>" (lambda () (interactive) (devil-run-key "%k RET"))))
+(defun devil-execute-key (key)
+  "Execute KEY with `devil-mode-map' temporarily disabled.
+
+KEY is a string in the format returned by commands such as `C-h
+k' (`describe-key').  Format control sequences supported by
+`devil-format' may be used in KEY."
+  (let ((keymap (cdr devil-mode-map))
+        (key (devil-format key)))
+    (setcdr devil-mode-map nil)
+    (devil--remove-extra-keys)
+    (devil--log "Disabling keymaps")
+    (unwind-protect
+        (progn
+          (devil--log "Executing kbd macro: %s => %s" key (key-binding key))
+          (execute-kbd-macro (kbd key)))
+      (devil--log "Enabling keymaps")
+      (setcdr devil-mode-map keymap)
+      (devil--add-extra-keys))))
+
+(defcustom devil-special-keys
+  (list (cons "%k %k" (devil-key-executor "%k"))
+        (cons "%k SPC" (devil-key-executor "%k SPC"))
+        (cons "%k RET" (devil-key-executor "%k RET"))
+        (cons "%k <return>" (devil-key-executor "%k <return>"))
+        (cons "%k h %k k" #'devil-describe-key)
+        (cons "%k h %k l" #'devil-toggle-logging))
   "Special Devil keys that are executed as soon as they are typed.
 
 The value of this variable is an alist where each key represents
-a Devil key sequence.  If a Devil key sequence matches any key in
-this alist, the function or lambda in the corresponding value is
-invoked.  The format control specifier `%k' may be used to
-represent `key-description' of `devil-key' in the keys.")
+a Devil key sequence.  If `key-description' of Devil key sequence
+matches any key in this alist, the function or lambda in the
+corresponding value is invoked.  Format control sequences
+supported by `devil-format' may be used in the keys."
+  :type '(alist :key-type string :value-type function))
 
 (defcustom devil-translations
   (list (cons "%k z" "C-")
@@ -137,14 +168,15 @@ represent `key-description' of `devil-key' in the keys.")
   "Translation rules to convert Devil input to Emacs key sequence.
 
 The value of this variable is an alist where each item represents
-a translation rule that is applied on the Devil key sequence read
-from the user to obtain the Emacs key sequence to be executed.
-The translation rules are applied in the sequence they occur in
-the alist.  For each rule, if the key occurs anywhere in the
-Devil key sequence, it is replaced with the corresponding value
-in the translation rule.  The format control specifier `%k' may
-be used to represent `key-description' of `devil-key' in the
-keys."
+a translation rule that is applied on the `key-description' of
+the Devil key sequence read from the user in order to obtain the
+Emacs key sequence to be executed.  The translation rules are
+applied in the sequence they occur in the alist.  For each rule,
+if the key occurs anywhere in the Devil key sequence, it is
+replaced with the corresponding value in the translation rule.
+However, if a replacement leads to an invalid key sequence, then
+that replacement is skipped.  Format control sequences supported
+by `devil-format' may be used in the keys and values."
   :type '(alist :key-type string :value-type string))
 
 (defcustom devil-repeatable-keys
@@ -165,13 +197,12 @@ keys."
 
 The value of this variable is a list where each item represents a
 key sequence that may be repeated merely by typing the last
-character in the key sequence.  The format control specified `%k'
-may be used to represent `key-description' of `devil-key' in the
-keys.  Only key sequences that translate to a complete Emacs key
-sequence according to `devil-translations' and execute an Emacs
-command are made repeatable.  Key sequences that belong to
-`devil-special-keys' are never made repeatable.  Note that this
-variable is ignored if `devil-all-keys-repeatable' is set to t."
+character in the key sequence.  Format control sequences
+supported by `devil-format' may be used in the items.  Only key
+sequences that translate to a complete Emacs key sequence
+according to `devil-translations' and execute an Emacs command
+are made repeatable.  Note that this variable is ignored if
+`devil-all-keys-repeatable' is set to t."
   :type '(repeat string))
 
 (defcustom devil-all-keys-repeatable nil
@@ -179,191 +210,207 @@ variable is ignored if `devil-all-keys-repeatable' is set to t."
 
 When this variable is set to t all key sequences that translate
 to a complete and defined Emacs key sequence become a repeatable
-key sequence, i.e., it can be repeated merely by typing the last
-character in the key sequence.  Note that key sequences that
-belong to `devil-special-keys' are never made repeatable.  Also,
+key sequence, i.e., every such key sequence can be repeated
+merely by typing the last character in the key sequence.  Also,
 note that when this variable is set to t, the variable
 `devil-repeatable-keys' is ignored.  However when this variable
 is set to nil, the variable `devil-repeatable-keys' is used to
 determine whether a key sequence is repeatable or not."
   :type 'boolean)
 
-(defun devil-run-key (key)
-  "Execute the given key sequence KEY.
+(defcustom devil-lighter " Devil"
+  "String displayed on the mode line when Devil mode is enabled."
+  :type 'string)
 
-KEY must be in the format returned by `C-h k` (`describe-key').
-If the format control specifier `%k' occurs in KEY, for each such
-occurrence `key-description' of `devil-key' is inserted into the
-buffer."
-  (dolist (key (split-string key))
-    (if (string= key "%k")
-        (insert (key-description devil-key))
-      (execute-kbd-macro (kbd key)))))
+(defcustom devil-prompt "Devil: %t"
+  "A format control string that determines the `devil' prompt.
+
+Format control sequences supported by `devil-format' may be used
+in the format control string."
+  :type 'string)
+
+(defcustom devil-describe-prompt "Describe Devil key: %t"
+  "A format control string that determines the `devil-describe-key' prompt.
+
+Format control sequences supported by `devil-format' may be used
+in the format control string."
+  :type 'string)
+
+
+;;; Minor Mode Definition ============================================
+
+;;;###autoload
+(define-minor-mode devil-mode
+  "Local minor mode to support Devil key sequences."
+  :lighter devil-lighter
+  (devil--log "Mode is %s in %s" devil-mode (buffer-name)))
+
+;;;###autoload
+(define-globalized-minor-mode
+  global-devil-mode devil-mode devil--on
+  (if global-devil-mode (devil--add-extra-keys) (devil--remove-extra-keys)))
+
+(defun devil--on ()
+  "Turn Devil mode on."
+  (devil-mode 1))
+
+
+;;; Bonus Key Bindings ===============================================
 
 (defvar devil--saved-keys nil
   "Original key bindings saved by Devil.")
 
-(defun devil-add-extra-keys ()
+(defun devil--add-extra-keys ()
   "Add key bindings to keymaps for Isearch and universal argument."
   (devil--log "Adding extra key bindings")
   (setq devil--saved-keys (devil--original-keys-to-be-saved))
   (define-key isearch-mode-map devil-key #'devil)
   (define-key universal-argument-map (kbd "u") #'universal-argument-more))
 
-(defun devil-remove-extra-keys ()
+(defun devil--remove-extra-keys ()
   "Remove Devil key bindings from Isearch and universal argument."
   (devil--log "Removing extra key bindings")
   (define-key isearch-mode-map (kbd ",")
-    (cdr (assoc 'isearch-comma devil--saved-keys)))
+    (devil--aget 'isearch-comma devil--saved-keys))
   (define-key universal-argument-map (kbd "u")
-    (cdr (assoc 'universal-u devil--saved-keys))))
+    (devil--aget 'universal-u devil--saved-keys)))
 
 (defun devil--original-keys-to-be-saved ()
   "Return an alist of keys that will be modified by Devil."
   (list (cons 'isearch-comma (lookup-key isearch-mode-map devil-key))
         (cons 'universal-u (lookup-key universal-argument-map (kbd "u")))))
 
+
+;;; Activation Commands ==============================================
+
 (defun devil ()
-  "Wake up Devil to read and translate Devil key sequences."
+  "Read and execute a Devil key sequence."
   (interactive)
-  (devil--log "Devil awake")
-  (devil--read-key (this-command-keys)))
+  (devil--log "Activated with %s" (key-description (this-command-keys)))
+  (let* ((result (devil--read-key devil-prompt (this-command-keys)))
+         (key (devil--aget 'key result))
+         (translated-key (devil--aget 'translated-key result))
+         (binding (devil--aget 'binding result)))
+    (devil--log "Read key: %s => %s => %s => %s"
+                key (key-description key) translated-key binding)
+    (if (eq binding 'devil--undefined)
+        (message "Devil: %s is undefined" translated-key)
+      (devil--execute-command key binding))))
 
-(defun devil--read-key (key)
-  "Read Devil key sequences.
+(defun devil-describe-key ()
+  "Describe a Devil key sequence."
+  (interactive)
+  (devil--log "Activated with %s" (key-description (this-command-keys)))
+  (let* ((result (devil--read-key devil-describe-prompt (vector)))
+         (key (devil--aget 'key result))
+         (translated-key (devil--aget 'translated-key result))
+         (binding (devil--aget 'binding result)))
+    (devil--log "Read key: %s => %s => %s => %s"
+                key (key-description key) translated-key binding)
+    (if translated-key
+        (describe-key (list (cons (kbd translated-key) key)))
+      ;; Create a transient keymap to describe special key sequence.
+      (let* ((virtual-keymap (make-sparse-keymap))
+             (exit-function (set-transient-map virtual-keymap)))
+        (define-key virtual-keymap key binding)
+        (describe-key key)
+        (funcall exit-function)))))
 
-Key sequences are read until it is determined to be a valid Devil
-mode special key sequence, a valid complete key sequence after
-translation to Emacs key sequence, or an undefined key sequence
-after translation to Emacs key sequence.
+
+;;; Command Lookup ===================================================
 
-The argument KEY is a vector that represents the key sequence
-read so far.  This function reads a new key from the user, appends
-it to KEY, and then checks if the result is a valid key sequence
-or an undefined key sequence.  If the result is a valid key
-sequence for a special key command or an Emacs command, then the
-command is executed.  Otherwise, this function calls itself
-recursively to read yet another key from the user."
-  (setq key (vconcat key (vector (read-event (devil--make-prompt key)))))
-  (unless (devil--run-command key)
-    (devil--read-key key)))
+(defun devil--read-key (prompt key)
+  "Read Devil key sequence.
 
-(defcustom devil-prompt "Devil: %t"
-  "A format control string that determines the Devil prompt.
+Key events are read until it is determined to be a valid special
+key sequence, a valid complete key sequence after translation to
+Emacs key sequence, or an undefined key sequence after
+translation to Emacs key sequence.
 
-The following format control sequences are supported:
+PROMPT is a format control string that defines the prompt to be
+displayed while reading the key sequence.  Format control
+sequences supported by `devil-format' may be used in PROMPT.
 
-%k - Devil key sequence read by Devil so far.
-%t - Emacs key sequence translated from Devil key sequence read so far.
-%% - The percent sign."
-  :type 'string)
+KEY is a vector that represents the key sequence read so far.
+This function reads a new key from the user, appends it to KEY,
+and then checks if the result is a valid key sequence or an
+undefined key sequence.  If the result is a valid key sequence
+for a special key command or an Emacs command, then the command
+is executed.  Otherwise, this function calls itself recursively
+to read yet another key from the user."
+  (setq key (vconcat key (vector (read-event (devil-format prompt key)))))
+  (or (devil--find-special-command key)
+      (devil--find-regular-command key)
+      (devil--read-key prompt key)))
 
-(defun devil--make-prompt (key)
-  "Create Devil prompt based on the given KEY."
-  ;; If you are interested in adding Compat as a dependency, you can
-  ;; make use of `format-spec' without raining the minimum version.
-  (let ((result devil-prompt)
-        (controls (list (cons "%k" (key-description key))
-                        (cons "%t" (devil-translate key))
-                        (cons "%%" "%"))))
-    (dolist (control controls result)
-      (setq result (devil-string-replace (car control)
-                                         (cdr control) result)))))
+(defun devil--find-special-command (key)
+  "Find special command defined for KEY.
 
-(defun devil--run-command (key)
-  "Try running the command bound to the key sequence in KEY.
-
-KEY is a vector that represents a sequence of keystrokes.  If KEY
-is found to be a special key in `devil-special-keys', the
-corresponding special command is executed immediately and t is
-returned.
-
-Otherwise, it is translated to an Emacs key sequence using
-`devil-translations'.  If the resulting Emacs key sequence is
-found to be a complete key sequence, the command it is bound to
-is executed interactively and t is returned.  If it is found to
-be an undefined key sequence, then t is returned.  If the
-resulting Emacs key sequence is found to be an incomplete key
-sequence, then nil is returned.  The return value t indicates to
-the caller that no more Devil key sequences should be read from
-the user."
-  (devil--log "Trying to execute key: %s" (key-description key))
-  (or (devil--run-special-command key)
-      (devil--run-regular-command key)))
-
-(defun devil--run-special-command (key)
-  "Run Devil mode special command defined for the Devil key sequence KEY.
-
-If the given key sequence KEY is found to be a special key in
-`devil-special-keys', the corresponding special command is
-executed, and t is returned.  Otherwise nil is returned."
+If the `key-description' of the given key sequence vector KEY is
+found to be a special key in `devil-special-keys', the
+corresponding special command is executed, and a non-nil result
+is returned.  Otherwise nil is returned."
   (catch 'break
     (dolist (entry devil-special-keys)
       (when (string= (key-description key) (devil-format (car entry)))
-        (devil--log "Running special command: %s => %s"
+        (devil--log "Found special command: %s => %s"
                     (key-description key) (cdr entry))
-        (funcall (cdr entry))
-        (throw 'break t)))))
+        (throw 'break (devil--make-result key nil (cdr entry)))))))
 
-(defun devil--run-regular-command (key)
-  "Translate KEY and run command bound to it.
+(defun devil--find-regular-command (key)
+  "Translate KEY and find command bound to it.
 
-After translating KEY to an Emacs key sequence, if the resulting
-key sequence turns out to be an incomplete key, then nil is
-returned.  If it turns out to be a complete key sequence, the
-corresponding Emacs command is executed, and t is returned.  If it
-turns out to be an undefined key sequence, t is returned.  The
-return value t indicates to the caller that no more Devil key
-sequences should be read from the user."
-  (let* ((description (key-description key))
-         (translation (devil-translate key))
-         (fallback (devil-fallback-key translation))
-         (result (devil--run-translation key description translation (not fallback))))
-    (if result
-        result
-      (when fallback
-        (devil--run-translation key description fallback t)))))
+After translating the given key sequence vector KEY to an Emacs
+key sequence, if the resulting key sequence turns out to be an
+incomplete key, then nil is returned.  If it turns out to be a
+complete key sequence, a non-nil result is returned."
+  (let* ((translated-key (devil--translate key))
+         (binding (devil--find-command translated-key)))
+    (when (eq binding 'devil--undefined)
+      (let ((fallback-key (devil--fallback-key translated-key)))
+        (when fallback-key
+          (setq translated-key fallback-key)
+          (setq binding (devil--find-command fallback-key)))))
+    (when binding
+      (devil--make-result key translated-key binding))))
 
-(defun devil--run-translation (key described-key translated-key default)
-  "Try to run the given TRANSLATED-KEY.
-
-KEY is a vector that represents the original sequence of
-keystrokes from which DESCRIBED-KEY and TRANSLATED-KEY were
-derived.  If TRANSLATED-KEY is an incomplete key sequence, nil is
-returned.  If it is a complete key sequence, the Emacs command
-bound to it is executed, and t is returned.  If it is an
-undefined key sequence, DEFAULT is returned."
+(defun devil--find-command (translated-key)
+  "Find command bound to TRANSLATED-KEY."
   (let* ((parsed-key (ignore-errors (kbd translated-key)))
          (binding (when parsed-key (key-binding parsed-key))))
-    (cond ((string-match "[ACHMSs]-$" translated-key)
-           (devil--log "Ignoring incomplete key: %s => %s"
-                       described-key translated-key)
+    (cond ((devil--incomplete-key-p translated-key)
+           (devil--log "Ignoring incomplete key: %s" translated-key)
            nil)
           ((keymapp binding)
-           (devil--log "Ignoring prefix key: %s => %s => %s"
-                       described-key translated-key binding)
+           (devil--log "Ignoring prefix key: %s" translated-key)
            nil)
           ((commandp binding)
-           (devil--update-command-loop-info key binding)
-           (devil--log-command-loop-info)
-           (devil--log "Executing key: %s => %s => %s"
-                       described-key translated-key binding)
-           (call-interactively binding)
-           (when (or devil-all-keys-repeatable
-                     (devil--repeatable-key-p described-key))
-             (devil--set-transient-map (substring described-key -1) binding))
-           t)
+           (devil--log "Found command: %s => %s" translated-key binding)
+           binding)
           (t
-           (devil--log "Undefined key: %s => %s" described-key translated-key)
-           (when default
-             (message "Devil: %s is undefined" translated-key))
-           default))))
+           (devil--log "Undefined key: %s => %s" translated-key binding)
+           'devil--undefined))))
 
-(defun devil-translate (key)
-  "Translate a given Devil KEY to Emacs key sequence.
+(defun devil--make-result (key translated-key binding)
+  "Create alist for the given KEY, TRANSLATED-KEY, and BINDING."
+  (list (cons 'key key)
+        (cons 'translated-key translated-key)
+        (cons 'binding binding)))
 
-The argument KEY is a vector that represents the key sequence
-read so far."
+
+;;; Key Translation ==================================================
+
+(defun devil--translate (key)
+  "Translate a given Devil key sequence vector to Emacs key sequence.
+
+KEY is a key sequence vector that represents a Devil key
+sequence.  The returned value is an Emacs key sequence string in
+the format returned by commands such as `C-h k' (`describe-key').
+
+If FALLBACK is non-nil, the translated key is further translated
+using `local-function-key-map'.  In this case, if this further
+translation does not yield a new translation, then nil is
+returned."
   (setq key (key-description key))
   (let ((result "")
         (index 0))
@@ -393,11 +440,11 @@ read so far."
         (setq index (1+ index))))
     (devil--normalize-ctrl-uppercase-chord result)))
 
-(defun devil-fallback-key (translated-key)
+(defun devil--fallback-key (translated-key)
   "Translate TRANSLATED-KEY to an Emacs key sequence for terminal Emacs.
 
 The argument TRANSLATED-KEY is a string that represents an Emacs
-key sequence returned by `devil-translate'.  Each keystroke in
+key sequence returned by `devil--translate'.  Each keystroke in
 the key sequence is looked up in `local-function-key-map'.  If a
 match is found, it is replaced with its corresponding binding."
   (unless (devil--incomplete-key-p translated-key)
@@ -410,6 +457,49 @@ match is found, it is replaced with its corresponding binding."
           (setq result (concat result separator chunk))))
       (when (not (member result (list "" translated-key)))
         result))))
+
+(defun devil--clean-key (translated-key)
+  "Clean up TRANSLATED-KEY to properly formatted Emacs key sequence."
+  (devil-regexp-replace "\\([ACHMSs]\\)- " "\\1-" translated-key))
+
+(defun devil--normalize-ctrl-uppercase-chord (translated-key)
+  "Normalize chords containing ctrl and uppercase letter in TRANSLATED-KEY."
+  (devil-regexp-replace "C-\\(?:[ACHMs]-\\)*[A-Z]\\(?: \\|$\\)"
+                        'devil--shifted-key translated-key))
+
+(defun devil--shifted-key (translated-key)
+  "Replace the last character in TRANSLATED-KEY with its shifted form."
+  (let* ((hyphen-index (if (string-suffix-p " " translated-key) -2 -1))
+         (prefix (substring translated-key 0 hyphen-index))
+         (suffix (substring translated-key hyphen-index)))
+    (concat prefix "S-" (downcase suffix))))
+
+(defun devil--incomplete-key-p (translated-key)
+  "Return t iff TRANSLATED-KEY is an incomplete Emacs key sequence."
+  (string-match "[ACHMSs]-$" translated-key))
+
+(defun devil--invalid-key-p (translated-key)
+  "Return t iff TRANSLATED-KEY is an invalid Emacs key sequence."
+  (catch 'break
+    (dolist (chunk (split-string translated-key " "))
+      (when (or (string= chunk "")
+                (not (string-match-p "^\\(?:[ACHMSs]-\\)*[^-]*$" chunk))
+                (string-match-p "\\([ACHMSs]-\\)[^ ]*\\1" chunk))
+        (throw 'break t)))))
+
+
+;;; Command Execution ================================================
+
+(defun devil--execute-command (key binding)
+  "Execute the given BINDING bound to the given KEY."
+  (let ((described-key (key-description key)))
+    (devil--update-command-loop-info key binding)
+    (devil--log-command-loop-info)
+    (devil--log "Executing command: %s => %s" described-key binding)
+    (call-interactively binding)
+    (when (devil--repeatable-key-p described-key)
+      (devil--set-transient-map (vector (aref key (1- (length key))))
+                                binding))))
 
 (defun devil--update-command-loop-info (key binding)
   "Update variables that maintain command loop information.
@@ -444,60 +534,48 @@ the original Emacs key sequence."
 
 (defun devil--log-command-loop-info ()
   "Log command loop information for debugging purpose."
-  (devil--log
-   (format "Found current-prefix-arg: %s; \
-this-command: %s; last-command: %s; last-repeatable-command: %s"
-	   current-prefix-arg
-	   this-command
-	   last-command
-	   last-repeatable-command)))
+  (devil--log "Found current-prefix-arg: %s; \
+this-command: %s; last-command: %s; last-repeatable-command: %s; \
+last-command-event: %s; char-before: %s"
+              current-prefix-arg
+              this-command
+              last-command
+              last-repeatable-command
+              last-command-event
+              (char-before)))
 
 (defun devil--repeatable-key-p (described-key)
   "Return t iff DESCRIBED-KEY belongs to `devil-repeatable-keys'."
-  (catch 'break
-    (dolist (repeatable-key devil-repeatable-keys)
-      (when (string= described-key (devil-format repeatable-key))
-        (throw 'break t)))))
+  (or devil-all-keys-repeatable
+      (catch 'break
+        (dolist (repeatable-key devil-repeatable-keys)
+          (when (string= described-key (devil-format repeatable-key))
+            (throw 'break t))))))
 
 (defun devil--set-transient-map (key binding)
   "Set transient map to run BINDING with KEY."
-  (devil--log "Setting transient map: %s => %s" key binding)
+  (devil--log "Setting transient map: %s => %s" (key-description key) binding)
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd key) binding)
+    (define-key map key binding)
     (set-transient-map map t)))
 
-(defun devil--clean-key (translated-key)
-  "Clean up TRANSLATED-KEY to properly formatted Emacs key sequence."
-  (devil-regexp-replace "\\([ACHMSs]\\)- " "\\1-" translated-key))
+
+;;; Utility Functions ================================================
 
-(defun devil--normalize-ctrl-uppercase-chord (translated-key)
-  "Normalize chords containing ctrl and uppercase letter in TRANSLATED-KEY."
-  (devil-regexp-replace "C-\\(?:[ACHMs]-\\)*[A-Z]\\(?: \\|$\\)"
-                        'devil--shifted-key translated-key))
+(defun devil-format (format-string &optional key)
+  "Format a Devil FORMAT-STRING.
 
-(defun devil--shifted-key (translated-key)
-  "Replace the last character in TRANSLATED-KEY with its shifted form."
-  (let* ((hyphen-index (if (string-suffix-p " " translated-key) -2 -1))
-         (prefix (substring translated-key 0 hyphen-index))
-         (suffix (substring translated-key hyphen-index)))
-    (concat prefix "S-" (downcase suffix))))
+KEY must be a key sequence vector.  The following format control
+sequences are supported in FORMAT-STRING:
 
-(defun devil--incomplete-key-p (translated-key)
-  "Return t iff TRANSLATED-KEY is an incomplete Emacs key sequence."
-  (string-match "[ACHMSs]-$" translated-key))
-
-(defun devil--invalid-key-p (translated-key)
-  "Return t iff TRANSLATED-KEY is an invalid Emacs key sequence."
-  (catch 'break
-    (dolist (chunk (split-string translated-key " "))
-      (when (or (string= chunk "")
-                (not (string-match-p "^\\(?:[ACHMSs]-\\)*[^-]*$" chunk))
-                (string-match-p "\\([ACHMSs]-\\)[^ ]*\\1" chunk))
-        (throw 'break t)))))
-
-(defun devil-format (string)
-  "Replace %k in STRING with `key-description' of `devil-key'."
-  (devil-string-replace "%k" (key-description devil-key) string))
+%k - Devil key.
+%r - Devil key sequence read by Devil so far.
+%t - Emacs key sequence translated from the Devil key sequence.
+%% - The percent sign."
+  (format-spec format-string (list (cons ?k (key-description devil-key))
+                                   (cons ?r (key-description key))
+                                   (cons ?t (devil--translate key))
+                                   (cons ?% "%"))))
 
 (defun devil-string-replace (from-string to-string in-string)
   "Replace FROM-STRING with TO-STRING in IN-STRING."
@@ -509,6 +587,10 @@ this-command: %s; last-command: %s; last-repeatable-command: %s"
   "Replace REGEXP with REPLACEMENT in IN-STRING."
   (let ((case-fold-search nil))
     (replace-regexp-in-string regexp replacement in-string t)))
+
+(defun devil--aget (key alist)
+  "Find KEY in ALIST and return corresponding value."
+  (cdr (assoc key alist)))
 
 (provide 'devil)
 ;;; devil.el ends here
