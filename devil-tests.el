@@ -11,6 +11,54 @@
 (require 'devil)
 
 
+;;; Customization ====================================================
+
+(ert-deftest devil-log ()
+  "Test if `devil--log' works as expected."
+  ;; When logging is disabled, message is not called.
+  (unwind-protect
+      (let ((devil-logging nil)
+            (count 0))
+        (advice-add 'message :override
+                    (lambda (&rest args) (setq count (1+ count)))
+                    '((name . message-override)))
+        (devil--log "foo")
+        (should (= count 0)))
+    (advice-remove 'message 'message-override))
+  ;; When logging is enabled, message is called.
+  (unwind-protect
+      (let ((devil-logging t)
+            (count 0))
+        (advice-add 'message :override
+                    (lambda (&rest args) (setq count (1+ count)))
+                    '((name . message-override)))
+        (devil--log "foo")
+        (should (= count 1)))
+    (advice-remove 'message 'message-override))
+  ;; When logging is disabled, logging arguments are not evaluated.
+  (unwind-protect
+      (let ((devil-logging nil)
+            (count 0))
+        (advice-add 'message :override (lambda (&rest args))
+                    '((name . message-override)))
+        (devil--log (progn (setq count (1+ count)) "foo")
+                    (progn (setq count (1+ count)))
+                    (progn (setq count (1+ count))))
+        (should (= count 0)))
+    (advice-remove 'message 'message-override))
+  ;; When logging is enabled, logging arguments are evaluated.
+  (unwind-protect
+      (let ((devil-logging t)
+            (count 0))
+        (advice-add 'message :override (lambda (&rest args))
+                    '((name . message-override)))
+        (devil--log (progn (setq count (1+ count)) "foo")
+                    (progn (setq count (1+ count)))
+                    (progn (setq count (1+ count))))
+        (should (= count 3)))
+    (advice-remove 'message 'message-override)))
+
+
 ;;; Command Lookup ===================================================
 
 (ert-deftest devil-incomplete-key-p ()
