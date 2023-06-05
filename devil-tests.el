@@ -10,57 +10,8 @@
 (require 'ert)
 (require 'devil)
 
-(let ((devil-key (kbd "<left>")))
-  (devil-format "%k"))
-(ert-deftest devil-format ()
-  "Test if `devil-format' works as expected."
-  (let ((devil-key ","))
-    (should (string= (devil-format "%k") ","))
-    (should (string= (devil-format "Devil: %k") "Devil: ,"))
-    (should (string= (devil-format "%k %%") ", %"))
-    (should (string= (devil-format "%r => %t" (kbd ",")) ", => C-"))
-    (should (string= (devil-format "%r => %t" (kbd ", x")) ", x => C-x")))
-  (let ((devil-key (kbd "<left>")))
-    (should (string= (devil-format "%k") "<left>"))
-    (should (string= (devil-format "Devil: %k") "Devil: <left>"))
-    (should (string= (devil-format "%k %%") "<left> %"))
-    (should (string= (devil-format "%r => %t" (kbd "<left> x"))
-                     "<left> x => C-x"))
-    (should (string= (devil-format "%r => %t" (kbd "<left> x <left>"))
-                     "<left> x <left> => C-x C-"))))
-
-(ert-deftest devil-string-replace ()
-  "Test if `devil-string-replace' works as expected."
-  (should (string= (devil-string-replace "" "" "") ""))
-  (should (string= (devil-string-replace "" "foo" "") ""))
-  (should (string= (devil-string-replace "foo" "foo" "foo") "foo"))
-  (should (string= (devil-string-replace "foo" "bar" "") ""))
-  (should (string= (devil-string-replace "foo" "bar" "foo") "bar"))
-  (should (string= (devil-string-replace "foo" "bar" "Foo") "Foo"))
-  (should (string= (devil-string-replace "foo" "bar" "FOO") "FOO"))
-  (should (string= (devil-string-replace "f.." "bar" "foo f..") "foo bar"))
-  (should (string= (devil-string-replace "f.." "<\\&>" "foo f..") "foo <\\&>")))
-
-(ert-deftest devil-regexp-replace ()
-  "Test if `devil-string-replace' works as expected."
-  (should (string= (devil-regexp-replace "" "" "") ""))
-  (should (string= (devil-regexp-replace "" "foo" "") ""))
-  (should (string= (devil-regexp-replace "foo" "foo" "foo") "foo"))
-  (should (string= (devil-regexp-replace "foo" "bar" "") ""))
-  (should (string= (devil-regexp-replace "foo" "bar" "foo") "bar"))
-  (should (string= (devil-regexp-replace "foo" "bar" "Foo") "Foo"))
-  (should (string= (devil-regexp-replace "foo" "bar" "FOO") "FOO"))
-  (should (string= (devil-regexp-replace "f.." "bar" "foo f..") "bar bar"))
-  (should (string= (devil-regexp-replace "f.." "<\\&>" "foo f..") "<foo> <f..>")))
-
-(ert-deftest devil-shifted-key ()
-  "Test if `devil--shifted-key' works as expected."
-  (should (string= (devil--shifted-key "A") "S-a"))
-  (should (string= (devil--shifted-key "C-A") "C-S-a"))
-  (should (string= (devil--shifted-key "C-M-A") "C-M-S-a"))
-  (should (string= (devil--shifted-key "A ") "S-a "))
-  (should (string= (devil--shifted-key "C-A ") "C-S-a "))
-  (should (string= (devil--shifted-key "C-M-A ") "C-M-S-a ")))
+
+;;; Command Lookup ===================================================
 
 (ert-deftest devil-incomplete-key-p ()
   "Test if `devil--invalid-key-p' works as expected."
@@ -73,13 +24,8 @@
   (should (not (devil--incomplete-key-p "C-x C-f")))
   (should (not (devil--incomplete-key-p "C-M-x"))))
 
-(ert-deftest devil-invalid-key-p ()
-  "Test if `devil--invalid-key-p' works as expected."
-  (should (devil--invalid-key-p ""))
-  (should (devil--invalid-key-p "C-x-C-f"))
-  (should (devil--invalid-key-p "C-x CC-f"))
-  (should (not (devil--invalid-key-p "C-x C-f")))
-  (should (not (devil--invalid-key-p "C-M-x"))))
+
+;;; Key Translation ==================================================
 
 (ert-deftest devil--translate ()
   "Test if `devil-translate' works as expected."
@@ -137,6 +83,67 @@
     (should (string= (devil--fallback-key "<tab>") "TAB"))
     (should (string= (devil--fallback-key "M-<return>") "M-RET"))
     (should (string= (devil--fallback-key "C-<tab> M-<return>") "C-<tab> M-RET"))))
+
+(ert-deftest devil-shifted-key ()
+  "Test if `devil--shifted-key' works as expected."
+  (should (string= (devil--shifted-key "A") "S-a"))
+  (should (string= (devil--shifted-key "C-A") "C-S-a"))
+  (should (string= (devil--shifted-key "C-M-A") "C-M-S-a"))
+  (should (string= (devil--shifted-key "A ") "S-a "))
+  (should (string= (devil--shifted-key "C-A ") "C-S-a "))
+  (should (string= (devil--shifted-key "C-M-A ") "C-M-S-a ")))
+
+(ert-deftest devil-invalid-key-p ()
+  "Test if `devil--invalid-key-p' works as expected."
+  (should (devil--invalid-key-p ""))
+  (should (devil--invalid-key-p "C-x-C-f"))
+  (should (devil--invalid-key-p "C-x CC-f"))
+  (should (not (devil--invalid-key-p "C-x C-f")))
+  (should (not (devil--invalid-key-p "C-M-x"))))
+
+
+;;; Utility Functions ================================================
+
+(ert-deftest devil-format ()
+  "Test if `devil-format' works as expected."
+  (let ((devil-key ","))
+    (should (string= (devil-format "%k") ","))
+    (should (string= (devil-format "Devil: %k") "Devil: ,"))
+    (should (string= (devil-format "%k %%") ", %"))
+    (should (string= (devil-format "%r => %t" (kbd ",")) ", => C-"))
+    (should (string= (devil-format "%r => %t" (kbd ", x")) ", x => C-x")))
+  (let ((devil-key (kbd "<left>")))
+    (should (string= (devil-format "%k") "<left>"))
+    (should (string= (devil-format "Devil: %k") "Devil: <left>"))
+    (should (string= (devil-format "%k %%") "<left> %"))
+    (should (string= (devil-format "%r => %t" (kbd "<left> x"))
+                     "<left> x => C-x"))
+    (should (string= (devil-format "%r => %t" (kbd "<left> x <left>"))
+                     "<left> x <left> => C-x C-"))))
+
+(ert-deftest devil-string-replace ()
+  "Test if `devil-string-replace' works as expected."
+  (should (string= (devil-string-replace "" "" "") ""))
+  (should (string= (devil-string-replace "" "foo" "") ""))
+  (should (string= (devil-string-replace "foo" "foo" "foo") "foo"))
+  (should (string= (devil-string-replace "foo" "bar" "") ""))
+  (should (string= (devil-string-replace "foo" "bar" "foo") "bar"))
+  (should (string= (devil-string-replace "foo" "bar" "Foo") "Foo"))
+  (should (string= (devil-string-replace "foo" "bar" "FOO") "FOO"))
+  (should (string= (devil-string-replace "f.." "bar" "foo f..") "foo bar"))
+  (should (string= (devil-string-replace "f.." "<\\&>" "foo f..") "foo <\\&>")))
+
+(ert-deftest devil-regexp-replace ()
+  "Test if `devil-string-replace' works as expected."
+  (should (string= (devil-regexp-replace "" "" "") ""))
+  (should (string= (devil-regexp-replace "" "foo" "") ""))
+  (should (string= (devil-regexp-replace "foo" "foo" "foo") "foo"))
+  (should (string= (devil-regexp-replace "foo" "bar" "") ""))
+  (should (string= (devil-regexp-replace "foo" "bar" "foo") "bar"))
+  (should (string= (devil-regexp-replace "foo" "bar" "Foo") "Foo"))
+  (should (string= (devil-regexp-replace "foo" "bar" "FOO") "FOO"))
+  (should (string= (devil-regexp-replace "f.." "bar" "foo f..") "bar bar"))
+  (should (string= (devil-regexp-replace "f.." "<\\&>" "foo f..") "<foo> <f..>")))
 
 (provide 'devil-tests)
 ;;; devil-tests.el ends here

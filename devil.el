@@ -391,6 +391,10 @@ complete key sequence, a non-nil result is returned."
            (devil--log "Undefined key: %s => %s" translated-key binding)
            'devil--undefined))))
 
+(defun devil--incomplete-key-p (translated-key)
+  "Return t iff TRANSLATED-KEY is an incomplete Emacs key sequence."
+  (string-match "[ACHMSs]-$" translated-key))
+
 (defun devil--make-result (key translated-key binding)
   "Create alist for the given KEY, TRANSLATED-KEY, and BINDING."
   (list (cons 'key key)
@@ -473,10 +477,6 @@ match is found, it is replaced with its corresponding binding."
          (prefix (substring translated-key 0 hyphen-index))
          (suffix (substring translated-key hyphen-index)))
     (concat prefix "S-" (downcase suffix))))
-
-(defun devil--incomplete-key-p (translated-key)
-  "Return t iff TRANSLATED-KEY is an incomplete Emacs key sequence."
-  (string-match "[ACHMSs]-$" translated-key))
 
 (defun devil--invalid-key-p (translated-key)
   "Return t iff TRANSLATED-KEY is an invalid Emacs key sequence."
