@@ -69,10 +69,10 @@ activate Devil.")
   (setq devil-logging (not devil-logging))
   (message "Devil: Logging %s" (if devil-logging "enabled" "disabled")))
 
-(defun devil--log (format-string &rest args)
+(defmacro devil--log (format-string &rest args)
   "Write log message with the given FORMAT-STRING and ARGS."
-  (when devil-logging
-    (apply #'message (concat "Devil: " format-string) args)))
+  `(when devil-logging
+     (message (concat "Devil: " ,format-string) ,@args)))
 
 (defun devil--custom-devil-key (symbol value)
   "Set Devil key variable SYMBOL to the key sequence in given VALUE.
