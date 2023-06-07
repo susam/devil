@@ -4,7 +4,7 @@
 
 ;; Author: Susam Pal <susam@susam.net>
 ;; Maintainer: Susam Pal <susam@susam.net>
-;; Version: 0.5.0-beta2
+;; Version: 0.5.0-beta3
 ;; Package-Requires: ((emacs "24.4"))
 ;; Keywords: convenience, abbrev
 ;; URL: https://github.com/susam/devil
@@ -48,7 +48,7 @@
   :prefix "devil-"
   :group 'editing)
 
-(defconst devil-version "0.5.0-beta2"
+(defconst devil-version "0.5.0-beta3"
   "Devil version string.")
 
 (defvar devil-mode-map (make-sparse-keymap)
@@ -85,6 +85,16 @@ sequence given in VALUE activates Devil."
   (define-key devil-mode-map value #'devil)
   (devil--log "Keymap updated to %s" devil-mode-map))
 
+(defun devil-set-key (key)
+  "Set `devil-key' to the given KEY and update `devil-mode-map'.
+
+KEY is a string or vector that represents a sequence of
+keystrokes, e.g., `\",\"', `(kbd \"<left>\")', etc.  This
+function clears existing key bindings in `devil-mode-map' and
+sets a single key binding in this keymap so that Devil can be
+activated using the given KEY."
+  (devil--custom-devil-key 'devil-key key))
+
 (defcustom devil-key ","
   "The key sequence that begins Devil input.
 
@@ -96,16 +106,6 @@ updated value of this variable."
   :type 'key-sequence
   :set #'devil--custom-devil-key)
 
-(defun devil-set-key (key)
-  "Set `devil-key' to the given KEY and update `devil-mode-map'.
-
-KEY is a string or vector that represents a sequence of
-keystrokes, e.g., `\",\"', `(kbd \"<left>\")', etc.  This
-function clears existing key bindings in `devil-mode-map' and
-sets a single key binding in this keymap so that Devil can be
-activated using the given KEY."
-  (devil--custom-devil-key 'devil-key key))
-
 (defun devil-key-executor (key)
   "Create a command to call `devil-execute-key' with KEY when invoked.
 
@@ -116,30 +116,13 @@ k' (`describe-key').  Format control sequences supported by
 This is a convenience function that returns an interactive lambda
 that may be used as a binding value for a special key defined in
 `devil-special-keys'.  When the lambda returned by this function
-is later invoked, it disables `devil-mode-map' temporarily and
-executes KEY as a keyboard macro."
+is later invoked, it disables Devil keys temporarily and executes
+the bindings bound to KEY.  This allows key sequences involving
+the configured `devil-key' to be executed to produce their
+original behaviour thus avoiding invoking Devil recursively."
   (lambda ()
     (interactive)
     (devil-execute-key key)))
-
-(defun devil-execute-key (key)
-  "Execute KEY with `devil-mode-map' temporarily disabled.
-
-KEY is a string in the format returned by commands such as `C-h
-k' (`describe-key').  Format control sequences supported by
-`devil-format' may be used in KEY."
-  (let ((keymap (cdr devil-mode-map))
-        (key (devil-format key)))
-    (setcdr devil-mode-map nil)
-    (devil--remove-extra-keys)
-    (devil--log "Disabling keymaps")
-    (unwind-protect
-        (progn
-          (devil--log "Executing kbd macro: %s => %s" key (key-binding key))
-          (execute-kbd-macro (kbd key)))
-      (devil--log "Enabling keymaps")
-      (setcdr devil-mode-map keymap)
-      (devil--add-extra-keys))))
 
 (defcustom devil-special-keys
   (list (cons "%k %k" (devil-key-executor "%k"))
@@ -489,6 +472,38 @@ match is found, it is replaced with its corresponding binding."
 
 
 ;;; Command Execution ================================================
+
+(defun devil-execute-key (key)
+  "Suppress Devil keys and execute the given KEY.
+
+KEY is a string in the format returned by commands such as `C-h
+k' (`describe-key').  Format control sequences supported by
+`devil-format' may be used in KEY."
+  (let ((keymap (cdr devil-mode-map))
+        (key (devil-format key)))
+    (setcdr devil-mode-map nil)
+    (devil--remove-extra-keys)
+    (devil--log "Disabling keymaps")
+    (unwind-protect
+        (devil--find-bindings-and-execute key)
+      (devil--log "Enabling keymaps")
+      (setcdr devil-mode-map keymap)
+      (devil--add-extra-keys))))
+
+(defun devil--find-bindings-and-execute (key)
+  "Find bindings bound to the given KEY and execute them."
+  (let ((accumulator ""))
+    (dolist (chunk (split-string key " " t))
+      (let ((separator (if (string= accumulator "") "" " ")))
+        (setq accumulator (concat accumulator separator chunk)))
+      (let ((binding (devil--find-command accumulator)))
+        (cond ((not binding))
+              ((eq binding 'devil--undefined)
+               (message "Devil: %s is undefined" accumulator)
+               (setq accumulator ""))
+              (t
+               (devil--execute-command (kbd chunk) binding)
+               (setq accumulator "")))))))
 
 (defun devil--execute-command (key binding)
   "Execute the given BINDING bound to the given KEY."

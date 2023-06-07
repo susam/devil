@@ -37,6 +37,7 @@
 
 - Fix special key sequence =, <return>= which was broken by the
   previous release of version 0.4.0.
+- Fix special =, ,= in incremental search minor mode.
 
 ** Version 0.4.0 (2023-05-27)
 :PROPERTIES:
