@@ -48,7 +48,7 @@
   :prefix "devil-"
   :group 'editing)
 
-(defconst devil-version "0.5.0-beta3"
+(defconst devil-version "0.5.0-beta4"
   "Devil version string.")
 
 (defvar devil-mode-map (make-sparse-keymap)
@@ -302,6 +302,9 @@ in the format control string."
 
 ;;; Command Lookup ===================================================
 
+(defconst devil--fallbacks (list #'devil--terminal-key)
+  "A list of functions that further translate a translated key.")
+
 (defun devil--read-key (prompt key)
   "Read Devil key sequence.
 
@@ -338,7 +341,7 @@ is returned.  Otherwise nil is returned."
       (when (string= (key-description key) (devil-format (car entry)))
         (devil--log "Found special command: %s => %s"
                     (key-description key) (cdr entry))
-        (throw 'break (devil--make-result key nil (cdr entry)))))))
+        (throw 'break (devil--binding-result key nil (cdr entry)))))))
 
 (defun devil--find-regular-command (key)
   "Translate KEY and find command bound to it.
@@ -347,18 +350,16 @@ After translating the given key sequence vector KEY to an Emacs
 key sequence, if the resulting key sequence turns out to be an
 incomplete key, then nil is returned.  If it turns out to be a
 complete key sequence, a non-nil result is returned."
-  (let* ((translated-key (devil--translate key))
-         (binding (devil--find-command translated-key)))
-    (when (eq binding 'devil--undefined)
-      (let ((fallback-key (devil--fallback-key translated-key)))
-        (when fallback-key
-          (setq translated-key fallback-key)
-          (setq binding (devil--find-command fallback-key)))))
-    (when binding
-      (devil--make-result key translated-key binding))))
+  (devil--find-command key (devil--translate key) devil--fallbacks))
 
-(defun devil--find-command (translated-key)
-  "Find command bound to TRANSLATED-KEY."
+(defun devil--find-command (key translated-key fallbacks)
+  "Find command bound to TRANSLATED-KEY translated from KEY.
+
+FALLBACKS is a list of functions.  When FALLBACKS is non-nil and
+no binding is found for the given TRANSLATED-KEY, the given
+TRANSLATED-KEY is translated further by invoking the `car' of
+this list.  Then this function is called recursively with the
+`cdr' of this list."
   (let* ((parsed-key (ignore-errors (kbd translated-key)))
          (binding (when parsed-key (key-binding parsed-key))))
     (cond ((devil--incomplete-key-p translated-key)
@@ -369,16 +370,20 @@ complete key sequence, a non-nil result is returned."
            nil)
           ((commandp binding)
            (devil--log "Found command: %s => %s" translated-key binding)
-           binding)
+           (devil--binding-result key translated-key binding))
           (t
            (devil--log "Undefined key: %s => %s" translated-key binding)
-           'devil--undefined))))
+           (let ((fallback-key (when fallbacks (funcall (car fallbacks)
+                                                        translated-key))))
+             (if (and fallback-key (not (string= translated-key fallback-key)))
+                 (devil--find-command key fallback-key (cdr fallbacks))
+               (devil--binding-result key translated-key nil)))))))
 
 (defun devil--incomplete-key-p (translated-key)
   "Return t iff TRANSLATED-KEY is an incomplete Emacs key sequence."
   (string-match "[ACHMSs]-$" translated-key))
 
-(defun devil--make-result (key translated-key binding)
+(defun devil--binding-result (key translated-key binding)
   "Create alist for the given KEY, TRANSLATED-KEY, and BINDING."
   (list (cons 'key key)
         (cons 'translated-key translated-key)
@@ -392,12 +397,7 @@ complete key sequence, a non-nil result is returned."
 
 KEY is a key sequence vector that represents a Devil key
 sequence.  The returned value is an Emacs key sequence string in
-the format returned by commands such as `C-h k' (`describe-key').
-
-If FALLBACK is non-nil, the translated key is further translated
-using `local-function-key-map'.  In this case, if this further
-translation does not yield a new translation, then nil is
-returned."
+the format returned by commands such as `C-h k' (`describe-key')."
   (setq key (key-description key))
   (let ((result "")
         (index 0))
@@ -427,7 +427,7 @@ returned."
         (setq index (1+ index))))
     (devil--normalize-ctrl-uppercase-chord result)))
 
-(defun devil--fallback-key (translated-key)
+(defun devil--terminal-key (translated-key)
   "Translate TRANSLATED-KEY to an Emacs key sequence for terminal Emacs.
 
 The argument TRANSLATED-KEY is a string that represents an Emacs
@@ -442,8 +442,7 @@ match is found, it is replaced with its corresponding binding."
           (when (and binding (not (keymapp binding)))
             (setq chunk (key-description binding)))
           (setq result (concat result separator chunk))))
-      (when (not (member result (list "" translated-key)))
-        result))))
+      result)))
 
 (defun devil--clean-key (translated-key)
   "Clean up TRANSLATED-KEY to properly formatted Emacs key sequence."
@@ -496,7 +495,8 @@ k' (`describe-key').  Format control sequences supported by
     (dolist (chunk (split-string key " " t))
       (let ((separator (if (string= accumulator "") "" " ")))
         (setq accumulator (concat accumulator separator chunk)))
-      (let ((binding (devil--find-command accumulator)))
+      (let* ((result (devil--find-command key accumulator devil--fallbacks))
+             (binding (devil--aget 'binding result)))
         (cond ((not binding))
               ((eq binding 'devil--undefined)
                (message "Devil: %s is undefined" accumulator)

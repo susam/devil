@@ -61,7 +61,7 @@
 
 ;;; Command Lookup ===================================================
 
-(ert-deftest devil-incomplete-key-p ()
+(ert-deftest devil--incomplete-key-p ()
   "Test if `devil--invalid-key-p' works as expected."
   (should (devil--incomplete-key-p "C-"))
   (should (devil--incomplete-key-p "C-x C-"))
@@ -116,23 +116,23 @@
   (should (string= (devil--translate (vconcat ",cmzm")) "C-c M-m"))
   (should (string= (devil--translate (vconcat ",mzm")) "C-M-m")))
 
-(ert-deftest devil--fallback-key ()
-  "Test if `devil--fallback-key' works as expected."
+(ert-deftest devil--terminal-key ()
+  "Test if `devil--terminal-key' works as expected."
   (let ((local-function-key-map (make-sparse-keymap)))
     ;; Define bindings for fallback.
     (define-key local-function-key-map (kbd "<tab>") (kbd "TAB"))
     (define-key local-function-key-map (kbd "M-<return>") (kbd "M-RET"))
     ;; Test translation
-    (should (string= (devil--fallback-key "") nil))
-    (should (string= (devil--fallback-key "a") nil))
-    (should (string= (devil--fallback-key "<return>") nil))
-    (should (string= (devil--fallback-key "C-<tab>") nil))
-    (should (string= (devil--fallback-key "C-<return>") nil))
-    (should (string= (devil--fallback-key "<tab>") "TAB"))
-    (should (string= (devil--fallback-key "M-<return>") "M-RET"))
-    (should (string= (devil--fallback-key "C-<tab> M-<return>") "C-<tab> M-RET"))))
+    (should (string= (devil--terminal-key "") ""))
+    (should (string= (devil--terminal-key "a") "a"))
+    (should (string= (devil--terminal-key "<return>") "<return>"))
+    (should (string= (devil--terminal-key "C-<tab>") "C-<tab>"))
+    (should (string= (devil--terminal-key "C-<return>") "C-<return>"))
+    (should (string= (devil--terminal-key "<tab>") "TAB"))
+    (should (string= (devil--terminal-key "M-<return>") "M-RET"))
+    (should (string= (devil--terminal-key "C-<tab> M-<return>") "C-<tab> M-RET"))))
 
-(ert-deftest devil-shifted-key ()
+(ert-deftest devil--shifted-key ()
   "Test if `devil--shifted-key' works as expected."
   (should (string= (devil--shifted-key "A") "S-a"))
   (should (string= (devil--shifted-key "C-A") "C-S-a"))
@@ -141,7 +141,7 @@
   (should (string= (devil--shifted-key "C-A ") "C-S-a "))
   (should (string= (devil--shifted-key "C-M-A ") "C-M-S-a ")))
 
-(ert-deftest devil-invalid-key-p ()
+(ert-deftest devil--invalid-key-p ()
   "Test if `devil--invalid-key-p' works as expected."
   (should (devil--invalid-key-p ""))
   (should (devil--invalid-key-p "C-x-C-f"))
