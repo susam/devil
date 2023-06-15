@@ -4,7 +4,7 @@
 
 ;; Author: Susam Pal <susam@susam.net>
 ;; Maintainer: Susam Pal <susam@susam.net>
-;; Version: 0.5.0-beta5
+;; Version: 0.5.0
 ;; Package-Requires: ((emacs "24.4"))
 ;; Keywords: convenience, abbrev
 ;; URL: https://github.com/susam/devil
@@ -48,7 +48,7 @@
   :prefix "devil-"
   :group 'editing)
 
-(defconst devil-version "0.5.0-beta5"
+(defconst devil-version "0.5.0"
   "Devil version string.")
 
 (defvar devil-mode-map (make-sparse-keymap)

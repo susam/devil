@@ -2,7 +2,7 @@
 
 * Changelog
 
-** Version 0.5.0 (UNRELEASED)
+** Version 0.5.0 (2023-06-15)
 :PROPERTIES:
 :CUSTOM_ID: 0.5.0
 :END:
@@ -32,12 +32,21 @@
   command =indent-rigidly= bound to it is executed.
 - Format control sequence to show the Devil key sequence read by Devil
   has changed from =%k= to =%r=.
+- The default special key sequences no longer merely insert literal
+  characters into the buffer.  That behaviour was problematic in
+  =isearch-mode= because typing special keys like =, ,= and =, SPC= in
+  =isearch-mode= inserted the literal characters in the buffer as
+  opposed to appending these characters to the search pattern.  The
+  default special key sequences now invoke =devil-execute-key= instead
+  which carefully look up the current binding for the current special
+  key and executes it.  This produces the correct behaviour of special
+  keys even in =isearch-mode=.
 
 *** Fixed
 
 - Fix special key sequence =, <return>= which was broken by the
   previous release of version 0.4.0.
-- Fix special =, ,= in incremental search minor mode.
+- Fix special key =, ,= in =isearch-mode=.
 
 ** Version 0.4.0 (2023-05-27)
 :PROPERTIES:
