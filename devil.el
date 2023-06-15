@@ -4,7 +4,7 @@
 
 ;; Author: Susam Pal <susam@susam.net>
 ;; Maintainer: Susam Pal <susam@susam.net>
-;; Version: 0.5.0-beta3
+;; Version: 0.5.0-beta5
 ;; Package-Requires: ((emacs "24.4"))
 ;; Keywords: convenience, abbrev
 ;; URL: https://github.com/susam/devil
@@ -48,7 +48,7 @@
   :prefix "devil-"
   :group 'editing)
 
-(defconst devil-version "0.5.0-beta4"
+(defconst devil-version "0.5.0-beta5"
   "Devil version string.")
 
 (defvar devil-mode-map (make-sparse-keymap)
@@ -276,9 +276,9 @@ in the format control string."
          (binding (devil--aget 'binding result)))
     (devil--log "Read key: %s => %s => %s => %s"
                 key (key-description key) translated-key binding)
-    (if (eq binding 'devil--undefined)
-        (message "Devil: %s is undefined" translated-key)
-      (devil--execute-command key binding))))
+    (if binding
+        (devil--execute-command key binding)
+      (message "Devil: %s is undefined" translated-key))))
 
 (defun devil-describe-key ()
   "Describe a Devil key sequence."
@@ -497,8 +497,7 @@ k' (`describe-key').  Format control sequences supported by
         (setq accumulator (concat accumulator separator chunk)))
       (let* ((result (devil--find-command key accumulator devil--fallbacks))
              (binding (devil--aget 'binding result)))
-        (cond ((not binding))
-              ((eq binding 'devil--undefined)
+        (cond ((not binding)
                (message "Devil: %s is undefined" accumulator)
                (setq accumulator ""))
               (t
