@@ -2,6 +2,29 @@
 
 * Changelog
 
+** Version 0.6.0 (UNRELEASED)
+:PROPERTIES:
+:CUSTOM_ID: 0.6.0
+:END:
+
+*** Changed
+
+- Devil key sequence =, m= now translates to =M-= instead of =C-M-=.
+- Devil key sequence =, m z= now translates to =M-= instead of =C-M-=.
+- Devil key sequence =, m ,= now translates to =M-,= instead of =C-M-,=.
+- Devil key sequence =, m m= now translates to =C-M-= instead of =M-=.
+- Repeatable key sequence =, m m f= changed to =, m f=.
+- Repeatable key sequence =, m m b= changed to =, m b=.
+- Repeatable key sequence =, m m y= changed to =, m y=.
+- Repeatable key sequence =, m m ^= changed to =, m ^=.
+
+*** Removed
+
+- Devil key translation from =m z= to =M-=.
+- Devil key translation from =m m= to =m=.
+- Devil key translation from =m= to =M-=.
+
+
 ** Version 0.5.0 (2023-06-15)
 :PROPERTIES:
 :CUSTOM_ID: 0.5.0

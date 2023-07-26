@@ -19,7 +19,7 @@ here.  Welcome, instead, to the realm of the Devil!  You will be
 granted the occasional use of the comma key for punctuation, but only
 if you can charm the Devil.  But beware, for in this sinister domain,
 you must relinquish your comma key and embrace an editing experience
-that whispers wicked secrets into your fingertips.
+that whispers wicked secrets into your fingertips!
 
 * Introduction
 :PROPERTIES:
@@ -115,7 +115,9 @@ following steps:
    the corresponding command.
 
 ** Install Automatically from MELPA
-
+:PROPERTIES:
+:CUSTOM_ID: install-automatically-from-melpa
+:END:
 Here is yet another basic way to install and enable Devil using Elisp:
 
 #+begin_src elisp
@@ -193,12 +195,12 @@ Devil may be used:
 5. Type =, s= and watch Devil translate it to =C-s= and invoke
    incremental search.
 
-6. Type =, m s= and watch Devil translate it to =C-M-s= and invoke
-   regular-expression-based incremental search.  Yes, =m= is
-   translated to =M-=.
+6. Type =, m x= and watch Devil translate it to =M-x= and invoke the
+   corresponding command.  Yes, =, m= is translated to =M-=.
 
-7. Type =, m m x= and watch Devil translate it to =M-x= and invoke the
-   corresponding command.
+7. Type =, m m s= and watch Devil translate it to =C-M-s= and invoke
+   regular-expression-based incremental search.  The key sequence =, m
+   m= is translated to =C-M-=.
 
 8. Type =, u , f= and watch Devil translate it to =C-u C-f= and move
    the cursor forward by 4 characters.
@@ -230,7 +232,7 @@ Devil may be used:
     key sequence =, x , f= and Devil will display the documentation of
     the function invoked by this Devil key sequence.  Note: The key
     sequence =, h k= translates to =C-h k= and invokes the vanilla
-    =describe=key=.  It is the Devil key sequence =, h , k= that
+    =describe-key=.  It is the Devil key sequence =, h , k= that
     invokes =devil-describe-key=.
 
 * Typing Commas
@@ -340,17 +342,17 @@ the user to an Emacs key sequence:
 3. If the simple string based replacement discussed in the previous
    point leads to an invalid Emacs key sequence, it skips the
    replacement that causes the resulting Emacs key sequence to become
-   invalid.  For example =, m ,= results in =C-M-C-= after the simple
-   string replacement because the default translation rules replace
-   =,= with =C-= and =m= with =M-=.  However, =C-M-C-= is an invalid
-   key sequence, so the replacement of the second =,= to =C-= is
-   skipped.  Therefore, the input =, m ,= is translated to =C-M-,=
-   instead.
+   invalid.  For example =, m m ,= results in =C-M-C-= after the
+   simple string replacement because the default translation rules
+   replace the leading =, m m= with =C-M-= and the trailing =,= with
+   =C-=.  However, =C-M-C-= is an invalid key sequence, so the
+   replacement of the trailing =,= to =C-= is skipped.  Therefore, the
+   input =, m m ,= is translated to =C-M-,= instead.
 
 4. Finally, Devil looks for key chords in the key sequence that
    contain both the =C-= modifier and an uppercase letter.  If such a
    key chord occurs, then it replaces the uppercase letter with its
-   shifted form, e.g., =, m V= first translates to =C-M-V= according
+   shifted form, e.g., =, m m V= first translates to =C-M-V= according
    to the previous points and then the result is translated to
    =C-M-S-v= according to this point.
 
@@ -367,19 +369,18 @@ more peculiar translations come later in the table.  The concluding
 paragraph of this subsection offers a guide on how to gradually and
 gently adopt these key sequences into your daily routine.
 
-| Input       | Translated | Remarks                           |
-|-------------+------------+-----------------------------------|
-| =, s=       | =C-s=      | =,= is replaced with =C-=         |
-| =, m s=     | =C-M-s=    | =m= is replaced with =M-=         |
-| =, m m x=   | =M-x=      | =, m m= is replaced with =M-= too |
-| =, [ x=     | =C-[ x=    | equivalent to =M-x=               |
-| =, c , ,=   | =C-c ,=    | =, ,= is replaced with =,=        |
-| =, c m m=   | =C-c m=    | =m m= is replaced with =m=        |
-| =, z SPC=   | =C-SPC=    | =, z= is replaced with =C-= too   |
-| =, z z=     | =C-z=      | ditto                             |
-| =, z ,=     | =C-,=      | ditto                             |
-| =, c m z m= | =C-c M-m=  | =m z= is replaced with =M-= too   |
-| =, m z m=   | =C-M-m=    | ditto                             |
+| Input     | Translated | Remarks                                   |
+|-----------+------------+-------------------------------------------|
+| =, s=     | =C-s=      | Rule 1: =,= is replaced with =C-=         |
+| =, m x=   | =M-x=      | Rule 2: =, m= is replaced with =M-=       |
+| =, [ x=   | =C-[ x=    | equivalent to =M-x=                       |
+| =, m m s= | =C-M-s=    | Rule 3: =, m m= is replaced with =C-M-=   |
+| =, m ,=   | =M-,=      | Rule 4: =, m ,= is replaced with =M-,=    |
+| =, m z m= | =M-m=      | Rule 5: =, m z= is replaced with =M-= too |
+| =, c , ,= | =C-c ,=    | Rule 6: =, ,= is replaced with =,=        |
+| =, z SPC= | =C-SPC=    | Rule 7: =, z= is replaced with =C-= too   |
+| =, z z=   | =C-z=      | ditto                                     |
+| =, z ,=   | =C-,=      | ditto                                     |
 
 Note how we cannot use =, SPC= to set a mark because that key sequence
 is already reserved as a special key sequence in =devil-special-keys=.
@@ -387,43 +388,42 @@ In order to conveniently set a mark, Devil translates =, z= to =C-=
 too, so that we can type =, z SPC= and have Devil translate it to
 =C-SPC=.
 
-Also, note how the translation of =, m m= to =M-= allows us to enter a
-key sequence that begins with the =M-= modifier key.  Additionally,
-consider that =, [= is yet another way to type a key sequence that
-contains =M-= because =, [= translates to =C-[= and =C-[ <key>= is
-equivalent to =ESC <key>= which in turn is equivalent to =M-<key>=.
+Also, note that while =, m= may be used to type =M-= we have =, [= as
+yet another way to type a key sequence that contains =M-= because =,
+[= translates to =C-[= and =C-[ <key>= is equivalent to =ESC <key>=
+which in turn is equivalent to =M-<key>=.
 
 The default translation examples presented in the table above look
-weirder and weirder as we go down the table.  But the default
-translation rules are not as arbitrary as they might initially appear
-to be.  The default translation rules are arranged in such a way that
-overall, we get the following effect:
+weirder and weirder as we go down the table.  But they are not as
+arbitrary as they might initially appear to be.  They are arranged in
+such a way that overall, we get the following effect:
 
-- In a Devil key sequence, we see that the special character =,=
-  translates to =C-= and similarly =m= translates to =M-= according to
-  the default translation rules.
+- Devil translates the input =,= to =C-=.  Similarly it translates =,
+  m= to =M-= and =, m m= to =C-M-=.
 
-- If we really want the Devil key sequence to translate to an actual
-  =,= or =m=, then we need to double type the special character, i.e.,
-  in a Devil key sequence, we see that =, ,= translates to =,= and =m
-  m= translates to =m=.  Doubling the special character serves as an
-  escape mechanism to avoid the special meaning of the character and
-  get the literal form of the character instead.
+- When we really want to type the Devil key =,= we need to double type
+  it in the Devil key sequence.  Doubling the special character serves
+  as an escape mechanism to avoid the special meaning of the Devil key
+  and get its literal form instead.
 
 - Now since =, ,= translates to =,= we need another escape mechanism
-  to type =C-,=.  Putting =z= in between serves as this escape
+  to type =C-,=.  Typing =z= in between serves as this escape
   mechanism, i.e., within a Devil key sequence =, z ,= translates to
-  =C-,= and similarly =m z m= translates to =M-m=.
+  =C-,=.
+
+- Similarly since =, m m= translates to =C-M-= we need an escape
+  mechanism to type =M-m=.  Again, typing =z= in between serves as
+  this escape mechanism, i.e., =, m z m= translates to =M-m=.
 
 Here is a gentle guide to adopting these key sequences: For beginners
 using Devil, it is not necessary to memorize all of them right away.
-Understanding that =,= translates to =C-= and =m= translates to =M-=
-is sufficient to begin.  Subsequently, learning that =, m m= too
-translates to =M-= unlocks several more key sequences like =, m m x=
-(=M-x=), =, m m f= (=M-f=), etc.  As you encounter more key sequences
-that are not covered by these initial rules, revisit the above table
-to pick up new translation rules and adopt them in your day-to-day
-usage of Devil.
+Understanding that =,= translates to =C-= and =, m= translates to =M-=
+is sufficient to begin.  Subsequently, learning that =, m m=
+translates to =C-M-= unlocks several more key sequences like =, m m s=
+(=C-M-s=), =, m m f= (=C-M-f=), etc.  As you encounter more key
+sequences that are not covered by these initial rules, revisit the
+above table to pick up new translation rules and adopt them in your
+day-to-day usage of Devil.
 
 * Describe Devil Key
 :PROPERTIES:
@@ -663,18 +663,18 @@ something like God mode or Evil mode?
 
 Well, for one, both God mode and Evil mode are modal editing modes.
 Devil, on the other hand, retains the non-modal editing experience of
-Emacs as much as possible.
+Emacs.
 
-Devil mode began as a fun little tiny experiment.  From the outset, it
-was clear that using something as crucial as the comma for specifying
-the modifier key is asking for trouble.  However, I still wanted to
-see how far I could go with it.  It turned out that in a matter of
-days, I was using it full-time for all of my Emacs usage.
+Devil mode began as a fun little experiment.  From the outset, it was
+clear that using something as crucial as the comma for specifying the
+modifier key is asking for trouble.  However, I still wanted to see
+how far I could go with it.  It turned out that in a matter of days, I
+was using it full-time for all of my Emacs usage.
 
 This experiment was partly motivated by Macbook keyboards which do not
 have a =ctrl= key on the right side of the keyboard.  Being a
 touch-typist myself, I found it inconvenient to type key combinations
-like =C-x=, =C-s=, =C-r=, =C-d=, =C=f=, =C-w=, =C-a=, =C-e=,
+like =C-x=, =C-s=, =C-r=, =C-d=, =C-f=, =C-w=, =C-a=, =C-e=,
 etc. where both the modifier key and the modified key need to be
 pressed with the left hand fingers.  I am not particularly fond of
 remapping =caps lock= to behave like =ctrl= because that still suffers
@@ -704,7 +704,7 @@ like God mode has.  Instead, Devil waits for an activation key (=,= by
 default) and as soon as it is activated, it intercepts and translates
 keys, runs the corresponding command, and then gets out of the way.
 So Devil tries to retain the non-modal editing experience of vanilla
-Emacs as much as possible.
+Emacs.
 
 Now it is worth mentioning that some of this non-modal editing
 experience can be reproduced in god-mode too using its
@@ -733,7 +733,7 @@ as sticky which leads to simpler key sequences at the cost of a little
 additional typing, i.e., =, x , f= translates to =C-x C-f= and =, x f=
 translates to =C-x f=.
 
-To summarize, there are primarily three things that Devil does
+To summarize, there are primarily four things that Devil does
 differently:
 
 - Provide a non-modal editing experience from the outset.
@@ -782,13 +782,13 @@ and preferences.
     of =, x , f= to invoke =C-x C-f=?
 
     Devil does not support sticky keys.  Say, Devil were to translate
-    =, x f= to =C-x C-f=, how then would you invoke =C-x f=?  We need
+    =, x f= to =C-x C-f=, how then would we invoke =C-x f=?  We need
     some way to disambiguate between =C-x C-f= and =C-x f=.  Different
     tools take different approaches to disambiguate the two key
-    sequences.  For example, god-mode translates =x f= to =C-x C-f=
-    and =x SPC f= to =C-x f=.  That is, God-mode treats the =C-=
-    modifier as sticky by default but when we want to make it
-    non-sticky, we need to type =SPC= in god-mode.
+    sequences.  God-mode translates =x f= to =C-x C-f= and =x SPC f=
+    to =C-x f=.  That is, God-mode treats the =C-= modifier as sticky
+    by default but when we want to make it non-sticky, we need to type
+    =SPC= in god-mode.
 
     Devil treats the Devil key as non-sticky, so that there is no need
     for additional peculiar rules to switch between sticky and
@@ -816,13 +816,12 @@ and preferences.
 Devil is a minor mode to translate key sequences.  Devil utilizes this
 translation capability to provide a modifier-free editing experience
 and it does so without resorting to modal-editing.  Devil retains the
-non-modal editing of vanilla Emacs as much as possible.  This mode was
-written as a quirky experiment to make it easier to use Emacs with
-only one =ctrl= key.  However, the resulting mode turned out to be
-quite convenient to use, in general.  You might find Devil
-comfortable.  Or you might find Devil to be a terrible idea.  It is
-also possible that you might find Devil useful but intrusive.  In such
-cases, there are plenty of customisable options that you can modify to
-configure Devil according to your preferences.  If you need any help
-or if you find any issues, please create an issue at
-[[https://github.com/susam/devil/issues]].
+non-modal editing of vanilla Emacs.  This mode was written as a quirky
+experiment to make it easier to use Emacs with only one =ctrl= key.
+However, the resulting mode turned out to be quite convenient to use,
+in general.  You might find Devil comfortable.  Or you might find
+Devil to be a terrible idea.  It is also possible that you might find
+Devil useful but intrusive.  In such cases, there are plenty of
+customisable options that you can modify to configure Devil according
+to your preferences.  If you need any help or if you find any issues,
+please create an issue at [[https://github.com/susam/devil/issues]].

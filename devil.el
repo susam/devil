@@ -4,7 +4,7 @@
 
 ;; Author: Susam Pal <susam@susam.net>
 ;; Maintainer: Susam Pal <susam@susam.net>
-;; Version: 0.5.0
+;; Version: 0.6.0-beta1
 ;; Package-Requires: ((emacs "24.4"))
 ;; Keywords: convenience, abbrev
 ;; URL: https://github.com/susam/devil
@@ -141,13 +141,13 @@ supported by `devil-format' may be used in the keys."
   :type '(alist :key-type string :value-type function))
 
 (defcustom devil-translations
-  (list (cons "%k z" "C-")
+  (list (cons "%k m m" "C-M-")
+        (cons "%k m %k" "M-,")
+        (cons "%k m z" "M-")
+        (cons "%k m" "M-")
         (cons "%k %k" "%k")
-        (cons "%k m m" "M-")
-        (cons "m z" "M-")
-        (cons "m m" "m")
-        (cons "%k"  "C-")
-        (cons "m" "M-"))
+        (cons "%k z" "C-")
+        (cons "%k"  "C-"))
   "Translation rules to convert Devil input to Emacs key sequence.
 
 The value of this variable is an alist where each item represents
@@ -171,10 +171,10 @@ by `devil-format' may be used in the keys and values."
         "%k k"
         "%k s"
         "%k /"
-        "%k m m f"
-        "%k m m b"
-        "%k m m y"
-        "%k m m ^"
+        "%k m f"
+        "%k m b"
+        "%k m y"
+        "%k m ^"
         "%k x o")
   "Devil mode repeatable key sequences.
 
