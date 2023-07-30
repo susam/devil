@@ -782,23 +782,26 @@ and preferences.
     of =, x , f= to invoke =C-x C-f=?
 
     Devil does not support sticky keys.  Say, Devil were to translate
-    =, x f= to =C-x C-f=, how then would we invoke =C-x f=?  We need
+    =, x f= to =C-x C-f=, how would we invoke =C-x f= then?  We need
     some way to disambiguate between =C-x C-f= and =C-x f=.  Different
     tools take different approaches to disambiguate the two key
     sequences.  God-mode translates =x f= to =C-x C-f= and =x SPC f=
-    to =C-x f=.  That is, God-mode treats the =C-= modifier as sticky
-    by default but when we want to make it non-sticky, we need to type
-    =SPC= in god-mode.
+    to =C-x f=, i.e., God-mode treats the =C-= modifier as sticky by
+    default but when we want to make it non-sticky, we need to type
+    =SPC= in god-mode.  This makes some key sequences like =C-x C-f=
+    shorter to type but some other key sequences like =C-x f= longer
+    to type.
 
     Devil treats the Devil key as non-sticky, so that there is no need
     for additional peculiar rules to switch between sticky and
     non-sticky behaviour to disambiguate key sequences like =C-x C-f=
     and =C-x f=.  With Devil =, x , f= translates to =C-x C-f= and
     similarly =, x f= translates to =C-x f=.  The translation rules
-    are simpler at the cost of a little additional typing.  In most
-    cases, Devil requires typing an additional comma that one might
-    have avoided if the comma were sticky.  This little additional
-    typing becomes muscle memory in no time.
+    are simpler at the cost of a little additional typing in some
+    cases.  In most such cases, Devil requires typing an additional
+    comma that one could have avoided if the comma were sticky.
+    However, in other cases, Devil eliminates the need to type an
+    extra key to make the modifier key non-sticky.
 
 04. Are there some things that are easier to do with Devil than
     god-mode?
