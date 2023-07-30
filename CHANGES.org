@@ -24,7 +24,6 @@
 - Devil key translation from =m m= to =m=.
 - Devil key translation from =m= to =M-=.
 
-
 ** Version 0.5.0 (2023-06-15)
 :PROPERTIES:
 :CUSTOM_ID: 0.5.0
