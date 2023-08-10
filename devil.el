@@ -141,13 +141,13 @@ supported by `devil-format' may be used in the keys."
   :type '(alist :key-type string :value-type function))
 
 (defcustom devil-translations
-  (list (cons "%k m m" "C-M-")
-        (cons "%k m %k" "M-,")
-        (cons "%k m z" "M-")
-        (cons "%k m" "M-")
-        (cons "%k %k" "%k")
-        (cons "%k z" "C-")
-        (cons "%k"  "C-"))
+  '(("%k m m" . "C-M-")
+    ("%k m %k" . "M-,")
+    ("%k m z" . "M-")
+    ("%k m" . "M-")
+    ("%k %k" . "%k")
+    ("%k z" . "C-")
+    ("%k" . "C-"))
   "Translation rules to convert Devil input to Emacs key sequence.
 
 The value of this variable is an alist where each item represents
