@@ -99,15 +99,15 @@ This is insane.  I am going to try it immediately.  -- [[https://news.ycombinato
 #+end_quote
 
 #+begin_quote
-Will defiantly check this out.  -- [[https://www.reddit.com/r/emacs/comments/13aj99j/comment/jj94y35/][@strings]]
+Will defiantly check this out.  -- [[https://old.reddit.com/r/emacs/comments/13aj99j/devil_mode_a_twisted_key_sequence_translator_for/jj94y35/][@strings]]
 #+end_quote
 
 #+begin_quote
-Defiantly!  -- [[https://www.reddit.com/r/emacs/comments/13aj99j/comment/jj98owf/][@oantolin]]
+Defiantly!  -- [[https://old.reddit.com/r/emacs/comments/13aj99j/devil_mode_a_twisted_key_sequence_translator_for/jj98owf/][@oantolin]]
 #+end_quote
 
 #+begin_quote
-😈  -- [[https://www.reddit.com/r/emacs/comments/13aj99j/comment/jj72ive/][@SequentialDesign]]
+😈  -- [[https://old.reddit.com/r/emacs/comments/13aj99j/devil_mode_a_twisted_key_sequence_translator_for/jj72ive/][@SequentialDesign]]
 #+end_quote
 
 ** More
