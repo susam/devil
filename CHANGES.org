@@ -10,6 +10,10 @@
 *** Added
 
 - Repeatable key sequence =, m e=.
+- Repeatable key sequence =, m h=.
+- Repeatable key sequence group for =, x [= and =, x ]=.
+- Repeatable key sequence group for =, x ^=, =, x {=, and =, x }=.
+- Repeatable key sequence =, x u=.
 
 *** Changed
 

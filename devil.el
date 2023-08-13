@@ -4,7 +4,7 @@
 
 ;; Author: Susam Pal <susam@susam.net>
 ;; Maintainer: Susam Pal <susam@susam.net>
-;; Version: 0.7.0-beta1
+;; Version: 0.7.0-beta2
 ;; Package-Requires: ((emacs "24.4"))
 ;; Keywords: convenience, abbrev
 ;; URL: https://github.com/susam/devil
@@ -163,16 +163,20 @@ by `devil-format' may be used in the keys and values."
   :type '(alist :key-type string :value-type string))
 
 (defcustom devil-repeatable-keys
-  '(("%k p" "%k n" "%k f" "%k b")
+  '(("%k /")
     ("%k d")
     ("%k k")
-    ("%k s")
-    ("%k /")
-    ("%k m f" "%k m b")
-    ("%k m e")
-    ("%k m y")
     ("%k m ^")
-    ("%k x o"))
+    ("%k m e")
+    ("%k m f" "%k m b")
+    ("%k m h")
+    ("%k m y")
+    ("%k p" "%k n" "%k f" "%k b")
+    ("%k s")
+    ("%k x [" "%k x ]")
+    ("%k x ^" "%k x {" "%k x }")
+    ("%k x o")
+    ("%k x u"))
   "Devil mode repeatable key sequences arranged in groups.
 
 The value of this variable is a list of lists.  Each item (each
