@@ -37,7 +37,8 @@ with using =,= to mean the =C-= modifier?  It turns out, this terrible
 idea can be made to work without too much of a hassle.  At least it
 works for me.  It might work for you too.  If it does not, Devil can
 be configured to use another key instead of =,= to mean the =C-=
-modifier.  See the section [[*Custom Devil Key]] for an example.
+modifier.  See the section [[*Custom Devil Key]] and the subsequent
+sections for a few examples.
 
 A sceptical reader may rightfully ask: If =,= is translated to =C-=,
 how on earth are we going to insert a literal =,= into the text when
@@ -184,49 +185,63 @@ Devil may be used:
    key sequences can be repeated by typing the last key of the Devil
    key sequence over and over again.
 
-4. Another example of a repeatable Devil key sequence is =, f f f=
-   which moves the cursor word by multiple characters.  A few other
-   examples of repeatable keys are =, k k k= to kill lines, =, / / /=
-   to undo changes, etc.  Type =C-h v devil-repeatable-keys RET= to
-   see the complete list of repeatable keys.  If you want all Devil
-   key sequences to be repeatable, see the section [[*Make All Keys
-   Repeatable]] to find out how to do this.
+4. Each repeatable key sequence belongs to a repeatable key sequence
+   groups.  Like before, type =, p p p= to move the cursor up by a few
+   lines.  But then immediately type =n n= to move the cursor down by
+   a couple of lines.  Then immediately type =p n b f= to move the
+   cursor up, down, left, and right.  The key sequences =, p= and =,
+   n= and =, f= and =, b= form a single repeatable key sequence group.
+   Therefore after we type any one of them, we can repeat that key
+   sequence or any other key sequence in the same group over and over
+   again merely by typing the last character of that key sequence.
+   Typing any other key stops the repetition and the default behaviour
+   of that other key is then observed.  Type =C-h v
+   devil-repeatable-keys RET= to see the complete list of all
+   repeatable key sequence groups.
 
-5. Type =, s= and watch Devil translate it to =C-s= and invoke
+5. Sometimes a repeatable key sequence may be the only key sequence in
+   a repeatable key sequence group.  An example of such a key sequence
+   is =, m ^= which translates to =M-^= and joins the current line to
+   the previous line.  In a text buffer with multiple lines type =, m
+   ^= to join the current line to the previous line.  Then type =^=
+   repeatedly to continue joining lines.  Typing any other key stops
+   the repetition.
+
+6. Type =, s= and watch Devil translate it to =C-s= and invoke
    incremental search.
 
-6. Type =, m x= and watch Devil translate it to =M-x= and invoke the
+7. Type =, m x= and watch Devil translate it to =M-x= and invoke the
    corresponding command.  Yes, =, m= is translated to =M-=.
 
-7. Type =, m m s= and watch Devil translate it to =C-M-s= and invoke
+8. Type =, m m s= and watch Devil translate it to =C-M-s= and invoke
    regular-expression-based incremental search.  The key sequence =, m
    m= is translated to =C-M-=.
 
-8. Type =, u , f= and watch Devil translate it to =C-u C-f= and move
+9. Type =, u , f= and watch Devil translate it to =C-u C-f= and move
    the cursor forward by 4 characters.
 
-9. Type =, u u , f= and the cursor moves forward by 16 characters.
+10. Type =, u u , f= and the cursor moves forward by 16 characters.
    Devil uses its translation rules and an additional keymap to make
    the input key sequence behave like =C-u C-u C-f= which moves the
    cursor forward by 16 characters.
 
-10. Type =, SPC= to type a comma followed by space.  This is a special
+11. Type =, SPC= to type a comma followed by space.  This is a special
     key sequence to make it convenient to type a comma in the text.
     Note that this sacrifices the use of =, SPC= to mean =C-SPC= which
     could have been a convenient way to set a mark.  See the section
     [[*Reclaim , SPC to Set Mark]] if you do not want to make this
     sacrifice.
 
-11. Type =, z SPC= and watch Devil translate it to =C-SPC= and set a
+12. Type =, z SPC= and watch Devil translate it to =C-SPC= and set a
     mark.  Yes, =, z= is translated to =C-= too.
 
-12. Similarly, type =, RET= to type a comma followed by the =enter=
+13. Similarly, type =, RET= to type a comma followed by the =enter=
     key.  This is another special key.
 
-13. Type =, ,= to type a single comma.  This special key is useful for
+14. Type =, ,= to type a single comma.  This special key is useful for
     cases when you really need to type a single literal comma.
 
-14. Type =, h , k= to invoke =devil-describe-key=.  This is a special
+15. Type =, h , k= to invoke =devil-describe-key=.  This is a special
     key that invokes the Devil variant of =describe-key= included in
     vanilla Emacs.  When the key input prompt appears, type the Devil
     key sequence =, x , f= and Devil will display the documentation of
@@ -307,10 +322,12 @@ bound to the key sequences:
    sequence and executing the command bound to it, Devil checks if the
    key sequence is a repeatable key sequence.  If it is found to be a
    repeatable key sequence, then Devil sets a transient map so that
-   the command can be repeated merely by typing the last keystroke of
-   the input key sequence.  This is how =, p p p= moves the cursor up
-   by three lines.  Type =C-h v devil-repeatable-keys RET= to see the
-   list of repeatable Devil key sequences.
+   the repeatable key sequences that belong to the same group as the
+   typed Devil key sequence can be invoked merely by typing the last
+   character of the input key sequence.  This is how =, p p p f f=
+   moves the cursor up by three lines and then by two characters
+   forward.  Type =C-h v devil-repeatable-keys RET= to see the list of
+   repeatable Devil key sequences.
 
 The variables =devil-special-keys=, =devil-translations=, and
 =devil-repeatable-keys= may contain keys or values with the string
@@ -416,7 +433,7 @@ such a way that overall, we get the following effect:
   this escape mechanism, i.e., =, m z m= translates to =M-m=.
 
 Here is a gentle guide to adopting these key sequences: For beginners
-using Devil, it is not necessary to memorize all of them right away.
+using Devil, it is not necessary to memorise all of them right away.
 Understanding that =,= translates to =C-= and =, m= translates to =M-=
 is sufficient to begin.  Subsequently, learning that =, m m=
 translates to =C-M-= unlocks several more key sequences like =, m m s=
@@ -624,14 +641,16 @@ keys as small as possible.
 By default Devil has a small list of key sequences that are considered
 repeatable.  This list is defined in the variable
 =devil-repeatable-keys=.  Type =C-h v devil-repeatable-keys RET= to
-view this list.  For example, consider the repeatable key sequence =%k
-p= in this list.  Assuming that the default Devil and Emacs key
-bindings have not been changed, this means that after we type =C-p=
-and move the cursor to the previous line, we can repeat this operation
-by typing =p= over and again.  The repetition occurs as long as the
-last character of the repeatable key sequence is typed again.  Typing
-any other key stops the repetition and the default behaviour of the
-other key is then observed.
+view this list.  For example, consider the repeatable key sequence
+group =("%k p" "%k n" "%k f" "%k b")= in this list.  Assuming that the
+default Devil and Emacs key bindings have not been changed, this means
+that after we type =, p= and move the cursor to the previous line, we
+can repeat this operation by typing =p= over and again.  We can also
+immediately type =f= to move the cursor right by one character.  The
+repetition occurs as long as the last character of any repeatable key
+sequence in the group is typed again.  Typing any other key stops the
+repetition and the default behaviour of the other key is then
+observed.
 
 It is possible to make all key sequences repeatable by setting the
 variable =devil-all-keys-repeatable= to =t=.  Here is an example
@@ -643,14 +662,149 @@ configuration:
   (global-devil-mode)
 #+end_src
 
-Now every Devil key sequence that ends up executing an Emacs command
-can be repeated by merely repeating the last character of the key
-sequence.  The list in =devil-repeatable-keys= is ignored.
+With this configuration, the repeatable key sequence groups still
+function as described above.  However, in addition to that now all
+other Devil key sequences that end up executing Emacs commands also
+become repeatable, i.e., any Devil key sequence that does not belong
+to =devil-all-keys-repeatable= but invokes an Emacs command is now
+repeatable and it can be repeated by merely repeating the last
+character of the key sequence.
 
 Note that only Devil key sequences that get translated to a regular
 Emacs key sequence and result in the execution of an Emacs command can
 be repeatable.  The special keys defined in =devil-special-keys= are
 never repeatable.
+
+** Interaction with Repeat Mode
+:PROPERTIES:
+:CUSTOM_ID: interaction-with-repeat-mode
+:END:
+Repeatable keys in Devil function somewhat like =repeat-mode=
+introduced in Emacs 28.1.  Here is an example configuration that
+disables repeatable keys in Devil and shows how to use =repeat-mode=
+instead to define repeatable commands.
+
+#+begin_src elisp
+  (require 'devil)
+  (global-devil-mode)
+  (setq devil-repeatable-keys nil)
+
+  (defvar movement-repeat-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "p") #'previous-line)
+      (define-key map (kbd "n") #'next-line)
+      (define-key map (kbd "b") #'backward-char)
+      (define-key map (kbd "f") #'forward-char)
+      map))
+
+  (dolist (cmd '(previous-line next-line backward-char forward-char))
+    (put cmd 'repeat-map 'movement-repeat-map))
+
+  (repeat-mode)
+#+end_src
+
+Now if we type =C-p= to move the cursor up by one line, we can repeat
+it by merely typing =p= again and we can also type or repeat =n=, =b=,
+or =f=, to move the cursor down, left, or right respectively.
+
+Repeat mode works fine with Devil too, so with the above
+configuration, when we type =, p= to move the cursor to the previous
+line, we can type or repeat =p=, =n=, =b=, or =f= to move the cursor
+up, down, left, or right again.
+
+We do not really need to disable Devil's repeatable keys while using
+repeat mode.  Both can be enabled together.  However, the results can
+be surprising due to certain differences between the two.  For
+example, consider the following configuration:
+
+#+begin_src elisp
+  (require 'devil)
+  (global-devil-mode)
+
+  (defvar movement-repeat-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "p") #'previous-line)
+      (define-key map (kbd "n") #'next-line)
+      map))
+
+  (dolist (cmd '(previous-line next-line))
+    (put cmd 'repeat-map 'movement-repeat-map))
+
+  (repeat-mode)
+#+end_src
+
+Now both Devil repeatable keys and repeat mode are active.  If we now
+type =, p= we can repeat =p= and =n= to move the cursor up and down.
+Repeat mode makes this repetition possible.  Additionally, after
+typing =, p= we can also type or repeat =b= and =f= to move the cursor
+left and right.  Devil makes this repetition possible.  We can tell
+the difference between repeat mode handling repeatable commands and
+Devil mode handling repeatable keys by looking at the echo area.  When
+we repeat =p= which is handled by repeat mode, we see a message
+"Repeat with p, n" in the echo area.  But when we repeat =b= which is
+handled by Devil, we see no such message; Devil sets up repeatable
+keys silently.
+
+** Comparison with Repeat Mode
+:PROPERTIES:
+:CUSTOM_ID: comparison-with-repeat-mode
+:END:
+The previous section demonstrates how much of what Devil accomplishes
+with its support for repeatable key sequences can also be accomplished
+with =repeat-mode= that comes out of the box in Emacs 28.1 and later
+versions.
+
+However, there is a crucial difference between Devil's repeatable keys
+and =repeat-mode=.  Repeat mode provides repeatable /commands/ but
+Devil supports repeatable /keys/.  This different is crucial and
+arguably makes repeatable key sequences easier to configure in Devil.
+To demonstrate the difference, let us consider the key sequence =M-e=.
+The command =forward-sentence= is bound to it by default in the global
+map.  However, in Org mode, the command =org-forward-sentence= is
+bound to it.  The corresponding Devil key sequence is =, m e= and this
+is a repeatable key sequence in Devil.  Therefore, we can type =, m e=
+followed by =e e e= and so on to move the cursor forward by multiple
+sentences in text mode as well as in Org mode.
+
+To emulate the same behaviour using repeat mode, we need a
+configuration like this:
+
+#+begin_src elisp
+  (require 'devil)
+  (global-devil-mode)
+  (setq devil-repeatable-keys nil)
+
+  (defvar forward-sentence-repeat-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "e") #'forward-sentence)
+      map))
+
+  (defvar org-forward-sentence-repeat-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "e") #'org-forward-sentence)
+      map))
+
+  (put #'forward-sentence 'repeat-map 'forward-sentence-repeat-map)
+  (put #'org-forward-sentence 'repeat-map 'org-forward-sentence-repeat-map)
+
+  (repeat-mode)
+#+end_src
+
+Note how we need to configure repeat mode for both commands that are
+bound to =M-e=.  With the above configuration, we can now type =, m e=
+followed by =e e e= to move forward by multiple sentences in both text
+mode as well as Org mode.  However, we can never be sure if we missed
+configuring repeat mode for some other command that might be bound to
+=M-h= in some mode.  For example, in C mode, the command
+=c-end-of-statement= is bound to =M-e=.  The above configuration is no
+good for repeating this command by typing =e e e=.
+
+Devil, however, can repeat the command bound to =M-e= in any mode.
+Devil does not make the command bound to it in a particular mode
+repeatable.  Instead Devil makes the key sequence =, m e= itself
+repeatable.  Therefore, with Devil's own support for repeatable key
+sequences, we can type =, m e= and then =e e e= to repeat the command
+bound to =M-e= regardless of which mode is active.
 
 * Why?
 :PROPERTIES:
@@ -768,8 +922,8 @@ and preferences.
     long finger to reach the comma key helps me avoid this wrist
     strain.  If you do not like this default, it is quite easy to
     customise the Devil key to be the semicolon or any other key of
-    your choice.  See the section [[*Custom Devil Key]] to learn how to do
-    this.
+    your choice.  See the section [[*Custom Devil Key]] and the subsequent
+    sections to learn how to do this.
 
 02. I am happy with typing =, ,= every time, I need to type a comma.
     Can I free up =, SPC= to invoke =set-mark-command=?
@@ -816,7 +970,7 @@ and preferences.
 :PROPERTIES:
 :CUSTOM_ID: conclusion
 :END:
-Devil is a minor mode to translate key sequences.  Devil utilizes this
+Devil is a minor mode to translate key sequences.  Devil utilises this
 translation capability to provide a modifier-free editing experience
 and it does so without resorting to modal-editing.  Devil retains the
 non-modal editing of vanilla Emacs.  This mode was written as a quirky

@@ -4,7 +4,7 @@
 
 ;; Author: Susam Pal <susam@susam.net>
 ;; Maintainer: Susam Pal <susam@susam.net>
-;; Version: 0.6.0
+;; Version: 0.7.0-beta1
 ;; Package-Requires: ((emacs "24.4"))
 ;; Keywords: convenience, abbrev
 ;; URL: https://github.com/susam/devil
@@ -163,42 +163,46 @@ by `devil-format' may be used in the keys and values."
   :type '(alist :key-type string :value-type string))
 
 (defcustom devil-repeatable-keys
-  (list "%k p"
-        "%k n"
-        "%k f"
-        "%k b"
-        "%k d"
-        "%k k"
-        "%k s"
-        "%k /"
-        "%k m f"
-        "%k m b"
-        "%k m y"
-        "%k m ^"
-        "%k x o")
-  "Devil mode repeatable key sequences.
+  '(("%k p" "%k n" "%k f" "%k b")
+    ("%k d")
+    ("%k k")
+    ("%k s")
+    ("%k /")
+    ("%k m f" "%k m b")
+    ("%k m e")
+    ("%k m y")
+    ("%k m ^")
+    ("%k x o"))
+  "Devil mode repeatable key sequences arranged in groups.
 
-The value of this variable is a list where each item represents a
-key sequence that may be repeated merely by typing the last
-character in the key sequence.  Format control sequences
-supported by `devil-format' may be used in the items.  Only key
-sequences that translate to a complete Emacs key sequence
-according to `devil-translations' and execute an Emacs command
-are made repeatable.  Note that this variable is ignored if
-`devil-all-keys-repeatable' is set to t."
-  :type '(repeat string))
+The value of this variable is a list of lists.  Each item (each
+inner list) of the top-level list represents a group of
+repeatable key sequences.  Each item of each group is a
+repeatable key sequence.  A repeatable key sequence may be
+repeated merely by typing the last character in the key sequence.
+After a repeatable key sequence has been typed, typing the last
+character of any repeatable key sequence that belongs to the same
+group executes that key sequence.
+
+Note that only Devil key sequences that get translated to a
+regular Emacs key sequence and result in the execution of an
+Emacs command can be repeatable.  The special keys defined in
+`devil-special-keys' are never repeatable.
+
+Format control sequences supported by `devil-format' may be used
+in the items.  Only key sequences that translate to a complete
+Emacs key sequence according to `devil-translations' and execute
+an Emacs command are made repeatable."
+  :type '(repeat (repeat string)))
 
 (defcustom devil-all-keys-repeatable nil
-  "All successfully translated key sequences become repeatable iff t.
+  "All successfully translated key sequences become repeatable if non-nil.
 
-When this variable is set to t all key sequences that translate
-to a complete and defined Emacs key sequence become a repeatable
-key sequence, i.e., every such key sequence can be repeated
-merely by typing the last character in the key sequence.  Also,
-note that when this variable is set to t, the variable
-`devil-repeatable-keys' is ignored.  However when this variable
-is set to nil, the variable `devil-repeatable-keys' is used to
-determine whether a key sequence is repeatable or not."
+When this variable is set to non-nil all key sequences that
+translate to a complete and defined Emacs key sequence become a
+repeatable key sequence, i.e., every such key sequence can be
+repeated merely by typing the last character in the key
+sequence."
   :type 'boolean)
 
 (defcustom devil-lighter " Devil"
@@ -276,9 +280,11 @@ in the format control string."
          (binding (devil--aget 'binding result)))
     (devil--log "Read key: %s => %s => %s => %s"
                 key (key-description key) translated-key binding)
-    (if binding
-        (devil--execute-command key binding)
-      (message "Devil: %s is undefined" translated-key))))
+    (if (not binding)
+        (message "Devil: %s is undefined" translated-key)
+      (devil--execute-command key binding)
+      (when translated-key
+        (devil--set-repeatable-keys (key-description key))))))
 
 (defun devil-describe-key ()
   "Describe a Devil key sequence."
@@ -510,10 +516,7 @@ k' (`describe-key').  Format control sequences supported by
     (devil--update-command-loop-info key binding)
     (devil--log-command-loop-info)
     (devil--log "Executing command: %s => %s" described-key binding)
-    (call-interactively binding)
-    (when (devil--repeatable-key-p described-key)
-      (devil--set-transient-map (vector (aref key (1- (length key))))
-                                binding))))
+    (call-interactively binding)))
 
 (defun devil--update-command-loop-info (key binding)
   "Update variables that maintain command loop information.
@@ -558,20 +561,36 @@ last-command-event: %s; char-before: %s"
               last-command-event
               (char-before)))
 
-(defun devil--repeatable-key-p (described-key)
-  "Return t iff DESCRIBED-KEY belongs to `devil-repeatable-keys'."
-  (or devil-all-keys-repeatable
-      (catch 'break
-        (dolist (repeatable-key devil-repeatable-keys)
-          (when (string= described-key (devil-format repeatable-key))
-            (throw 'break t))))))
+(defun devil--set-repeatable-keys (described-key)
+  "Set transient map for repeatable keys in the same group as DESCRIBED-KEY."
+  (let ((group (or (devil--find-repeatable-group described-key)
+                   (when devil-all-keys-repeatable (list described-key)))))
+    (when group
+      (devil--log "Setting repeatable keys for %s: %S" described-key group)
+      (devil--set-transient-map group))))
 
-(defun devil--set-transient-map (key binding)
-  "Set transient map to run BINDING with KEY."
-  (devil--log "Setting transient map: %s => %s" (key-description key) binding)
+(defun devil--set-transient-map (repeatable-keys-group)
+  "Set transient map for the keys in REPEATABLE-KEYS-GROUP."
   (let ((map (make-sparse-keymap)))
-    (define-key map key binding)
+    (dolist (repeatable-key repeatable-keys-group)
+      (let* ((key (vconcat (kbd (devil-format repeatable-key))))
+             (translated-key (devil--translate key))
+             (transient-key (vector (aref key (1- (length key)))))
+             (result (devil--find-command key translated-key devil--fallbacks))
+             (binding (devil--aget 'binding result)))
+        (when binding
+          (devil--log "Setting transient repeatable key: %s => %s"
+                      (key-description transient-key) binding)
+          (define-key map transient-key binding))))
     (set-transient-map map t)))
+
+(defun devil--find-repeatable-group (described-key)
+  "Find the repeatable keys group that DESCRIBED-KEY belongs to."
+  (catch 'break
+    (dolist (repeatable-group devil-repeatable-keys)
+      (dolist (repeatable-key repeatable-group)
+        (when (string= described-key (devil-format repeatable-key))
+          (throw 'break repeatable-group))))))
 
 
 ;;; Utility Functions ================================================

@@ -2,7 +2,33 @@
 
 * Changelog
 
-** Version 0.6.0 (UNRELEASED)
+** Version 0.7.0 (2023-08-12)
+:PROPERTIES:
+:CUSTOM_ID: 0.7.0
+:END:
+
+*** Added
+
+- Repeatable key sequence =, m e=.
+
+*** Changed
+
+- Support for repeatable key groups.  When a Devil key sequence in a
+  repeatable group is typed, then that key sequence or any another key
+  sequence in the same group can be executed and repeated merely by
+  typing the last character of that key sequence.
+- Repeatable key groups defined in =devil-repeatable-keys= is not
+  ignored anymore when =devil-all-keys-repeatable= is set to non-nil.
+- Devil key sequences =, p=, =, n=, =, f=, and =, b= have been grouped
+  together into a repeatable key group.
+- Devil key sequences =, m f= and =, m b= have been grouped together
+  into a repeatable key group.
+
+*** Fixed
+
+- Prevent special key sequences from being repeatable.
+
+** Version 0.6.0 (2023-07-30)
 :PROPERTIES:
 :CUSTOM_ID: 0.6.0
 :END:
