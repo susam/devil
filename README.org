@@ -80,6 +80,7 @@ Thanks to:
 
 - [[https://github.com/riscy][Chris Rayner]] for initial code review.
 - [[https://github.com/phikal][Philip Kaludercic]] for initial code review and patches.
+- [[https://github.com/morganwillcock][Morgan Willcock]] for initial feedback and code reviews.
 
 ** Reactions
 :PROPERTIES:
