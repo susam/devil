@@ -10,10 +10,12 @@
 *** Added
 
 - Repeatable key sequence =, m e=.
-- Repeatable key sequence =, m h=.
-- Repeatable key sequence group for =, x [= and =, x ]=.
-- Repeatable key sequence group for =, x ^=, =, x {=, and =, x }=.
 - Repeatable key sequence =, x u=.
+- Repeatable key sequence group for =, m @= and =, m h=.
+- Repeatable key sequence group for =, x [= and =, x ]=.
+- Repeatable key sequence group for =, x ^= and =, x {= and =, x }=.
+- Repeatable key sequences =, a= and =, e= added to group for =, p=.
+- Repeatable key sequences =, m a= and =, m e= added to group for =, m b=.
 
 *** Changed
 
@@ -23,8 +25,8 @@
   typing the last character of that key sequence.
 - Repeatable key groups defined in =devil-repeatable-keys= is not
   ignored anymore when =devil-all-keys-repeatable= is set to non-nil.
-- Devil key sequences =, p=, =, n=, =, f=, and =, b= have been grouped
-  together into a repeatable key group.
+- Devil key sequences =, p= and =, n= and =, b= and =, f= have been
+  grouped together into a repeatable key group.
 - Devil key sequences =, m f= and =, m b= have been grouped together
   into a repeatable key group.
 

@@ -4,7 +4,7 @@
 
 ;; Author: Susam Pal <susam@susam.net>
 ;; Maintainer: Susam Pal <susam@susam.net>
-;; Version: 0.7.0-beta2
+;; Version: 0.7.0-beta3
 ;; Package-Requires: ((emacs "24.4"))
 ;; Keywords: convenience, abbrev
 ;; URL: https://github.com/susam/devil
@@ -168,10 +168,10 @@ by `devil-format' may be used in the keys and values."
     ("%k k")
     ("%k m ^")
     ("%k m e")
-    ("%k m f" "%k m b")
-    ("%k m h")
+    ("%k m b" "%k m f" "%k m a" "% k m e")
+    ("%k m @" "%k m h")
     ("%k m y")
-    ("%k p" "%k n" "%k f" "%k b")
+    ("%k p" "%k n" "%k b" "%k f" "%k a" "%k e")
     ("%k s")
     ("%k x [" "%k x ]")
     ("%k x ^" "%k x {" "%k x }")

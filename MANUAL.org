@@ -974,7 +974,7 @@ Devil is a minor mode to translate key sequences.  Devil utilises this
 translation capability to provide a modifier-free editing experience
 and it does so without resorting to modal-editing.  Devil retains the
 non-modal editing of vanilla Emacs.  This mode was written as a quirky
-experiment to make it easier to use Emacs with only one =ctrl= key.
+experiment to make it easier to use Emacs without modifier keys.
 However, the resulting mode turned out to be quite convenient to use,
 in general.  You might find Devil comfortable.  Or you might find
 Devil to be a terrible idea.  It is also possible that you might find
