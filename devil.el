@@ -475,7 +475,7 @@ match is found, it is replaced with its corresponding binding."
   (catch 'break
     (dolist (chunk (split-string translated-key " "))
       (when (or (string= chunk "")
-                (not (string-match-p "^\\(?:[ACHMSs]-\\)*[^-]*$" chunk))
+                (not (string-match-p "^\\(?:[ACHMSs]-\\)*\\([^-]*\\|<.*>\\)$" chunk))
                 (string-match-p "\\([ACHMSs]-\\)[^ ]*\\1" chunk))
         (throw 'break t)))))
 
