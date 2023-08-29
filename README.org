@@ -71,6 +71,13 @@ about this project.
 
 To report bugs, suggest improvements, or ask questions, [[https://github.com/susam/devil/issues][create issues]].
 
+** Contributing
+:PROPERTIES:
+:CUSTOM_ID: contributing
+:END:
+
+See [[https://github.com/susam/devil/blob/main/CONTRIBUTING.org][CONTRIBUTING.org]] for contribution guidelines.
+
 ** Thanks
 :PROPERTIES:
 :CUSTOM_ID: thanks

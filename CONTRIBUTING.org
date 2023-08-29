@@ -1,0 +1,177 @@
+* Contribution Guidelines
+
+While contributing changes, bug fixes, pull requests, etc. please
+follow the contribution guidelines laid out in the following sections.
+
+** Commit Messages
+:PROPERTIES:
+:CUSTOM_ID: commit-messages
+:END:
+
+1. Begin the commit message with a short title.  The commit title must
+   not exceed 50 characters in length.
+
+   Good:
+
+   #+begin_example
+   Add configuration option to control logging level
+   #+end_example
+
+   Bad:
+
+   #+begin_example
+   Introduce a new configuration option to control logging level
+   #+end_example
+
+2. The commit title must be a single line.
+
+   Good:
+
+   #+begin_example
+   Add configuration option to control logging level
+   #+end_example
+
+   Bad:
+
+   #+begin_example
+   Add configuration option:
+   logging_level
+   #+end_example
+
+3. The commit title must be written in imperative mood.  Begin the
+   commit message with words like "Add", "Fix", "Remove", etc.  Do not
+   use words like "Added", "Fixes", "Removal", etc. to begin commit
+   summary lines.
+
+   Good:
+
+   #+begin_example
+   Add configuration option to control logging level
+   #+end_example
+
+   Bad:
+
+   #+begin_example
+   Added configuration option to control logging level
+   #+end_example
+
+4. Do not end the commit title with a punctuation.
+
+   Good:
+
+   #+begin_example
+   Add configuration option to control logging level
+   #+end_example
+
+   Bad:
+
+   #+begin_example
+   Add configuration option to control logging level.
+   #+end_example
+   
+5. Do not start commit title with prefixes like =fix:=, =feat:=, etc.
+
+   Good:
+
+   #+begin_example
+   Add configuration option to control logging level
+   #+end_example
+
+   Bad:
+
+   #+begin_example
+   feat: Add configuration option to control logging level
+   #+end_example
+   
+6. Optionally, add one or more paragraphs that describe the change in
+   detail.  This is known as the commit description.  There must be a
+   blank line between the commit title and the description.
+
+   Good:
+
+   #+begin_example
+   Add configuration option to control logging level
+
+   This change introduces a new configuration option named logging_level
+   to control the logging level of this application.  The logging levels
+   supported are: DEBUG, INFO, WARN, and ERROR.
+   #+end_example
+
+   Bad:
+
+   #+begin_example
+   Add configuration option to control logging level
+   This change introduces a new configuration option named logging_level
+   to control the logging level of this application.  The logging levels
+   supported are: DEBUG, INFO, WARN, and ERROR.
+   #+end_example
+
+7. When a commit description is present, ensure that no line exceeds
+   72 characters in length.  A decent editor should let you
+   automatically format your paragraphs such that each line is less
+   than or equal to 72 characters.  In Vim the commands
+   =:set textwidth=72= followed by =gqap= formats the current
+   paragraph in this manner.  In Emacs, the key sequence =M-q=
+   automatically formats the current paragraph so that no line exceeds
+   a certain number of characters (the default is 70 which is fine).
+
+   Good:
+   
+   #+begin_example
+   Add configuration option to control logging level
+
+   This change introduces a new configuration option named logging_level
+   to control the logging level of this application.  The logging levels
+   supported are: DEBUG, INFO, WARN, and ERROR.
+   #+end_example
+
+   Bad:
+
+   #+begin_example
+   Add configuration option to control logging level
+
+   This change introduces a new configuration option named logging_level to
+   control the logging level of this application.  The logging levels supported
+   are: DEBUG, INFO, WARN, and ERROR.
+   #+end_example
+
+8. When a commit description is present and it has multiple sentences,
+   the sentences must be separated by two spaces, i.e., there must be
+   two spaces after each sentence-terminating punctuation.
+   
+   Good:
+
+   #+begin_example
+   Add configuration option to control logging level
+
+   This change introduces a new configuration option named logging_level
+   to control the logging level of this application.  The logging levels
+   supported are: DEBUG, INFO, WARN, and ERROR.
+   #+end_example
+
+   Bad:
+
+   #+begin_example
+   Add configuration option to control logging level
+
+   This change introduces a new configuration option named logging_level
+   to control the logging level of this application. The logging levels
+   supported are: DEBUG, INFO, WARN, and ERROR.
+   #+end_example
+
+** Content
+:PROPERTIES:
+:CUSTOM_ID: content
+:END:
+
+1. A proposed change should not add major features or increase the
+   scope of the project without prior discussion.  Bug fixes and minor
+   improvements are okay.  However adding a new feature that
+   significantly increases the scope of this project requires prior
+   discussion.
+
+2. While updating =Makefile=, shell scripts, etc., use syntax,
+   commands, and options that are specified in [[https://pubs.opengroup.org/onlinepubs/9699919799/][POSIX]] as much as
+   possible.  Avoid Bash-specific and GNU-specific features.  See
+   documentation on [[https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html][POSIX Shell Command Language]], [[https://pubs.opengroup.org/onlinepubs/9699919799/idx/utilities.html][POSIX Utilities]], and
+   [[https://pubs.opengroup.org/onlinepubs/9699919799/utilities/make.html][POSIX Make]] for reference.
