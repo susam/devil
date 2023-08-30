@@ -795,16 +795,17 @@ bound to =M-e=.  With the above configuration, we can now type =, m e=
 followed by =e e e= to move forward by multiple sentences in both text
 mode as well as Org mode.  However, we can never be sure if we missed
 configuring repeat mode for some other command that might be bound to
-=M-h= in some mode.  For example, in C mode, the command
+=M-e= in some mode.  For example, in C mode, the command
 =c-end-of-statement= is bound to =M-e=.  The above configuration is no
 good for repeating this command by typing =e e e=.
 
 Devil, however, can repeat the command bound to =M-e= in any mode.
-Devil does not make the command bound to it in a particular mode
-repeatable.  Instead Devil makes the key sequence =, m e= itself
+Devil does not merely make the command bound to it in a particular
+mode repeatable.  Instead Devil makes the key sequence =, m e= itself
 repeatable.  Therefore, with Devil's own support for repeatable key
 sequences, we can type =, m e= and then =e e e= to repeat the command
-bound to =M-e= regardless of which mode is active.
+bound to =M-e= regardless of which mode is active or which command is
+bound to this key sequence.
 
 * Why?
 :PROPERTIES:
