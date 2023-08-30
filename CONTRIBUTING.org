@@ -68,7 +68,7 @@ follow the contribution guidelines laid out in the following sections.
    #+begin_example
    Add configuration option to control logging level.
    #+end_example
-   
+
 5. Do not start commit title with prefixes like =fix:=, =feat:=, etc.
 
    Good:
@@ -82,7 +82,7 @@ follow the contribution guidelines laid out in the following sections.
    #+begin_example
    feat: Add configuration option to control logging level
    #+end_example
-   
+
 6. Optionally, add one or more paragraphs that describe the change in
    detail.  This is known as the commit description.  There must be a
    blank line between the commit title and the description.
@@ -116,7 +116,7 @@ follow the contribution guidelines laid out in the following sections.
    a certain number of characters (the default is 70 which is fine).
 
    Good:
-   
+
    #+begin_example
    Add configuration option to control logging level
 
@@ -138,7 +138,7 @@ follow the contribution guidelines laid out in the following sections.
 8. When a commit description is present and it has multiple sentences,
    the sentences must be separated by two spaces, i.e., there must be
    two spaces after each sentence-terminating punctuation.
-   
+
    Good:
 
    #+begin_example
