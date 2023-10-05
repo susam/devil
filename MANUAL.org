@@ -221,9 +221,9 @@ Devil may be used:
    the cursor forward by 4 characters.
 
 10. Type =, u u , f= and the cursor moves forward by 16 characters.
-   Devil uses its translation rules and an additional keymap to make
-   the input key sequence behave like =C-u C-u C-f= which moves the
-   cursor forward by 16 characters.
+    Devil uses its translation rules and an additional keymap to make
+    this input key sequence behave like =C-u C-u C-f= which moves the
+    cursor forward by 16 characters.
 
 11. Type =, SPC= to type a comma followed by space.  This is a special
     key sequence to make it convenient to type a comma in the text.
