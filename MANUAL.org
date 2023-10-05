@@ -347,7 +347,7 @@ the user to an Emacs key sequence:
 1. The input key vector read from the user is converted to a key
    description (like the string produced by functions like
    =describe-key= and =key-description=).  For example, if the user
-   types =,x,f,= it is converted to =, x , f=.
+   types =,x,f= it is converted to =, x , f=.
 
 2. Now the resulting key description is translated with simple string
    replacements.  If any part of the string matches a key in
