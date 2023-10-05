@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Document last updated on 05 Oct 2023 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Devil Mode</title>
+<meta name="author" content="Susam Pal" />
+<meta name="generator" content="Org Mode" />
+
+<style>
+body {
+  color: #333;
+  font-family: georgia, serif;
+  font-size: large;
+  line-height: 1.5;
+  margin: 0 auto;
+  max-width: 40em;
+  padding: 0 1em;
+}
+h1 {
+  text-align: center;
+}
+h1, h2, h3, h4, h5, h6 {
+  margin: 1.25em 0 0.5em 0;
+  line-height: 1.2;
+}
+a:link {
+  color: #00e;
+}
+a:visited {
+  color: #518;
+}
+a:focus, a:hover {
+  color: #03f;
+}
+a:active {
+  color: #e00;
+}
+a:empty:before {
+  content: "#";
+}
+a:empty {
+  visibility: hidden;
+  padding-left: 0.25em;
+}
+:hover > a:empty {
+  visibility: visible;
+}
+img {
+  max-width: 100%;
+}
+figure {
+  margin: 1em 0;
+  text-align: center;
+}
+figcaption {
+  font-size: small;
+}
+pre, code, samp, kbd {
+  font-family: monospace, monospace;
+}
+pre, code, kbd {
+  color: #050;
+}
+samp {
+  color: #730;
+}
+pre, blockquote, code, samp, kbd {
+  background: #eee;
+  font-size: 80%;
+}
+code, samp, kbd {
+  padding: 0.2em 0.4em;
+  border-radius: 0.4em;
+}
+pre, blockquote {
+  padding: 0.5em;
+}
+pre {
+  overflow: auto;
+}
+blockquote {
+  border-left: medium solid #ccc;
+  margin: 1em 0;
+}
+blockquote :first-child {
+  margin-top: 0;
+}
+blockquote :last-child {
+  margin-bottom: 0;
+}
+table {
+  border-collapse: collapse;
+}
+th, td {
+  border: thin solid #999;
+  padding: 0.3em 0.4em;
+  text-align: left;
+}
+.org-center {
+  text-align: center;
+}
+.org-center a {
+  margin-right: 1.5em;
+  line-height: 2.5;
+}
+.org-center a:last-child {
+  margin-right: 0;
+}
+hr {
+  margin: 1.5em auto;
+  border: 0;
+  border-bottom: medium dotted #999;
+}
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #111;
+    color: #bbb;
+  }
+  a:link {
+    color: #9bf;
+  }
+  a:visited {
+    color: #caf;
+  }
+  a:focus, a:hover {
+    color: #9cf;
+  }
+  a:active {
+    color: #f99;
+  }
+  pre, code, kbd {
+    color: #9d6;
+    font-family: monospace, monospace;
+  }
+  samp {
+    color: #ec0;
+  }
+  pre, blockquote, code, samp, kbd {
+    background: #120;
+  }
+  blockquote {
+    border-color: #363;
+  }
+  th, td {
+    border-color: #666;
+  }
+  hr {
+    border-bottom-color: #666;
+  }
+}
+</style>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Devil Mode</h1>
+<p>
+Devil mode trades your comma key in exchange for a modifier-free
+editing experience in Emacs.  Yes, the comma key!  The key you would
+normally wield for punctuation in nearly every corner of text.  Yes,
+this is twisted!  It would not be called the Devil otherwise, would
+it?  If it were any more rational, we might call it something divine,
+like, uh, the God mode?  But alas, there is nothing divine to be found
+here.  Welcome, instead, to the realm of the Devil!  You will be
+granted the occasional use of the comma key for punctuation, but only
+if you can charm the Devil.  But beware, for in this sinister domain,
+you must relinquish your comma key and embrace an editing experience
+that whispers wicked secrets into your fingertips!
+</p>
+
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#notation">Notation</a></li>
+<li><a href="#install">Install</a>
+<ul>
+<li><a href="#install-interactively-from-melpa">Install Interactively from MELPA</a></li>
+<li><a href="#install-automatically-from-melpa">Install Automatically from MELPA</a></li>
+<li><a href="#install-from-git-source">Install from Git Source</a></li>
+</ul>
+</li>
+<li><a href="#use-devil">Use Devil</a></li>
+<li><a href="#typing-commas">Typing Commas</a></li>
+<li><a href="#devil-reader">Devil Reader</a></li>
+<li><a href="#translation-mechanism">Translation Mechanism</a></li>
+<li><a href="#default-translation-rules">Default Translation Rules</a></li>
+<li><a href="#devil-describe-key">Describe Devil Key</a></li>
+<li><a href="#bonus-key-bindings">Bonus Key Bindings</a></li>
+<li><a href="#custom-configuration-examples">Custom Configuration Examples</a>
+<ul>
+<li><a href="#local-mode">Local Mode</a></li>
+<li><a href="#custom-appearance">Custom Appearance</a></li>
+<li><a href="#reclaim-comma-space-to-set-mark">Reclaim , SPC to Set Mark</a></li>
+<li><a href="#custom-devil-key">Custom Devil Key</a></li>
+<li><a href="#yet-another-custom-devil-key">Yet Another Custom Devil Key</a></li>
+<li><a href="#multiple-devil-keys">Multiple Devil Keys</a></li>
+<li><a href="#make-all-keys-repeatable">Make All Keys Repeatable</a></li>
+<li><a href="#interaction-with-repeat-mode">Interaction with Repeat Mode</a></li>
+<li><a href="#comparison-with-repeat-mode">Comparison with Repeat Mode</a></li>
+</ul>
+</li>
+<li><a href="#why">Why?</a></li>
+<li><a href="#comparison-with-god-mode">Comparison with God Mode</a></li>
+<li><a href="#frequently-asked-questions">Frequently Asked Questions</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-introduction" class="outline-2">
+<h2 id="introduction">Introduction<a href="#introduction"></a></h2>
+<div class="outline-text-2" id="text-introduction">
+<p>
+Devil mode intercepts our keystrokes and translates them to Emacs key
+sequences according to a configurable set of translation rules.  For
+example, with the default translation rules, when we type <code>, x , f</code>,
+Devil translates it to <code>C-x C-f</code>.
+</p>
+
+<p>
+The choice of the comma key (<code>,</code>) to mean the control modifier key
+(<code>C-</code>) may seem outrageous.  After all, the comma is a very important
+punctuation both in prose as well as in code.  Can we really get away
+with using <code>,</code> to mean the <code>C-</code> modifier?  It turns out, this terrible
+idea can be made to work without too much of a hassle.  At least it
+works for me.  It might work for you too.  If it does not, Devil can
+be configured to use another key instead of <code>,</code> to mean the <code>C-</code>
+modifier.  See the section <a href="#custom-devil-key">Custom Devil Key</a> and the subsequent
+sections for a few examples.
+</p>
+
+<p>
+A sceptical reader may rightfully ask: If <code>,</code> is translated to <code>C-</code>,
+how on earth are we going to insert a literal <code>,</code> into the text when
+we need to?  The section <a href="#typing-commas">Typing Commas</a> answers this.  But before we
+get there, we have some fundamentals to cover.  Take the plunge and
+see what unfolds.  Maybe you will like this.  Maybe you will not.  If
+you do not like this, you can always retreat to God mode, Evil mode,
+the vanilla key bindings, or whatever piques your fancy.
+</p>
+</div>
+</div>
+
+<div id="outline-container-notation" class="outline-2">
+<h2 id="notation">Notation<a href="#notation"></a></h2>
+<div class="outline-text-2" id="text-notation">
+<p>
+A quick note about the notation used in the document: The previous
+example shows that <code>, x , f</code> is translated to <code>C-x C-f</code>.  What this
+really means is that the keystrokes <code>,x,f</code> is translated to <code>ctrl+x
+ctrl+f</code>.  We do not really type any space after the commas.  The key
+<code>,</code> is directly followed by the key <code>x</code>.  However, the key sequence
+notation used in this document contains spaces between each keystroke.
+This is consistent with how key sequences are represented in Emacs in
+general and how Emacs functions like <code>key-description</code>,
+<code>describe-key</code>, etc.  represent key sequences.  When we really need to
+type a space, it is represented as <code>SPC</code>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-install" class="outline-2">
+<h2 id="install">Install<a href="#install"></a></h2>
+<div class="outline-text-2" id="text-install">
+<p>
+Devil is available via <a href="https://elpa.nongnu.org/nongnu/devil.html">NonGNU ELPA</a> and <a href="https://melpa.org/#/devil">MELPA</a>.  You may already have a
+preferred way of installing packages from ELPA/MELPA.  If so, install
+the package named <code>devil</code> to get Devil.  If you have Emacs 28.1 or a
+more recent version, it has NonGNU ELPA enabled by default, so you can
+install Devil quite easily with <code>M-x package-install RET devil RET</code>
+without having to perform any further steps.  However, for the sake of
+completeness, a few very different and basic ways of installing Devil
+are presented in the next few subsections.
+</p>
+</div>
+
+<div id="outline-container-install-interactively-from-melpa" class="outline-3">
+<h3 id="install-interactively-from-melpa">Install Interactively from MELPA<a href="#install-interactively-from-melpa"></a></h3>
+<div class="outline-text-3" id="text-install-interactively-from-melpa">
+<p>
+To install the latest version of Devil from MELPA, perform the
+following steps:
+</p>
+
+<ol class="org-ol">
+<li><p>
+Add the following to the Emacs initialization file (i.e.,
+<code>~/.emacs</code> or <code>~/.emacs.d/init.el</code> or <code>~/.config/emacs/init.el</code>):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
+</pre>
+</div></li>
+
+<li><p>
+Start Emacs with the updated initialization file.  Then type these
+commands:
+</p>
+
+<pre class="example" id="org5aae058">
+M-x package-refresh-contents RET
+M-x package-install RET devil RET
+</pre></li>
+
+<li><p>
+Confirm that Devil is installed successfully with this command:
+</p>
+
+<pre class="example" id="org1ffacfd">
+C-h f devil RET
+</pre></li>
+
+<li><p>
+Enable Devil mode with this command:
+</p>
+
+<pre class="example" id="org829b2ce">
+M-x global-devil-mode RET
+</pre></li>
+
+<li>Type <code>, x , f</code> and watch Devil translate it to <code>C-x C-f</code> and invoke
+the corresponding command.</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-install-automatically-from-melpa" class="outline-3">
+<h3 id="install-automatically-from-melpa">Install Automatically from MELPA<a href="#install-automatically-from-melpa"></a></h3>
+<div class="outline-text-3" id="text-install-automatically-from-melpa">
+<p>
+Here is yet another basic way to install and enable Devil using Elisp:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
+(unless package-archive-contents
+  (package-refresh-contents))
+(unless (package-installed-p 'devil)
+  (package-install 'devil))
+(global-devil-mode)
+(global-set-key (kbd "C-,") 'global-devil-mode)
+</pre>
+</div>
+
+<p>
+Now type <code>, x , f</code> and watch Devil translate it to <code>C-x C-f</code> and
+invoke the corresponding command.  Type <code>C-,</code> to disable Devil mode.
+Type <code>C-,</code> again to enable it.
+</p>
+</div>
+</div>
+
+<div id="outline-container-install-from-git-source" class="outline-3">
+<h3 id="install-from-git-source">Install from Git Source<a href="#install-from-git-source"></a></h3>
+<div class="outline-text-3" id="text-install-from-git-source">
+<p>
+If you prefer obtaining Devil from its Git repository, follow these
+steps:
+</p>
+
+<ol class="org-ol">
+<li><p>
+Clone Devil to your system:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">git clone https://github.com/susam/devil.git
+</pre>
+</div></li>
+
+<li><p>
+Add the following to your Emacs initialization:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(add-to-list 'load-path "/path/to/devil/")
+(require 'devil)
+(global-devil-mode)
+(global-set-key (kbd "C-,") 'global-devil-mode)
+</pre>
+</div></li>
+
+<li>Start the Emacs editor.  Devil mode should now be enabled in all
+buffers.  The modeline of each buffer should show the <code>Devil</code>
+lighter.</li>
+
+<li>Type <code>, x , f</code> and watch Devil translate it to <code>C-x C-f</code> and invoke
+the corresponding command.  Type <code>C-,</code> to disable Devil mode.  Type
+<code>C-,</code> again to enable it.</li>
+</ol>
+</div>
+</div>
+</div>
+
+<div id="outline-container-use-devil" class="outline-2">
+<h2 id="use-devil">Use Devil<a href="#use-devil"></a></h2>
+<div class="outline-text-2" id="text-use-devil">
+<p>
+Assuming vanilla Emacs key bindings have not been changed and Devil
+has not been customised, here are some examples that demonstrate how
+Devil may be used:
+</p>
+
+<ol class="org-ol">
+<li>Type <code>, x , f</code> and watch Devil translate it to <code>C-x C-f</code> and invoke
+the <code>find-file</code> command.</li>
+
+<li>Type <code>, p</code> to move up one line.</li>
+
+<li>To move up multiple lines, type <code>, p p p</code> and so on.  Some Devil
+key sequences are repeatable keys by default.  The repeatable Devil
+key sequences can be repeated by typing the last key of the Devil
+key sequence over and over again.</li>
+
+<li>Each repeatable key sequence belongs to a repeatable key sequence
+groups.  Like before, type <code>, p p p</code> to move the cursor up by a few
+lines.  But then immediately type <code>n n</code> to move the cursor down by
+a couple of lines.  Then immediately type <code>p n b f</code> to move the
+cursor up, down, left, and right.  The key sequences <code>, p</code> and <code>,
+   n</code> and <code>, f</code> and <code>, b</code> form a single repeatable key sequence group.
+Therefore after we type any one of them, we can repeat that key
+sequence or any other key sequence in the same group over and over
+again merely by typing the last character of that key sequence.
+Typing any other key stops the repetition and the default behaviour
+of that other key is then observed.  Type <code>C-h v
+   devil-repeatable-keys RET</code> to see the complete list of all
+repeatable key sequence groups.</li>
+
+<li>Sometimes a repeatable key sequence may be the only key sequence in
+a repeatable key sequence group.  An example of such a key sequence
+is <code>, m ^</code> which translates to <code>M-^</code> and joins the current line to
+the previous line.  In a text buffer with multiple lines type <code>, m
+   ^</code> to join the current line to the previous line.  Then type <code>^</code>
+repeatedly to continue joining lines.  Typing any other key stops
+the repetition.</li>
+
+<li>Type <code>, s</code> and watch Devil translate it to <code>C-s</code> and invoke
+incremental search.</li>
+
+<li>Type <code>, m x</code> and watch Devil translate it to <code>M-x</code> and invoke the
+corresponding command.  Yes, <code>, m</code> is translated to <code>M-</code>.</li>
+
+<li>Type <code>, m m s</code> and watch Devil translate it to <code>C-M-s</code> and invoke
+regular-expression-based incremental search.  The key sequence <code>, m
+   m</code> is translated to <code>C-M-</code>.</li>
+
+<li>Type <code>, u , f</code> and watch Devil translate it to <code>C-u C-f</code> and move
+the cursor forward by 4 characters.</li>
+
+<li>Type <code>, u u , f</code> and the cursor moves forward by 16 characters.
+Devil uses its translation rules and an additional keymap to make
+this input key sequence behave like <code>C-u C-u C-f</code> which moves the
+cursor forward by 16 characters.</li>
+
+<li>Type <code>, SPC</code> to type a comma followed by space.  This is a special
+key sequence to make it convenient to type a comma in the text.
+Note that this sacrifices the use of <code>, SPC</code> to mean <code>C-SPC</code> which
+could have been a convenient way to set a mark.  See the section
+<a href="#reclaim-comma-space-to-set-mark">Reclaim , SPC to Set Mark</a> if you do not want to make this
+sacrifice.</li>
+
+<li>Type <code>, z SPC</code> and watch Devil translate it to <code>C-SPC</code> and set a
+mark.  Yes, <code>, z</code> is translated to <code>C-</code> too.</li>
+
+<li>Similarly, type <code>, RET</code> to type a comma followed by the <code>enter</code>
+key.  This is another special key.</li>
+
+<li>Type <code>, ,</code> to type a single comma.  This special key is useful for
+cases when you really need to type a single literal comma.</li>
+
+<li>Type <code>, h , k</code> to invoke <code>devil-describe-key</code>.  This is a special
+key that invokes the Devil variant of <code>describe-key</code> included in
+vanilla Emacs.  When the key input prompt appears, type the Devil
+key sequence <code>, x , f</code> and Devil will display the documentation of
+the function invoked by this Devil key sequence.  Note: The key
+sequence <code>, h k</code> translates to <code>C-h k</code> and invokes the vanilla
+<code>describe-key</code>.  It is the Devil key sequence <code>, h , k</code> that
+invokes <code>devil-describe-key</code>.</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-typing-commas" class="outline-2">
+<h2 id="typing-commas">Typing Commas<a href="#typing-commas"></a></h2>
+<div class="outline-text-2" id="text-typing-commas">
+<p>
+Devil makes the questionable choice of using the comma as its
+activation key.  As illustrated in the previous section, typing <code>, x ,
+f</code> produces the same effect as typing <code>C-x C-f</code>.  One might naturally
+wonder how then we are supposed to type literal commas.
+</p>
+
+<p>
+Most often when we edit text, we do not really type a comma in
+isolation.  Often we immediately follow the comma with a space or a
+newline.  This assumption usually holds good while editing regular
+text.  However, this assumption may not hold in some situations, like
+while working with code when we need to add a single comma at the end
+of an existing line.
+</p>
+
+<p>
+In scenarios where the above assumption holds good, typing <code>, SPC</code>
+inserts a comma and a space.  Similarly, typing <code>, RET</code> inserts a
+comma and a newline.
+</p>
+
+<p>
+In scenarios where we do need to type a single comma, type <code>, ,</code>
+instead.
+</p>
+
+<p>
+Note that you could also type a single comma with <code>, q ,</code> which
+translates to <code>C-q ,</code> and inserts a literal comma.  The Emacs key
+sequence <code>C-q</code> invokes the command <code>quoted-insert</code> which inserts the
+next input character.  The <code>, ,</code> special key sequence is probably
+easier to type than this.
+</p>
+
+<p>
+Also, it is worth mentioning here that if all this fiddling with the
+comma key feels clumsy, we could always customise the Devil key to
+something else that feels better.  We could also disable Devil mode
+temporarily and enable it again later with <code>C-,</code> as explained in
+section <a href="#install">Install</a>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-devil-reader" class="outline-2">
+<h2 id="devil-reader">Devil Reader<a href="#devil-reader"></a></h2>
+<div class="outline-text-2" id="text-devil-reader">
+<p>
+The following points briefly describe how Devil reads Devil key
+sequences, translates them to Emacs key sequences, and runs commands
+bound to the key sequences:
+</p>
+
+<ol class="org-ol">
+<li>As soon as the Devil key is typed (which is <code>,</code> by default), Devil
+wakes up and starts reading Devil key sequences.  Type <code>C-h v
+   devil-key RET</code> to see the current Devil key.</li>
+
+<li>After each keystroke is read, Devil checks if the key sequence
+accumulated is a special key.  If it is, then the special command
+bound to the special key is executed immediately.  Note that this
+step is performed before any translation rules are applied to the
+input key sequence.  This is how the Devil special key sequence <code>,
+   SPC</code> inserts a comma and a space.  Type <code>C-h v devil-special-keys
+   RET</code> to see the list of special keys and the commands bound to
+them.</li>
+
+<li>If the key sequence accumulated so far is not a special key, then
+Devil translates the Devil key sequence to a regular Emacs key
+sequence.  If the regular Emacs key sequence turns out to be a
+complete key sequence and some command is found to be bound to it,
+then that command is executed immediately.  This is how the Devil
+key sequence <code>, x , f</code> is translated to <code>C-x C-f</code> and the
+corresponding binding is executed.  If the translated key sequence
+is a complete key sequence but no command is bound to it, then
+Devil displays a message that the key sequence is undefined.  Type
+<code>C-h v devil-translations RET</code> to see the list of translation
+rules.</li>
+
+<li>After successfully translating a Devil key sequence to an Emacs key
+sequence and executing the command bound to it, Devil checks if the
+key sequence is a repeatable key sequence.  If it is found to be a
+repeatable key sequence, then Devil sets a transient map so that
+the repeatable key sequences that belong to the same group as the
+typed Devil key sequence can be invoked merely by typing the last
+character of the input key sequence.  This is how <code>, p p p f f</code>
+moves the cursor up by three lines and then by two characters
+forward.  Type <code>C-h v devil-repeatable-keys RET</code> to see the list of
+repeatable Devil key sequences.</li>
+</ol>
+
+<p>
+The variables <code>devil-special-keys</code>, <code>devil-translations</code>, and
+<code>devil-repeatable-keys</code> may contain keys or values with the string
+<code>%k</code> in them.  This is a placeholder for <code>devil-key</code>.  While applying
+the special keys, translation rules, or repeat rules, each <code>%k</code> is
+replaced with the actual value of <code>devil-key</code> before applying the
+rules.
+</p>
+</div>
+</div>
+
+<div id="outline-container-translation-mechanism" class="outline-2">
+<h2 id="translation-mechanism">Translation Mechanism<a href="#translation-mechanism"></a></h2>
+<div class="outline-text-2" id="text-translation-mechanism">
+<p>
+The following points provide an account of the translation mechanism
+that Devil uses in order to convert a Devil key sequence entered by
+the user to an Emacs key sequence:
+</p>
+
+<ol class="org-ol">
+<li>The input key vector read from the user is converted to a key
+description (like the string produced by functions like
+<code>describe-key</code> and <code>key-description</code>).  For example, if the user
+types <code>,x,f</code> it is converted to <code>, x , f</code>.</li>
+
+<li>Now the resulting key description is translated with simple string
+replacements.  If any part of the string matches a key in
+<code>devil-translations</code>, then it is replaced with the corresponding
+value.  For example, <code>, x , f</code> is translated to <code>C- x C- f</code>.  Then
+Devil normalises the result to <code>C-x C-f</code> by removing the stray
+spaces after the modifier keys.</li>
+
+<li>If the simple string based replacement discussed in the previous
+point leads to an invalid Emacs key sequence, it skips the
+replacement that causes the resulting Emacs key sequence to become
+invalid.  For example <code>, m m ,</code> results in <code>C-M-C-</code> after the
+simple string replacement because the default translation rules
+replace the leading <code>, m m</code> with <code>C-M-</code> and the trailing <code>,</code> with
+<code>C-</code>.  However, <code>C-M-C-</code> is an invalid key sequence, so the
+replacement of the trailing <code>,</code> to <code>C-</code> is skipped.  Therefore, the
+input <code>, m m ,</code> is translated to <code>C-M-,</code> instead.</li>
+
+<li>Finally, Devil looks for key chords in the key sequence that
+contain both the <code>C-</code> modifier and an uppercase letter.  If such a
+key chord occurs, then it replaces the uppercase letter with its
+shifted form, e.g., <code>, m m V</code> first translates to <code>C-M-V</code> according
+to the previous points and then the result is translated to
+<code>C-M-S-v</code> according to this point.</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-default-translation-rules" class="outline-2">
+<h2 id="default-translation-rules">Default Translation Rules<a href="#default-translation-rules"></a></h2>
+<div class="outline-text-2" id="text-default-translation-rules">
+<p>
+By default, Devil supports a small but peculiar set of translation
+rules that can be used to avoid modifier keys while typing various
+types of key sequences.  See <code>C-h v devil-translations RET</code> for the
+translation rules.  Here are some examples that demonstrate the
+default translation rules.  The obvious ones are shown first.  The
+more peculiar translations come later in the table.  The concluding
+paragraph of this subsection offers a guide on how to gradually and
+gently adopt these key sequences into your daily routine.
+</p>
+
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Input</th>
+<th scope="col" class="org-left">Translated</th>
+<th scope="col" class="org-left">Remarks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>, s</code></td>
+<td class="org-left"><code>C-s</code></td>
+<td class="org-left">Rule 1: <code>,</code> is replaced with <code>C-</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>, m x</code></td>
+<td class="org-left"><code>M-x</code></td>
+<td class="org-left">Rule 2: <code>, m</code> is replaced with <code>M-</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>, [ x</code></td>
+<td class="org-left"><code>C-[ x</code></td>
+<td class="org-left">equivalent to <code>M-x</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>, m m s</code></td>
+<td class="org-left"><code>C-M-s</code></td>
+<td class="org-left">Rule 3: <code>, m m</code> is replaced with <code>C-M-</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>, m ,</code></td>
+<td class="org-left"><code>M-,</code></td>
+<td class="org-left">Rule 4: <code>, m ,</code> is replaced with <code>M-,</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>, m z m</code></td>
+<td class="org-left"><code>M-m</code></td>
+<td class="org-left">Rule 5: <code>, m z</code> is replaced with <code>M-</code> too</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>, c , ,</code></td>
+<td class="org-left"><code>C-c ,</code></td>
+<td class="org-left">Rule 6: <code>, ,</code> is replaced with <code>,</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>, z SPC</code></td>
+<td class="org-left"><code>C-SPC</code></td>
+<td class="org-left">Rule 7: <code>, z</code> is replaced with <code>C-</code> too</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>, z z</code></td>
+<td class="org-left"><code>C-z</code></td>
+<td class="org-left">ditto</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>, z ,</code></td>
+<td class="org-left"><code>C-,</code></td>
+<td class="org-left">ditto</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Note how we cannot use <code>, SPC</code> to set a mark because that key sequence
+is already reserved as a special key sequence in <code>devil-special-keys</code>.
+In order to conveniently set a mark, Devil translates <code>, z</code> to <code>C-</code>
+too, so that we can type <code>, z SPC</code> and have Devil translate it to
+<code>C-SPC</code>.
+</p>
+
+<p>
+Also, note that while <code>, m</code> may be used to type <code>M-</code> we have <code>, [</code> as
+yet another way to type a key sequence that contains <code>M-</code> because <code>,
+[</code> translates to <code>C-[</code> and <code>C-[ &lt;key&gt;</code> is equivalent to <code>ESC &lt;key&gt;</code>
+which in turn is equivalent to <code>M-&lt;key&gt;</code>.
+</p>
+
+<p>
+The default translation examples presented in the table above look
+weirder and weirder as we go down the table.  But they are not as
+arbitrary as they might initially appear to be.  They are arranged in
+such a way that overall, we get the following effect:
+</p>
+
+<ul class="org-ul">
+<li>Devil translates the input <code>,</code> to <code>C-</code>.  Similarly it translates <code>,
+  m</code> to <code>M-</code> and <code>, m m</code> to <code>C-M-</code>.</li>
+
+<li>When we really want to type the Devil key <code>,</code> we need to double type
+it in the Devil key sequence.  Doubling the special character serves
+as an escape mechanism to avoid the special meaning of the Devil key
+and get its literal form instead.</li>
+
+<li>Now since <code>, ,</code> translates to <code>,</code> we need another escape mechanism
+to type <code>C-,</code>.  Typing <code>z</code> in between serves as this escape
+mechanism, i.e., within a Devil key sequence <code>, z ,</code> translates to
+<code>C-,</code>.</li>
+
+<li>Similarly since <code>, m m</code> translates to <code>C-M-</code> we need an escape
+mechanism to type <code>M-m</code>.  Again, typing <code>z</code> in between serves as
+this escape mechanism, i.e., <code>, m z m</code> translates to <code>M-m</code>.</li>
+</ul>
+
+<p>
+Here is a gentle guide to adopting these key sequences: For beginners
+using Devil, it is not necessary to memorise all of them right away.
+Understanding that <code>,</code> translates to <code>C-</code> and <code>, m</code> translates to <code>M-</code>
+is sufficient to begin.  Subsequently, learning that <code>, m m</code>
+translates to <code>C-M-</code> unlocks several more key sequences like <code>, m m s</code>
+(<code>C-M-s</code>), <code>, m m f</code> (<code>C-M-f</code>), etc.  As you encounter more key
+sequences that are not covered by these initial rules, revisit the
+above table to pick up new translation rules and adopt them in your
+day-to-day usage of Devil.
+</p>
+</div>
+</div>
+
+<div id="outline-container-devil-describe-key" class="outline-2">
+<h2 id="devil-describe-key">Describe Devil Key<a href="#devil-describe-key"></a></h2>
+<div class="outline-text-2" id="text-devil-describe-key">
+<p>
+Devil offers a command named <code>devil-describe-key</code> that can be used to
+describe a Devil key sequence.  It works similarly to the
+<code>describe-key</code> command of vanilla Emacs that can be invoked with <code>C-h
+k</code>.  The <code>devil-describe-key</code> command can be invoked with the special
+key sequence <code>, h , k</code>.  Type <code>, h , k</code> and a prompt appears to read a
+key sequence.  Type any Devil key sequence, say, <code>, x , f</code> and Devil
+immediately shows the documentation for the function invoked by this
+key sequence.
+</p>
+
+<p>
+Note that <code>, x , f</code> (<code>devil-describe-key</code>) can also be used to look up
+documentation for vanilla Emacs key sequences like <code>C-x C-f</code>.
+</p>
+
+<p>
+Also note that the Devil key sequence is <code>, h k</code> is still free to
+invoke <code>C-h k</code> (<code>describe-key</code> of vanilla Emacs).
+</p>
+</div>
+</div>
+
+<div id="outline-container-bonus-key-bindings" class="outline-2">
+<h2 id="bonus-key-bindings">Bonus Key Bindings<a href="#bonus-key-bindings"></a></h2>
+<div class="outline-text-2" id="text-bonus-key-bindings">
+<p>
+Devil adds the following additional key bindings only when Devil is
+enabled globally with <code>global-devil-mode</code>:
+</p>
+
+<ul class="org-ul">
+<li>Adds the Devil key to <code>isearch-mode-map</code>, so that Devil key
+sequences work in incremental search too.</li>
+
+<li>Adds <code>u</code> to <code>universal-argument-more</code> to allow repeating the
+universal argument command <code>C-u</code> simply by repeating <code>u</code>.</li>
+</ul>
+
+<p>
+As mentioned before these features are available only when Devil is
+enabled globally with <code>global-devil-mode</code>.  If Devil is enabled
+locally with <code>devil-mode</code>, then these features are not available.
+</p>
+</div>
+</div>
+
+<div id="outline-container-custom-configuration-examples" class="outline-2">
+<h2 id="custom-configuration-examples">Custom Configuration Examples<a href="#custom-configuration-examples"></a></h2>
+<div class="outline-text-2" id="text-custom-configuration-examples">
+<p>
+In the examples presented below, the <code>(require 'devil)</code> calls may be
+omitted if Devil has been installed from a package archive like ELPA
+or MELPA.  There are appropriate autoloads in place in the Devil
+package that would ensure that it is loaded automatically on enabling
+Devil mode.  However, the <code>require</code> calls have been included in the
+examples below for the sake of completeness.
+</p>
+</div>
+
+<div id="outline-container-local-mode" class="outline-3">
+<h3 id="local-mode">Local Mode<a href="#local-mode"></a></h3>
+<div class="outline-text-3" id="text-local-mode">
+<p>
+While the section <a href="#install">Install</a> shows how we enable Devil mode globally,
+this section shows how we can enable it locally.  Here is an example
+initialization code that enables Devil locally only in text buffers.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(require 'devil)
+(add-hook 'text-mode-hook 'devil-mode)
+(global-set-key (kbd "C-,") 'devil-mode)
+</pre>
+</div>
+
+<p>
+This is not recommended though because this does not provide a
+seamless Devil experience.  For example, with Devil enabled locally in
+a text buffer like this, although we can type <code>, x , f</code> to launch the
+<code>find-file</code> minibuffer, we cannot use Devil key sequences in the
+minibuffer.  Further the special keymaps described in the previous
+section work only when Devil is enabled globally.
+</p>
+</div>
+</div>
+
+<div id="outline-container-custom-appearance" class="outline-3">
+<h3 id="custom-appearance">Custom Appearance<a href="#custom-appearance"></a></h3>
+<div class="outline-text-3" id="text-custom-appearance">
+<p>
+The following initialization code shows how we can customise Devil to
+show a Devil smiley (😈) in the modeline and in the Devil prompt.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(require 'devil)
+(setq devil-lighter " \U0001F608")
+(setq devil-prompt "\U0001F608 %t")
+(global-devil-mode)
+(global-set-key (kbd "C-,") 'global-devil-mode)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-reclaim-comma-space-to-set-mark" class="outline-3">
+<h3 id="reclaim-comma-space-to-set-mark">Reclaim , SPC to Set Mark<a href="#reclaim-comma-space-to-set-mark"></a></h3>
+<div class="outline-text-3" id="text-reclaim-comma-space-to-set-mark">
+<p>
+The default configuration for special keys reserves <code>, SPC</code> to insert
+a literal comma followed by space.  This default makes it easy to type
+comma in various contexts.  However, this means that <code>, SPC</code> does not
+translate to <code>C-SPC</code>.  Therefore <code>, SPC</code> cannot be used to set mark.
+Instead, the default translation rules offer <code>, z SPC</code> as a way to set
+mark.
+</p>
+
+<p>
+If you would rather set mark using <code>, SPC</code> and you are happy with
+typing the special key <code>, ,</code> to insert a literal comma, then use the
+following configuration:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(require 'devil)
+(global-devil-mode)
+(global-set-key (kbd "C-,") 'global-devil-mode)
+(assoc-delete-all "%k SPC" devil-special-keys)
+</pre>
+</div>
+
+<p>
+This removes the special key <code>, SPC</code> from <code>devil-special-keys</code> so that
+it is now free to be translated to <code>C-SPC</code> and invoke <code>set-mark-command</code>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-custom-devil-key" class="outline-3">
+<h3 id="custom-devil-key">Custom Devil Key<a href="#custom-devil-key"></a></h3>
+<div class="outline-text-3" id="text-custom-devil-key">
+<p>
+The following initialization code shows how we can customise Devil to
+use a different Devil key.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(require 'devil)
+(global-devil-mode)
+(global-set-key (kbd "C-;") 'global-devil-mode)
+(devil-set-key (kbd ";"))
+</pre>
+</div>
+
+<p>
+The above example sets the Devil key to the semicolon, perhaps another
+dubious choice for the Devil key.  With this configuration, we can use
+<code>; x ; f</code> and have Devil translate it to <code>C-x C-f</code>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-yet-another-custom-devil-key" class="outline-3">
+<h3 id="yet-another-custom-devil-key">Yet Another Custom Devil Key<a href="#yet-another-custom-devil-key"></a></h3>
+<div class="outline-text-3" id="text-yet-another-custom-devil-key">
+<p>
+The following initialization code shows how we can customise Devil to
+use yet another different Devil key.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(require 'devil)
+(global-devil-mode)
+(global-set-key (kbd "C-&lt;left&gt;") 'global-devil-mode)
+(devil-set-key (kbd "&lt;left&gt;"))
+(dolist (key '("%k SPC" "%k RET" "%k &lt;return&gt;"))
+  (assoc-delete-all key devil-special-keys))
+</pre>
+</div>
+
+<p>
+The above example sets the Devil key to the left arrow key.  With this
+configuration, we can use <code>&lt;left&gt; x &lt;left&gt; f</code> and have Devil translate
+it to <code>C-x C-f</code>.  We can type the special key <code>&lt;left&gt; &lt;left&gt;</code> to
+produce the same effect as the original <code>&lt;left&gt;</code>.
+</p>
+
+<p>
+The above example removes some special keys that are no longer useful.
+In particular, <code>&lt;left&gt; SPC</code> is no longer reserved as a special key, so
+we can use it now to set a mark.
+</p>
+</div>
+</div>
+
+<div id="outline-container-multiple-devil-keys" class="outline-3">
+<h3 id="multiple-devil-keys">Multiple Devil Keys<a href="#multiple-devil-keys"></a></h3>
+<div class="outline-text-3" id="text-multiple-devil-keys">
+<p>
+While this package provides the comma (<code>,</code>) as the default and the
+only Devil key, nothing stops you from extending the mode map to
+support multiple Devil keys.  Say, you decide that in addition to
+activating Devil with <code>,</code> which also plays the role of <code>C-</code>, you also
+want to activate Devil with <code>.</code> which must now play the role of <code>M-</code>.
+To achieve such a result, you could use this initialization code as a
+starting point and then customise it further based on your
+requirements:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(require 'devil)
+(global-devil-mode)
+(define-key devil-mode-map (kbd ".") #'devil)
+(add-to-list 'devil-special-keys `(". ." . ,(devil-key-executor ".")))
+(setq devil-translations '((", z" . "C-")
+			   (". z" . "M-")
+			   (", ," . ",")
+			   (". ." . ".")
+			   ("," . "C-")
+			   ("." . "M-")))
+</pre>
+</div>
+
+<p>
+With this configuration, we can type <code>, x , f</code> for <code>C-x C-f</code> like
+before.  But now we can also type <code>. x</code> for <code>M-x</code>.  Similarly, we can
+type <code>, . s</code> for <code>C-M-s</code> and so on.  Also <code>, ,</code> inserts a literal
+comma and <code>. .</code> inserts a literal dot.  Further we can type <code>, z ,</code> to
+get <code>C-,</code> and <code>. z .</code> to get <code>M-.</code>.
+</p>
+
+<p>
+Note that by default Devil configures only one activation key (<code>,</code>)
+because the more activation keys we add, the more intrusive Devil
+becomes during regular editing tasks.  Every key that we reserve for
+activating Devil loses its default function and then we need
+workarounds to somehow invoke the default function associated with
+that key (like repeating <code>.</code> twice to insert a single <code>.</code> in the above
+example).  Therefore, it is a good idea to keep the number of Devil
+keys as small as possible.
+</p>
+</div>
+</div>
+
+<div id="outline-container-make-all-keys-repeatable" class="outline-3">
+<h3 id="make-all-keys-repeatable">Make All Keys Repeatable<a href="#make-all-keys-repeatable"></a></h3>
+<div class="outline-text-3" id="text-make-all-keys-repeatable">
+<p>
+By default Devil has a small list of key sequences that are considered
+repeatable.  This list is defined in the variable
+<code>devil-repeatable-keys</code>.  Type <code>C-h v devil-repeatable-keys RET</code> to
+view this list.  For example, consider the repeatable key sequence
+group <code>("%k p" "%k n" "%k f" "%k b")</code> in this list.  Assuming that the
+default Devil and Emacs key bindings have not been changed, this means
+that after we type <code>, p</code> and move the cursor to the previous line, we
+can repeat this operation by typing <code>p</code> over and again.  We can also
+immediately type <code>f</code> to move the cursor right by one character.  The
+repetition occurs as long as the last character of any repeatable key
+sequence in the group is typed again.  Typing any other key stops the
+repetition and the default behaviour of the other key is then
+observed.
+</p>
+
+<p>
+It is possible to make all key sequences repeatable by setting the
+variable <code>devil-all-keys-repeatable</code> to <code>t</code>.  Here is an example
+configuration:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(require 'devil)
+(setq devil-all-keys-repeatable t)
+(global-devil-mode)
+</pre>
+</div>
+
+<p>
+With this configuration, the repeatable key sequence groups still
+function as described above.  However, in addition to that now all
+other Devil key sequences that end up executing Emacs commands also
+become repeatable, i.e., any Devil key sequence that does not belong
+to <code>devil-all-keys-repeatable</code> but invokes an Emacs command is now
+repeatable and it can be repeated by merely repeating the last
+character of the key sequence.
+</p>
+
+<p>
+Note that only Devil key sequences that get translated to a regular
+Emacs key sequence and result in the execution of an Emacs command can
+be repeatable.  The special keys defined in <code>devil-special-keys</code> are
+never repeatable.
+</p>
+</div>
+</div>
+
+<div id="outline-container-interaction-with-repeat-mode" class="outline-3">
+<h3 id="interaction-with-repeat-mode">Interaction with Repeat Mode<a href="#interaction-with-repeat-mode"></a></h3>
+<div class="outline-text-3" id="text-interaction-with-repeat-mode">
+<p>
+Repeatable keys in Devil function somewhat like <code>repeat-mode</code>
+introduced in Emacs 28.1.  Here is an example configuration that
+disables repeatable keys in Devil and shows how to use <code>repeat-mode</code>
+instead to define repeatable commands.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(require 'devil)
+(global-devil-mode)
+(setq devil-repeatable-keys nil)
+
+(defvar movement-repeat-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "p") #'previous-line)
+    (define-key map (kbd "n") #'next-line)
+    (define-key map (kbd "b") #'backward-char)
+    (define-key map (kbd "f") #'forward-char)
+    map))
+
+(dolist (cmd '(previous-line next-line backward-char forward-char))
+  (put cmd 'repeat-map 'movement-repeat-map))
+
+(repeat-mode)
+</pre>
+</div>
+
+<p>
+Now if we type <code>C-p</code> to move the cursor up by one line, we can repeat
+it by merely typing <code>p</code> again and we can also type or repeat <code>n</code>, <code>b</code>,
+or <code>f</code>, to move the cursor down, left, or right respectively.
+</p>
+
+<p>
+Repeat mode works fine with Devil too, so with the above
+configuration, when we type <code>, p</code> to move the cursor to the previous
+line, we can type or repeat <code>p</code>, <code>n</code>, <code>b</code>, or <code>f</code> to move the cursor
+up, down, left, or right again.
+</p>
+
+<p>
+We do not really need to disable Devil's repeatable keys while using
+repeat mode.  Both can be enabled together.  However, the results can
+be surprising due to certain differences between the two.  For
+example, consider the following configuration:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(require 'devil)
+(global-devil-mode)
+
+(defvar movement-repeat-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "p") #'previous-line)
+    (define-key map (kbd "n") #'next-line)
+    map))
+
+(dolist (cmd '(previous-line next-line))
+  (put cmd 'repeat-map 'movement-repeat-map))
+
+(repeat-mode)
+</pre>
+</div>
+
+<p>
+Now both Devil repeatable keys and repeat mode are active.  If we now
+type <code>, p</code> we can repeat <code>p</code> and <code>n</code> to move the cursor up and down.
+Repeat mode makes this repetition possible.  Additionally, after
+typing <code>, p</code> we can also type or repeat <code>b</code> and <code>f</code> to move the cursor
+left and right.  Devil makes this repetition possible.  We can tell
+the difference between repeat mode handling repeatable commands and
+Devil mode handling repeatable keys by looking at the echo area.  When
+we repeat <code>p</code> which is handled by repeat mode, we see a message
+"Repeat with p, n" in the echo area.  But when we repeat <code>b</code> which is
+handled by Devil, we see no such message; Devil sets up repeatable
+keys silently.
+</p>
+</div>
+</div>
+
+<div id="outline-container-comparison-with-repeat-mode" class="outline-3">
+<h3 id="comparison-with-repeat-mode">Comparison with Repeat Mode<a href="#comparison-with-repeat-mode"></a></h3>
+<div class="outline-text-3" id="text-comparison-with-repeat-mode">
+<p>
+The previous section demonstrates how much of what Devil accomplishes
+with its support for repeatable key sequences can also be accomplished
+with <code>repeat-mode</code> that comes out of the box in Emacs 28.1 and later
+versions.
+</p>
+
+<p>
+However, there is a crucial difference between Devil's repeatable keys
+and <code>repeat-mode</code>.  Repeat mode provides repeatable <i>commands</i> but
+Devil supports repeatable <i>keys</i>.  This different is crucial and
+arguably makes repeatable key sequences easier to configure in Devil.
+To demonstrate the difference, let us consider the key sequence <code>M-e</code>.
+The command <code>forward-sentence</code> is bound to it by default in the global
+map.  However, in Org mode, the command <code>org-forward-sentence</code> is
+bound to it.  The corresponding Devil key sequence is <code>, m e</code> and this
+is a repeatable key sequence in Devil.  Therefore, we can type <code>, m e</code>
+followed by <code>e e e</code> and so on to move the cursor forward by multiple
+sentences in text mode as well as in Org mode.
+</p>
+
+<p>
+To emulate the same behaviour using repeat mode, we need a
+configuration like this:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(require 'devil)
+(global-devil-mode)
+(setq devil-repeatable-keys nil)
+
+(defvar forward-sentence-repeat-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "e") #'forward-sentence)
+    map))
+
+(defvar org-forward-sentence-repeat-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "e") #'org-forward-sentence)
+    map))
+
+(put #'forward-sentence 'repeat-map 'forward-sentence-repeat-map)
+(put #'org-forward-sentence 'repeat-map 'org-forward-sentence-repeat-map)
+
+(repeat-mode)
+</pre>
+</div>
+
+<p>
+Note how we need to configure repeat mode for both commands that are
+bound to <code>M-e</code>.  With the above configuration, we can now type <code>, m e</code>
+followed by <code>e e e</code> to move forward by multiple sentences in both text
+mode as well as Org mode.  However, we can never be sure if we missed
+configuring repeat mode for some other command that might be bound to
+<code>M-e</code> in some mode.  For example, in C mode, the command
+<code>c-end-of-statement</code> is bound to <code>M-e</code>.  The above configuration is no
+good for repeating this command by typing <code>e e e</code>.
+</p>
+
+<p>
+Devil, however, can repeat the command bound to <code>M-e</code> in any mode.
+Devil does not merely make the command bound to it in a particular
+mode repeatable.  Instead Devil makes the key sequence <code>, m e</code> itself
+repeatable.  Therefore, with Devil's own support for repeatable key
+sequences, we can type <code>, m e</code> and then <code>e e e</code> to repeat the command
+bound to <code>M-e</code> regardless of which mode is active or which command is
+bound to this key sequence.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-why" class="outline-2">
+<h2 id="why">Why?<a href="#why"></a></h2>
+<div class="outline-text-2" id="text-why">
+<p>
+Why go to the trouble of creating and using something like this?  Why
+not just remap <code>caps lock</code> to <code>ctrl</code> like every other sane person
+does?  Or if it is so important to avoid modifier keys, why not use
+something like God mode or Evil mode?
+</p>
+
+<p>
+Well, for one, both God mode and Evil mode are modal editing modes.
+Devil, on the other hand, retains the non-modal editing experience of
+Emacs.
+</p>
+
+<p>
+Devil mode began as a fun little experiment.  From the outset, it was
+clear that using something as crucial as the comma for specifying the
+modifier key is asking for trouble.  However, I still wanted to see
+how far I could go with it.  It turned out that in a matter of days, I
+was using it full-time for all of my Emacs usage.
+</p>
+
+<p>
+This experiment was partly motivated by Macbook keyboards which do not
+have a <code>ctrl</code> key on the right side of the keyboard.  Being a
+touch-typist myself, I found it inconvenient to type key combinations
+like <code>C-x</code>, <code>C-s</code>, <code>C-r</code>, <code>C-d</code>, <code>C-f</code>, <code>C-w</code>, <code>C-a</code>, <code>C-e</code>,
+etc. where both the modifier key and the modified key need to be
+pressed with the left hand fingers.  I am not particularly fond of
+remapping <code>caps lock</code> to behave like <code>ctrl</code> because that still suffers
+from the problem that key combinations like <code>C-x</code>, <code>C-a</code> require
+pressing both the modifier key and the modified key with the left hand
+fingers.  I know many people remap both their <code>caps lock</code> and <code>enter</code>
+to behave like <code>ctrl</code>.  While I think that is a fine solution, I was
+not willing to put up with the work required to make that work
+seamlessly across all the various operating systems I work on.
+</p>
+
+<p>
+What began as a tiny whimsical experiment a few years ago turned out
+to be quite effective, at least to me.  I like that this solution is
+implemented purely as Elisp and therefore does not have any external
+dependency.  I am sharing this solution in the form of a minor mode,
+just in case, there is someone out there who might find this useful
+too.
+</p>
+</div>
+</div>
+
+<div id="outline-container-comparison-with-god-mode" class="outline-2">
+<h2 id="comparison-with-god-mode">Comparison with God Mode<a href="#comparison-with-god-mode"></a></h2>
+<div class="outline-text-2" id="text-comparison-with-god-mode">
+<p>
+God mode provides a modal editing experience but Devil does not.
+Devil has the same underlying philosophy as that of God mode, i.e.,
+the user should not have to learn new key bindings.  However, Devil
+does not have a hard separation between insert mode and command mode
+like God mode has.  Instead, Devil waits for an activation key (<code>,</code> by
+default) and as soon as it is activated, it intercepts and translates
+keys, runs the corresponding command, and then gets out of the way.
+So Devil tries to retain the non-modal editing experience of vanilla
+Emacs.
+</p>
+
+<p>
+Now it is worth mentioning that some of this non-modal editing
+experience can be reproduced in god-mode too using its
+<code>god-execute-with-current-bindings</code> function.  Here is an example:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(global-set-key (kbd ",") #'god-execute-with-current-bindings)
+</pre>
+</div>
+
+<p>
+With this configuration, God mode translates <code>, x f</code> to <code>C-x C-f</code>.
+Similarly <code>, g x</code> invokes <code>M-x</code> and <code>, G s</code> invokes <code>C-M-x</code>.  This
+provides a non-modal editing experience in God mode too.  However,
+this experience does not extend seamlessly to minibuffers.  Devil does
+extend its Devil key translation to minibuffers.
+</p>
+
+<p>
+Further note that in God mode the <code>ctrl</code> modifier has sticky
+behaviour, i.e., the modifier remains active automatically for the
+entire key sequence.  Therefore in the above example, we type <code>,</code> only
+once while typing <code>, x f</code> to invoke <code>C-x C-f</code>.  However, this sticky
+behaviour implies that we need some way to disambiguate between key
+sequences like <code>C-x C-f</code> (<code>find-file</code>) and <code>C-x f</code>
+(<code>set-fill-column</code>).  God mode solves this by introducing <code>SPC</code> to
+deactivate the modifier, e.g., <code>, x f</code> translates to <code>C-x C-f</code> but <code>,
+x SPC f</code> translates to <code>C-x f</code>.  Devil does not treat the modifier key
+as sticky which leads to simpler key sequences at the cost of a little
+additional typing, i.e., <code>, x , f</code> translates to <code>C-x C-f</code> and <code>, x f</code>
+translates to <code>C-x f</code>.
+</p>
+
+<p>
+To summarize, there are primarily four things that Devil does
+differently:
+</p>
+
+<ul class="org-ul">
+<li>Provide a non-modal editing experience from the outset.</li>
+<li>Seamlessly extend the same editing experience to minibuffer,
+incremental search, etc.</li>
+<li>Translate key sequences using string replacements.  This allows for
+arbitrary and sophisticated key translations for the adventurous.</li>
+<li>Choose non-sticky behaviour for the modifier keys.</li>
+</ul>
+
+<p>
+These differences could make Devil easier to use than God mode for
+some people but clumsy for other people.  It depends on one's tastes
+and preferences.
+</p>
+</div>
+</div>
+
+<div id="outline-container-frequently-asked-questions" class="outline-2">
+<h2 id="frequently-asked-questions">Frequently Asked Questions<a href="#frequently-asked-questions"></a></h2>
+<div class="outline-text-2" id="text-frequently-asked-questions">
+<ol class="org-ol">
+<li><p>
+Why was the comma (<code>,</code>) chosen as the default Devil key?  Isn't
+the semicolon (<code>;</code>) a better choice since it belongs to the home
+row?
+</p>
+
+<p>
+Opinions vary.  As the author and maintainer of this minor mode, I
+made a choice to use the comma as the default Devil key.
+Although, the semicolon belongs to the home row on most keyboards
+and the comma does not, I find the vertical movement to reach the
+comma key with the long finger more convenient than the horizontal
+movement necessary to reach the semicolon with the little finger.
+</p>
+
+<p>
+As a touch typist, my fingers rest on the eight home row keys when
+idle.  The horizontal movement necessary to type the semicolon
+leads to a significant angular movement of the wrist.  Curling my
+long finger to reach the comma key helps me avoid this wrist
+strain.  If you do not like this default, it is quite easy to
+customise the Devil key to be the semicolon or any other key of
+your choice.  See the section <a href="#custom-devil-key">Custom Devil Key</a> and the subsequent
+sections to learn how to do this.
+</p></li>
+
+<li><p>
+I am happy with typing <code>, ,</code> every time, I need to type a comma.
+Can I free up <code>, SPC</code> to invoke <code>set-mark-command</code>?
+</p>
+
+<p>
+Yes, this can be done by removing the special key <code>, SPC</code> from
+<code>devil-special-keys</code>.  See the section <a href="#reclaim-comma-space-to-set-mark">Reclaim , SPC to Set Mark</a>
+to find out how to do this.
+</p></li>
+
+<li><p>
+Can I make the Devil key sticky, i.e., can I type <code>, x f</code> instead
+of <code>, x , f</code> to invoke <code>C-x C-f</code>?
+</p>
+
+<p>
+Devil does not support sticky keys.  Say, Devil were to translate
+<code>, x f</code> to <code>C-x C-f</code>, how would we invoke <code>C-x f</code> then?  We need
+some way to disambiguate between <code>C-x C-f</code> and <code>C-x f</code>.  Different
+tools take different approaches to disambiguate the two key
+sequences.  God-mode translates <code>x f</code> to <code>C-x C-f</code> and <code>x SPC f</code>
+to <code>C-x f</code>, i.e., God-mode treats the <code>C-</code> modifier as sticky by
+default but when we want to make it non-sticky, we need to type
+<code>SPC</code> in god-mode.  This makes some key sequences like <code>C-x C-f</code>
+shorter to type but some other key sequences like <code>C-x f</code> longer
+to type.
+</p>
+
+<p>
+Devil treats the Devil key as non-sticky, so that there is no need
+for additional peculiar rules to switch between sticky and
+non-sticky behaviour to disambiguate key sequences like <code>C-x C-f</code>
+and <code>C-x f</code>.  With Devil <code>, x , f</code> translates to <code>C-x C-f</code> and
+similarly <code>, x f</code> translates to <code>C-x f</code>.  The translation rules
+are simpler at the cost of a little additional typing in some
+cases.  In most such cases, Devil requires typing an additional
+comma that one could have avoided if the comma were sticky.
+However, in other cases, Devil eliminates the need to type an
+extra key to make the modifier key non-sticky.
+</p></li>
+
+<li><p>
+Are there some things that are easier to do with Devil than
+god-mode?
+</p>
+
+<p>
+Devil is not necessarily easier than god-mode.  It is different.
+Preferences vary, so some may find Devil easier to use while some
+others may find god-mode easier to use.  See the section
+<a href="#comparison-with-god-mode">Comparison with God Mode</a> for more details on the differences
+between the two modes.
+</p></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-conclusion" class="outline-2">
+<h2 id="conclusion">Conclusion<a href="#conclusion"></a></h2>
+<div class="outline-text-2" id="text-conclusion">
+<p>
+Devil is a minor mode to translate key sequences.  Devil utilises this
+translation capability to provide a modifier-free editing experience
+and it does so without resorting to modal-editing.  Devil retains the
+non-modal editing of vanilla Emacs.  This mode was written as a quirky
+experiment to make it easier to use Emacs without modifier keys.
+However, the resulting mode turned out to be quite convenient to use,
+in general.  You might find Devil comfortable.  Or you might find
+Devil to be a terrible idea.  It is also possible that you might find
+Devil useful but intrusive.  In such cases, there are plenty of
+customisable options that you can modify to configure Devil according
+to your preferences.  If you need any help or if you find any issues,
+please create an issue at <a href="https://github.com/susam/devil/issues">https://github.com/susam/devil/issues</a>.
+</p>
+
+<hr>
+
+<div class="org-center">
+<p>
+<a href="devil.pdf">PDF</a>
+<a href="https://github.com/susam/devil">GitHub</a>
+<a href="https://mastodon.social/@susam">Mastodon</a>
+</p>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
