@@ -16,6 +16,9 @@
 - Repeatable key sequence group for =, x ^= and =, x {= and =, x }=.
 - Repeatable key sequences =, a= and =, e= added to group for =, p=.
 - Repeatable key sequences =, m a= and =, m e= added to group for =, m b=.
+- Customisable variable =devil-global-sets-buffer-default= that, when
+  set to =t=, makes enabling =global-devil-mode= also enable Devil in
+  all new buffers.
 
 *** Changed
 

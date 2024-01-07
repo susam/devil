@@ -510,6 +510,48 @@ a text buffer like this, although we can type =, x , f= to launch the
 minibuffer.  Further the special keymaps described in the previous
 section work only when Devil is enabled globally.
 
+** Mode as a buffer default
+:PROPERTIES:
+:CUSTOM_ID: buffer-default
+:END:
+While enabling =global-devil-mode= is typically enough for using Devil
+in every buffer the user encounters, buffer creation which bypasses
+the traditional setup hooks will not have the mode enabled by default.
+The most likely place to encounter this problem is with the default
+Emacs startup screen, which is created after the user's init file has
+been processed but does not run any hooks which will enable Devil.
+
+To solve this particular problem it is recommended to either customise
+the startup screen to one which does run the required hooks, or to
+advise the =display-startup-screen= function to enable Devil in the
+buffer once created.  Here is an example of enabling
+=global-devil-mode= and ensuring it is activated in the default Emacs
+startup screen.
+
+#+begin_src elisp
+  (require 'devil)
+  (global-devil-mode)
+  (advice-add 'display-startup-screen
+              :after (lambda (&optional _) (devil-mode 1)))
+#+end_src
+
+This solves the problem most likely to be encountered.  But what if
+you do genuinely need Devil active in *every* buffer?  When
+=devil-global-sets-buffer-default= is set to =t= and
+=global-minor-mode= is called, Devil will be enabled in all new
+buffers by default.  Enabling this functionality may seem appealing,
+but consider that not all buffers are intended to be interacted with,
+and the decision to opt-out of hooks which could apply a minor-mode is
+likely to have been intentional.  Even though it is not recommended,
+the following example demonstrates how to have Devil active in all
+buffers by default.
+
+#+begin_src elisp
+  (require 'devil)
+  (setq devil-global-sets-buffer-default t)
+  (global-devil-mode)
+#+end_src
+
 ** Custom Appearance
 :PROPERTIES:
 :CUSTOM_ID: custom-appearance
@@ -966,6 +1008,16 @@ and preferences.
     others may find god-mode easier to use.  See the section
     [[*Comparison with God Mode]] for more details on the differences
     between the two modes.
+
+05. I've called the function =global-devil-mode= in my config file,
+    but when Emacs opens Devil does not seem to active.  Why isn't it
+    working?
+
+    The most likely issue is that the first buffer shown is the
+    default Emacs startup screen, which is created without running any
+    hooks which would give Devil the opportunity to be applied.  See
+    the section [[*Mode as a buffer default]] for further details and
+    possible solutions.
 
 * Conclusion
 :PROPERTIES:

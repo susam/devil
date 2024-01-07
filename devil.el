@@ -227,6 +227,26 @@ Format control sequences supported by `devil-format' may be used
 in the format control string."
   :type 'string)
 
+(defcustom devil-global-sets-buffer-default nil
+  "Non-nil iff `global-devil-mode' modifies new buffer defaults.
+
+When non-nil and `global-devil-mode' is enabled, `devil-mode'
+will be enabled in all new buffers without relying on the
+standard global minor-mode hooks.
+
+While this solves issues with `devil-mode' not being active in
+buffers which have not called the hooks where a minor-mode could
+be applied, the decision to bypass these hooks is likely to have
+been intentional.  It is not recommended to enable this option
+unless you are absolutely sure of the consequences.
+
+To work around the most common issue, where `global-devil-mode'
+is enabled during start-up but `devil-mode' is not enabled in the
+default Emacs startup screen, a safer solution is to advise the
+function which creates the startup screen to enable the mode
+locally."
+  :type 'boolean)
+
 
 ;;; Minor Mode Definition ============================================
 
@@ -239,7 +259,9 @@ in the format control string."
 ;;;###autoload
 (define-globalized-minor-mode
   global-devil-mode devil-mode devil--on
-  (if global-devil-mode (devil--add-extra-keys) (devil--remove-extra-keys)))
+  (if global-devil-mode (devil--add-extra-keys) (devil--remove-extra-keys))
+  (when devil-global-sets-buffer-default
+    (setq-default devil-mode global-devil-mode)))
 
 (defun devil--on ()
   "Turn Devil mode on."
