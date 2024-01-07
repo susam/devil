@@ -4,7 +4,7 @@
 #+language:             en
 #+options:              ':t toc:nil author:t email:t num:t
 #+texinfo_dir_category: Emacs misc features
-#+texinfo_dir_title:    Devil: (devil-mode)
+#+texinfo_dir_title:    Devil: (devil)
 #+texinfo_dir_desc:     Minor mode for Devil-like command entering
 
 #+texinfo: @insertcopying
