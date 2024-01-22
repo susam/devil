@@ -246,6 +246,35 @@ in the format control string."
   (devil-mode 1))
 
 
+;;; Repeat suppression ===============================================
+
+(defun devil--isearch-suppress-repeat-p (binding)
+  "Suppress the repeat of BINDING if it will initiate isearch."
+  (and (eq binding 'isearch-forward)
+       (not (eq (current-local-map) isearch-mode-map))))
+
+(defvar devil-suppress-repeat-predicates
+  (list #'devil--isearch-suppress-repeat-p)
+  "The list of function symbols treated as predicates.")
+
+(defun devil--suppress-repeat-p (binding)
+  "Return a non-nil value if BINDING should not be repeated.
+
+For every symbol in `devil-suppress-repeat-predicates', if the
+symbol is an interactive command, compare it to BINDING using
+`eq', otherwise if the symbol is a function, call it with BINDING
+as the single argument.  If any result is non-nil, return the
+result without testing any additional symbols."
+  (seq-some (lambda (x)
+              (cond ((commandp x)
+                     (eq x binding))
+                    ((functionp x)
+                     (funcall x binding))
+                    (t
+                     (error "Bad suppress-repeat value"))))
+            devil-suppress-repeat-predicates))
+
+
 ;;; Bonus Key Bindings ===============================================
 
 (defvar devil--saved-keys nil
@@ -288,7 +317,9 @@ in the format control string."
         (message "Devil: %s is undefined" translated-key)
       (devil--execute-command key binding)
       (when translated-key
-        (devil--set-repeatable-keys (key-description key))))))
+        (if (devil--suppress-repeat-p binding)
+            (devil--log "Repeat suppressed for %s" binding)
+          (devil--set-repeatable-keys (key-description key)))))))
 
 (defun devil-describe-key ()
   "Describe a Devil key sequence."
