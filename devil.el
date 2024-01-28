@@ -167,7 +167,6 @@ by `devil-format' may be used in the keys and values."
     ("%k d")
     ("%k k")
     ("%k m ^")
-    ("%k m e")
     ("%k m b" "%k m f" "%k m a" "%k m e")
     ("%k m @" "%k m h")
     ("%k m y")
