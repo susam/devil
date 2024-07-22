@@ -85,6 +85,7 @@ sequence given in VALUE activates Devil."
   (define-key devil-mode-map value #'devil)
   (devil--log "Keymap updated to %s" devil-mode-map))
 
+;;;###autoload
 (defun devil-set-key (key)
   "Set `devil-key' to the given KEY and update `devil-mode-map'.
 
@@ -312,6 +313,7 @@ locally."
       (when translated-key
         (devil--set-repeatable-keys (key-description key))))))
 
+;;;###autoload
 (defun devil-describe-key ()
   "Describe a Devil key sequence."
   (interactive)
