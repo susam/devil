@@ -59,6 +59,13 @@ Devil can be activated using it.  To support multiple activation
 keys, this keymap may be modified to add multiple keys to
 activate Devil.")
 
+(defcustom devil-exit-key nil
+  "Key that stops the modal repeating of keys in sequence.
+For example, you can set it to <return> like `isearch-exit'."
+  :type '(choice (const :tag "No special key to exit repeating sequence" nil)
+                 (key :tag "Kbd keys that exit repeating sequence"))
+  :group 'devil)
+
 (defcustom devil-logging nil
   "Non-nil iff Devil should print log messages."
   :type 'boolean)
@@ -608,7 +615,12 @@ last-command-event: %s; char-before: %s"
           (devil--log "Setting transient repeatable key: %s => %s"
                       (key-description transient-key) binding)
           (define-key map transient-key binding))))
-    (set-transient-map map t)))
+    (let ((exitfun (set-transient-map map t)))
+      (when devil-exit-key
+        (define-key map (if (key-valid-p devil-exit-key)
+                            (kbd devil-exit-key)
+                          devil-exit-key)
+                    (lambda () (interactive) (funcall exitfun)))))))
 
 (defun devil--find-repeatable-group (described-key)
   "Find the repeatable keys group that DESCRIBED-KEY belongs to."
