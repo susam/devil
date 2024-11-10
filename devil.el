@@ -209,6 +209,10 @@ repeated merely by typing the last character in the key
 sequence."
   :type 'boolean)
 
+(defcustom devil-highlight-repeatable nil
+  "If non-nil, highlight the mode line, while a repeatable command is active."
+  :type 'boolean)
+
 (defcustom devil-lighter " Devil"
   "String displayed on the mode line when Devil mode is enabled."
   :type 'string)
@@ -608,7 +612,13 @@ last-command-event: %s; char-before: %s"
           (devil--log "Setting transient repeatable key: %s => %s"
                       (key-description transient-key) binding)
           (define-key map transient-key binding))))
-    (set-transient-map map t)))
+    (devil--highlight-repeatable t)
+    (set-transient-map map t #'devil--disable-transient-map)))
+
+(defun devil--disable-transient-map ()
+  "Callback, which is executed, when the transient map is removed."
+  (devil--log "Disable repeatable keys")
+  (devil--highlight-repeatable nil))
 
 (defun devil--find-repeatable-group (described-key)
   "Find the repeatable keys group that DESCRIBED-KEY belongs to."
@@ -617,6 +627,22 @@ last-command-event: %s; char-before: %s"
       (dolist (repeatable-key repeatable-group)
         (when (string= described-key (devil-format repeatable-key))
           (throw 'break repeatable-group))))))
+
+(let ((orig-foreground)
+      (orig-background))
+  (defun devil--highlight-repeatable (activep)
+    "Enable highlight for repeatable command when ACTIVEP is t, disable otherwise."
+    (when devil-highlight-repeatable
+      (if activep
+          (progn
+            (setq orig-foreground (face-foreground 'mode-line))
+            (setq orig-background (face-background 'mode-line))
+            (set-face-attribute 'mode-line nil
+                                :foreground "#604000"
+                                :background "#fff29a"))
+        (set-face-attribute 'mode-line nil
+                                :foreground orig-foreground
+                                :background orig-background)))))
 
 
 ;;; Utility Functions ================================================
