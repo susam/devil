@@ -254,7 +254,8 @@ locally."
 (define-minor-mode devil-mode
   "Local minor mode to support Devil key sequences."
   :lighter devil-lighter
-  (devil--log "Mode is %s in %s" devil-mode (buffer-name)))
+  (devil--log "Mode is %s in %s" devil-mode (buffer-name))
+  (devil--enable-which-key-support))
 
 ;;;###autoload
 (define-globalized-minor-mode
@@ -617,6 +618,68 @@ last-command-event: %s; char-before: %s"
       (dolist (repeatable-key repeatable-group)
         (when (string= described-key (devil-format repeatable-key))
           (throw 'break repeatable-group))))))
+
+
+;;;; Which-Key Support ===============================================
+
+(defvar devil--which-key-string nil
+  "Holds key string to use for which-key support.")
+
+(defun devil--which-key-read-key-advice (orig-fun prompt key &rest args)
+  "Wrap `devil--read-key' to store the current command.
+ORIG-FUN is the function which is being wrapped. PROMPT and KEY
+are the first and second arguments which are passed to ORIG-FUN,
+and ARGS is a catch-all for any other arguments which may be
+passed to ORIG-FUN. This current command will be stored in
+`devil--which-key-string'."
+  (setq devil--which-key-string (when (fboundp 'devil--translate)
+                                  (devil--translate key)))
+  (unwind-protect
+      (apply orig-fun prompt key args)
+    (when (bound-and-true-p which-key-mode)
+      (which-key--hide-popup))))
+
+(defun devil--which-key-this-command-keys ()
+  "Version of `which-key-this-command-keys-function' for devil-mode."
+  (let ((this-command-keys (this-single-command-keys)))
+    (when (devil--which-key-self-insert-p)
+      (setq this-command-keys (when (and devil--which-key-string
+                                         (not (equal devil--which-key-string "C-M-")))
+                                (kbd devil--which-key-string))))
+    this-command-keys))
+
+(defun devil--which-key-self-insert-p ()
+  (and (bound-and-true-p devil-mode)
+       (eq this-command 'devil)))
+
+(defun devil--enable-which-key-support ()
+  "Enable support for which-key."
+  (if devil-mode
+      (add-hook 'which-key-mode-hook #'devil--enable-which-key-support-later)
+    (remove-hook 'which-key-mode-hook #'devil--enable-which-key-support-later))
+
+  (when (featurep 'which-key)
+    (devil--enable-which-key-support-later)))
+
+(defun devil--enable-which-key-support-later (&optional _)
+  "Enable support for which-key.
+This function adds the actual logic, it is called directly, when
+enabling/disabling devil-mode and is also added to the
+which-key-mode-hook."
+  (if (and which-key-mode devil-mode)
+      (progn
+        (advice-add 'devil--read-key :around
+                    #'devil--which-key-read-key-advice)
+        (add-function :override which-key-this-command-keys-function
+                      #'devil--which-key-this-command-keys)
+        (add-hook 'which-key-inhibit-display-hook
+                  #'devil--which-key-self-insert-p))
+    (advice-remove 'devil--read-key
+                   #'devil--which-key-read-key-advice)
+    (remove-function which-key-this-command-keys-function
+                     #'devil--which-key-this-command-keys)
+    (remove-hook 'which-key-inhibit-display-hook
+                 #'devil--which-key-self-insert-p)))
 
 
 ;;; Utility Functions ================================================
